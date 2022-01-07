@@ -1,6 +1,4 @@
-# electron-vue-vite
-
-**简体中文**
+# v3-electron
 
 🥳 `Electron16` + `Vue3` + `Vite2`
 
