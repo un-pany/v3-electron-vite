@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+        "jsx": "preserve",
+        "target": "ESNext",
+        "module": "ESNext",
+        "importHelpers": true,
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "resolveJsonModule": true,
+        "noImplicitAny": false,
+        "allowSyntheticDefaultImports": true,
+        "suppressImplicitAnyIndexErrors": true,
+        "sourceMap": true,
+        "baseUrl": "./",
+        "strict": true,
+        "types": [
+            "node"
+            // "element-plus/global" //element-plus 的 Volar 支持
+        ],
+        "paths": {
+            // "@/*": ["src/renderer/*"]
+        }
+    }
+}

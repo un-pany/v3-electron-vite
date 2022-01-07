@@ -1,0 +1,22 @@
+html {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    -webkit-font-smoothing: antialiased;
+    font-family: "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+}
+
+#app {
+    height: 100%;
+}
+
+*,
+*:before,
+*:after {
+    outline: none;
+    box-sizing: border-box;
+}
