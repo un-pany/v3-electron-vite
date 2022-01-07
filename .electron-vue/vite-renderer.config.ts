@@ -14,9 +14,35 @@ export default defineConfig({
         //     '@': resolve(__dirname, '../src') // 路径别名
         // }
     },
+    css: {
+        postcss: {
+            plugins: [
+                {
+                    postcssPlugin: 'internal:charset-removal',
+                    AtRule: {
+                        charset: (atRule) => {
+                            if (atRule.name === 'charset') {
+                                atRule.remove()
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+    },
     build: {
         emptyOutDir: true,
-        outDir: '../../dist/renderer'
+        outDir: '../../dist/renderer',
+        chunkSizeWarningLimit: 1000,
+        rollupOptions: {
+            output: {
+                manualChunks(id) {
+                    if (id.includes('node_modules')) {
+                        return id.toString().split('node_modules/')[1].split('/')[0].toString()
+                    }
+                }
+            }
+        }
     },
     server: {
         host: pkg.env.host,
