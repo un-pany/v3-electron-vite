@@ -2,7 +2,7 @@ import PATH from 'path'
 import PKG from '../../package.json'
 import LOGGER from 'electron-log'
 import remote from '@electron/remote/main'
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, Tray, Menu, globalShortcut } from 'electron'
 
 // 关闭安全警告
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
@@ -13,6 +13,7 @@ LOGGER.transports.file.maxSize = 10 * 1024 * 1024
 
 // 变量
 let logo: string = ''
+let tray: Tray | null = null // 托盘
 let winURL: string = '' // 加载 url
 let winMain: BrowserWindow | null = null // 主窗口
 const preload: string = PATH.join(__dirname, '../preload/index.cjs') // 预加载脚本
@@ -33,6 +34,9 @@ if (app.requestSingleInstanceLock()) {
 
 // 启动应用
 function startApp() {
+    // 全局变量
+    global.loginSize = { width: 1200, height: 800 }
+
     // 初始化 变量
     if (process.env.NODE_ENV !== 'development') {
         logo = PATH.join(PATH.resolve('.'), `./resources/static/icons/logo.ico`)
@@ -45,15 +49,14 @@ function startApp() {
     // 初始化 remote
     remote.initialize()
 
-    // 全局变量
-    global.loginSize = { width: 1200, height: 800 }
-
-    app.on('second-instance', () => {
-        // 当运行第二个实例时, 将会聚焦到 主窗口
-        showMainWindow()
+    // electron 初始化完成
+    app.whenReady().then(() => {
+        createMainWindow()
+        setShortcut()
     })
-    // app.on('ready', createMainWindow)
-    app.whenReady().then(createMainWindow)
+
+    // 当运行第二个实例时, 将会聚焦到主窗口
+    app.on('second-instance', showMainWindow)
 
     app.on('window-all-closed', () => {
         if (process.platform !== 'darwin') {
@@ -62,6 +65,17 @@ function startApp() {
     })
 
     // app.commandLine.appendSwitch('ignore-certificate-errors')
+}
+
+// 注册快捷键
+function setShortcut() {
+    // 显示调试工具
+    globalShortcut.register('Alt+Ctrl+D', () => {
+        if (winMain) {
+            winMain.webContents.openDevTools()
+            winMain.setResizable(true)
+        }
+    })
 }
 
 // 创建 主窗口
@@ -74,11 +88,13 @@ function createMainWindow() {
         title: PKG.env.title, // 标题，默认为"Electron"。如果由loadURL()加载的HTML文件中含有标签<title>，此属性将被忽略
         width: global.loginSize.width, // 宽度
         height: global.loginSize.height, // 高度
-        show: true, // 是否在创建时显示, 默认值为 true
+        minWidth: global.loginSize.width,
+        minHeight: global.loginSize.height,
+        show: false, // 是否在创建时显示, 默认值为 true
         frame: true, // 是否有边框
         center: true, // 是否在屏幕居中
         resizable: true, // 是否允许拉伸大小
-        titleBarStyle: 'hiddenInset', // 标题栏样式 default | hidden | hiddenInset
+        titleBarStyle: 'default', // 标题栏样式 default | hidden | hiddenInset
         fullscreenable: false, // 是否允许全屏
         autoHideMenuBar: false, // 自动隐藏菜单栏, 除非按了Alt键, 默认值为 false
         backgroundColor: '#fff', // 背景颜色为十六进制值
@@ -96,21 +112,53 @@ function createMainWindow() {
     winMain = new BrowserWindow(options)
     winMain.setMenu(null)
     winMain.loadURL(winURL)
-    winMain.webContents.openDevTools() // 显示调试工具
     remote.enable(winMain.webContents) // 渲染进程中使用remote
+    if (process.env.NODE_ENV === 'development') {
+        winMain.webContents.openDevTools() // 显示调试工具
+    }
+
+    // 初始化完成后显示
+    winMain.on('ready-to-show', () => {
+        if (!winMain) return
+        showMainWindow() // 显示主窗口
+        createTray() // 系统托盘
+    })
 
     winMain.on('closed', () => {
         winMain = null
+        if (tray) {
+            tray.destroy()
+            tray = null
+        }
     })
 }
 
 // 显示 主窗口
 function showMainWindow() {
-    if (winMain) {
-        if (winMain.isMinimized()) {
-            winMain.restore()
+    if (!winMain) return
+    winMain.show()
+    winMain.focus()
+    winMain.setAlwaysOnTop(true)
+    winMain.setAlwaysOnTop(false)
+}
+
+// 创建 系统托盘
+function createTray() {
+    if (tray) return
+
+    // 系统托盘右键菜单
+    const contextMenu = Menu.buildFromTemplate([
+        {
+            role: 'quit',
+            label: '退出'
         }
-        winMain.show()
-        winMain.focus()
-    }
+    ])
+
+    tray = new Tray(logo)
+    tray.setToolTip(PKG.env.title) // 设置此托盘图标的悬停提示内容
+    tray.setContextMenu(contextMenu) // 设置此图标的右键菜单
+
+    // 打开应用
+    // tray.on('click', showMainWindow)
+    tray.on('double-click', showMainWindow)
 }

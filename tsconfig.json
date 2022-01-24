@@ -1,8 +1,8 @@
 {
     "compilerOptions": {
         "jsx": "preserve",
-        "target": "ESNext",
-        "module": "ESNext",
+        "target": "esnext",
+        "module": "esnext",
         "importHelpers": true,
         "moduleResolution": "node",
         "esModuleInterop": true,
@@ -14,11 +14,11 @@
         "baseUrl": "./",
         "strict": true,
         "types": [
-            "node"
-            // "element-plus/global" //element-plus 的 Volar 支持
+            "node",
+            "element-plus/global" //element-plus 的 Volar 支持
         ],
         "paths": {
-            // "@/*": ["src/renderer/*"]
+            "@/*": ["src/renderer/*"]
         }
     }
 }
