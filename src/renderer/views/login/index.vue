@@ -108,8 +108,7 @@ const onLogin = () => {
     background: url('@/assets/image/background.png') center/cover no-repeat;
 
     .login-card {
-        width: 35%;
-        min-width: 500px;
+        width: 500px;
         padding: 20px 40px 40px;
         // border: 1px solid red;
     }
@@ -144,6 +143,7 @@ const onLogin = () => {
     }
 
     .captcha-container {
+        width: 100%;
         position: relative;
         margin-bottom: 32px;
 
@@ -154,12 +154,12 @@ const onLogin = () => {
         .el-form-item {
             margin-bottom: 0;
         }
-    }
 
-    .captcha {
-        width: 160px;
-        height: 100%;
-        margin-left: 20px;
+        .captcha {
+            width: 160px;
+            height: 100%;
+            margin-left: 20px;
+        }
     }
 }
 
