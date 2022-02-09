@@ -72,20 +72,19 @@
         "@electron/remote": "^2.0.1",
         "dayjs": "^1.10.7",
         "electron-log": "^4.4.4",
-        "element-plus": "^1.3.0-beta.1",
+        "element-plus": "^2.0.1",
         "vue": "^3.2.26",
         "vue-router": "^4.0.12",
         "vuex": "^4.0.2",
         "vuex-persistedstate": "^4.1.0"
     },
     "devDependencies": {
-        "@vitejs/plugin-vue": "^1.9.4",
-        "chalk": "^4.1.2",
-        "electron": "16.0.0",
+        "@vitejs/plugin-vue": "^2.2.0",
+        "chalk": "^5.0.0",
+        "electron": "17.0.0",
         "electron-builder": "^22.13.1",
         "sass": "^1.45.2",
         "typescript": "^4.4.4",
-        "vite": "^2.6.14",
-        "vite-plugin-svg-icons": "^1.1.0"
+        "vite": "^2.6.14"
     }
 }

@@ -20,6 +20,9 @@ yarn build
 # build dir
 yarn build:dir
 
+# update dependencies
+yarn upgrade-interactive --latest
+
 ```
 
 ## 目录结构
