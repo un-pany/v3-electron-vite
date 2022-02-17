@@ -1,12 +1,12 @@
 <template>
     <svg class="svg-icon" aria-hidden="true">
-        <use :href="`#icon-${name}`" />
+        <use :href="`#icon-${iconName}`" />
     </svg>
 </template>
 
 <script lang="ts" setup>
 defineProps({
-    name: {
+    iconName: {
         type: String,
         required: true
     }

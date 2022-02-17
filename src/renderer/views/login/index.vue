@@ -12,20 +12,20 @@
             <el-form ref="loginFormRef" :model="loginForm" :rules="loginRule" @keyup.enter="onLogin()">
                 <!-- 用户名 -->
                 <el-form-item prop="username">
-                    <img src="@/assets/image/user.png" />
+                    <svg-icon icon-name="user" />
                     <el-input v-model="loginForm.username" :spellcheck="false" placeholder="请输入用户名" tabindex="1" />
                 </el-form-item>
 
                 <!-- 密码 -->
                 <el-form-item prop="password">
-                    <img src="@/assets/image/password.png" />
+                    <svg-icon icon-name="password" />
                     <el-input v-model="loginForm.password" :spellcheck="false" placeholder="请输入密码" tabindex="2" show-password />
                 </el-form-item>
 
                 <!-- 验证码 -->
                 <div class="captcha-container">
                     <el-form-item prop="captcha">
-                        <img src="@/assets/image/password.png" />
+                        <svg-icon icon-name="password" />
                         <el-input v-model="loginForm.captcha" :spellcheck="false" placeholder="请输入验证码" tabindex="3" />
                     </el-form-item>
                     <img src="@/assets/image/captcha.png" class="captcha" />
@@ -58,9 +58,9 @@ interface iLoginForm {
     captcha: string
 }
 const loginForm = reactive<iLoginForm>({
-    username: '',
-    password: '',
-    captcha: ''
+    username: 'admin',
+    password: '123456',
+    captcha: 'hyEv'
 })
 
 /**
@@ -128,10 +128,6 @@ const onLogin = () => {
             margin-right: 10px;
         }
     }
-
-    img {
-        -webkit-user-drag: none;
-    }
 }
 
 .el-form {
@@ -169,9 +165,8 @@ const onLogin = () => {
     border-radius: 8px;
     background-color: rgba(247, 248, 248, 1);
 
-    img {
-        width: 28px;
-        height: 24px;
+    .svg-icon {
+        font-size: 18px;
     }
 
     .el-input .el-input__inner {
@@ -188,7 +183,7 @@ const onLogin = () => {
     display: none !important;
 }
 :deep(.el-form-item__error) {
-    margin-left: 57px;
+    margin-left: 50px;
 }
 
 .login-button {

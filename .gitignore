@@ -9,4 +9,5 @@ tmp
 release
 build
 .vscode
-yarn.lock
+*.log
+package-lock.json

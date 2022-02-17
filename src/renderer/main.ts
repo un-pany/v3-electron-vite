@@ -8,10 +8,14 @@ import { createApp } from 'vue'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 
+import 'virtual:svg-icons-register'
+// import ids from 'virtual:svg-icons-names'
+// console.log(ids)
+
 import SvgIcon from '@/components/svg-icon/index.vue'
 
 const app = createApp(App)
 app.component('SvgIcon', SvgIcon) // 全局注册icon-svg
 
 app.use(ElementPlus)
-app.use(store).use(router).mount('body')
+app.use(store).use(router).mount('#main')

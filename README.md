@@ -1,6 +1,6 @@
 # v3-electron
 
-🥳 `Electron16` + `Vue3` + `Vite2`
+🥳 `Electron17` + `Vue3` + `Vite2`
 
 ## 运行项目
 
@@ -8,20 +8,42 @@
 # enter the project directory
 cd v3-electron
 
+##### yarn ( 在 .npmrc 中 electron_mirror 需要动态修改 )
 # install dependency
 yarn
 
 # develop
+# electron_mirror=https://npmmirror.com/mirrors/electron/
 yarn dev
 
 # build exe
+# electron_mirror=https://npmmirror.com/mirrors/electron/v
 yarn build
 
 # build dir
+# electron_mirror=https://npmmirror.com/mirrors/electron/v
 yarn build:dir
 
 # update dependencies
 yarn upgrade-interactive --latest
+
+##### npm ( 在 .npmrc 中 electron_mirror=https://npmmirror.com/mirrors/electron/v )
+# install dependency
+npm i --electron_mirror=https://npmmirror.com/mirrors/electron/
+
+# develop
+npm run dev
+
+# build exe
+npm run build
+
+# build dir
+npm run build:dir
+
+# update dependencies
+npm install -g npm-check-updates
+ncu -u
+npm i
 
 ```
 
@@ -30,7 +52,6 @@ yarn upgrade-interactive --latest
 一旦启动或打包脚本执行过，会在根目录产生 **`dist` 文件夹，里面的文件夹同 `src` 一模一样**；在使用一些路径计算时，尤其是相对路径计算；`dist` 与 `src` 里面保持相同的目录结构能避开好多问题
 
 ```tree
-├
 ├── .electron-vue
 ├   ├── build.mjs                    项目构建脚本，对应 yarn build
 ├   ├── dev-runner.mjs               项目开发脚本，对应 yarn dev

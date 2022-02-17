@@ -1,5 +1,6 @@
 import { join, resolve } from 'path'
 import { defineConfig } from 'vite'
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import vue from '@vitejs/plugin-vue'
 import pkg from '../package.json'
 
@@ -7,7 +8,16 @@ import pkg from '../package.json'
 export default defineConfig({
     mode: process.env.NODE_ENV,
     root: join(__dirname, '../src/renderer'),
-    plugins: [vue()],
+    plugins: [
+        vue(),
+        createSvgIconsPlugin({
+            // Specify the icon folder to be cached
+            iconDirs: [resolve(process.cwd(), './src/renderer/assets/svg')],
+            // Specify symbolId format
+            symbolId: 'icon-[dir]-[name]',
+            inject: 'body-first'
+        })
+    ],
     base: './',
     resolve: {
         alias: {

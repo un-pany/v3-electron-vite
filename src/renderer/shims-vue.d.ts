@@ -7,9 +7,7 @@ declare module '*.vue' {
     export default component
 }
 
-// declare module 'vue-router' {
-//     interface RouteMeta {
-//         roles?: string[]
-//         activeMenu?: string
-//     }
-// }
+declare module 'virtual:*' {
+    const result: any
+    export default result
+}

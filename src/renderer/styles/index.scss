@@ -1,3 +1,10 @@
+*,
+*:before,
+*:after {
+    outline: none;
+    box-sizing: border-box;
+}
+
 html {
     height: 100%;
 }
@@ -10,13 +17,11 @@ body {
     font-family: "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
 }
 
+#main,
 #app {
     height: 100%;
 }
 
-*,
-*:before,
-*:after {
-    outline: none;
-    box-sizing: border-box;
+img {
+    -webkit-user-drag: none;
 }

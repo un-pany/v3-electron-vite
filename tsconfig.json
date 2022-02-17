@@ -15,7 +15,8 @@
         "strict": true,
         "types": [
             "node",
-            "element-plus/global" //element-plus 的 Volar 支持
+            "vite-plugin-svg-icons/client",
+            "element-plus/global" // element-plus 的 Volar 支持
         ],
         "paths": {
             "@/*": ["src/renderer/*"]
