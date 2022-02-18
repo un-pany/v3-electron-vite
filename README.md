@@ -117,3 +117,15 @@ npm i
 -   `types` 类型定义文件更改
 -   `wip` 开发中
 -   `mod` 不确定分类的修改
+
+## 站在巨人的肩膀上
+
+-   [electron-vue-vite](https://github.com/caoxiemeihao/electron-vue-vite)
+-   [electron-vue-admin](https://github.com/PanJiaChen/electron-vue-admin)
+-   [fast-vue3](https://github.com/study-vue3/fast-vue3)
+
+## 交流（吹水）群
+
+QQ 群：1014374415
+
+![v3-admin.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/19291ab4cbb24c8c9e743f1701609cb6~tplv-k3u1fbpfcp-watermark.image)
