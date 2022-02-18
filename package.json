@@ -1,6 +1,6 @@
 {
     "name": "v3-electron",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "main": "dist/main/index.cjs",
     "author": "nevlf<2863180001@qq.com>",
     "description": "electron",
