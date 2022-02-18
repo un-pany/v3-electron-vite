@@ -10,10 +10,10 @@ cd v3-electron
 
 ##### yarn ( 在 .npmrc 中 electron_mirror 需要动态修改 )
 # install dependency
+# electron_mirror=https://npmmirror.com/mirrors/electron/
 yarn
 
 # develop
-# electron_mirror=https://npmmirror.com/mirrors/electron/
 yarn dev
 
 # build exe

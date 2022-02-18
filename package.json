@@ -1,6 +1,6 @@
 {
     "name": "v3-electron",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "main": "dist/main/index.cjs",
     "author": "nevlf<2863180001@qq.com>",
     "description": "electron",
@@ -9,6 +9,7 @@
         "vite2.x",
         "electron17.x",
         "vue3.x",
+        "pinia",
         "rollup"
     ],
     "engines": {
@@ -73,10 +74,10 @@
         "dayjs": "^1.10.7",
         "electron-log": "^4.4.6",
         "element-plus": "^2.0.2",
+        "pinia": "^2.0.11",
+        "pinia-plugin-persist": "^0.0.93",
         "vue": "^3.2.31",
-        "vue-router": "^4.0.12",
-        "vuex": "^4.0.2",
-        "vuex-persistedstate": "^4.1.0"
+        "vue-router": "^4.0.12"
     },
     "devDependencies": {
         "@vitejs/plugin-vue": "^2.2.0",
@@ -84,9 +85,9 @@
         "electron": "17.0.1",
         "electron-builder": "^22.14.13",
         "fast-glob": "^3.2.11",
-        "sass": "^1.49.7",
+        "sass": "^1.49.8",
         "typescript": "^4.5.5",
-        "vite": "^2.8.3",
+        "vite": "^2.8.4",
         "vite-plugin-svg-icons": "^2.0.1"
     }
 }

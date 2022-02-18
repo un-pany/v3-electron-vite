@@ -39,11 +39,12 @@
 </template>
 
 <script setup lang="ts">
-import { store } from '@/store'
+import { useUserStore } from '@/store/modules/user'
 import { useRouter } from 'vue-router'
 import { reactive, ref } from 'vue'
 
-// console.log(store.state.user)
+const userStore = useUserStore()
+console.log(userStore.fullname)
 
 const router = useRouter()
 const loading = ref<boolean>(false)
@@ -71,10 +72,10 @@ interface iLoginRule {
     password: any[]
     captcha: any[]
 }
-const validateFactory = (text) => ({
+const validateFactory = (text: string | undefined) => ({
     required: true,
     trigger: ['blur', 'change'],
-    validator: (rule, value, callback) => (value ? callback() : callback(new Error(text)))
+    validator: (rule: any, value: any, callback: (arg0: Error | undefined) => any) => (value ? callback(undefined) : callback(new Error(text)))
 })
 const loginRule = reactive<iLoginRule>({
     username: [validateFactory('请输入用户名')],
@@ -85,7 +86,7 @@ const loginRule = reactive<iLoginRule>({
 // 登录
 const onLogin = () => {
     if (loading.value) return
-    loginFormRef.value.validate((valid) => {
+    loginFormRef.value.validate((valid: any) => {
         if (!valid) return
         loading.value = true
         router.push({ path: '/home' })

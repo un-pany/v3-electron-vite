@@ -16,6 +16,7 @@ let logo: string = ''
 let tray: Tray | null = null // 托盘
 let winURL: string = '' // 加载 url
 let winMain: BrowserWindow | null = null // 主窗口
+const loginSize = { width: 1200, height: 800 }
 const preload: string = PATH.join(__dirname, '../preload/index.cjs') // 预加载脚本
 
 // 应用 单例
@@ -34,9 +35,6 @@ if (app.requestSingleInstanceLock()) {
 
 // 启动应用
 function startApp() {
-    // 全局变量
-    global.loginSize = { width: 1200, height: 800 }
-
     // 初始化 变量
     if (process.env.NODE_ENV !== 'development') {
         logo = PATH.join(PATH.resolve('.'), `./resources/static/icons/logo.ico`)
@@ -86,10 +84,10 @@ function createMainWindow() {
     const options: Object = {
         icon: logo, // 图标
         title: PKG.env.title, // 标题，默认为"Electron"。如果由loadURL()加载的HTML文件中含有标签<title>，此属性将被忽略
-        width: global.loginSize.width, // 宽度
-        height: global.loginSize.height, // 高度
-        minWidth: global.loginSize.width,
-        minHeight: global.loginSize.height,
+        width: loginSize.width, // 宽度
+        height: loginSize.height, // 高度
+        minWidth: loginSize.width,
+        minHeight: loginSize.height,
         show: false, // 是否在创建时显示, 默认值为 true
         frame: true, // 是否有边框
         center: true, // 是否在屏幕居中

@@ -1,47 +1,33 @@
-//
+import { defineStore } from 'pinia'
 
-export interface UserState {
-    name: string
-    age: number
-}
-
-const getDefaultState: () => UserState = () => {
-    const raw: UserState = {
-        name: '',
-        age: 18
+export const useUserStore = defineStore({
+    id: 'user', // id必填，且需要唯一
+    state: () => {
+        return {
+            name: '张三',
+            age: 20,
+            gender: '男'
+        }
+    },
+    getters: {
+        fullname: (state) => 'Mr ' + state.name
+    },
+    actions: {
+        update(name: string) {
+            this.name = name
+        }
+    },
+    persist: {
+        // 数据缓存
+        // 默认存在 sessionStorage 里，并且会以 store 的 id 作为 key
+        // 默认所有 state 都会进行缓存，可以通过 paths 指定要持久化的字段，其他的则不会进行持久化
+        enabled: true,
+        strategies: [
+            {
+                key: 'user-key',
+                storage: localStorage,
+                paths: ['name', 'age']
+            }
+        ]
     }
-    return raw
-}
-
-const state: UserState = getDefaultState()
-
-const mutations = {
-    RESET_STATE: (state: UserState) => {
-        Object.assign(state, getDefaultState())
-    },
-    SET_NAME: (state: UserState, name: string) => {
-        state.name = name
-    },
-    SET_AGE: (state: UserState, age: number) => {
-        state.age = age
-    }
-}
-
-const actions = {
-    reset({ commit }: any) {
-        commit('RESET_STATE')
-    },
-    setName({ commit }: any, name: string) {
-        commit('SET_NAME', name)
-    },
-    setAge({ commit }: any, age: number) {
-        commit('SET_AGE', age)
-    }
-}
-
-export default {
-    namespaced: true,
-    state,
-    mutations,
-    actions
-}
+})

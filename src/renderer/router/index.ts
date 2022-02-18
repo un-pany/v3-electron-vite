@@ -5,12 +5,12 @@ export const constantRoutes: Array<RouteRecordRaw> = [
     {
         path: '/',
         name: 'Login',
-        component: () => import('../views/login/index.vue')
+        component: () => import('@/views/login/index.vue')
     },
     {
         path: '/home',
         name: 'Home',
-        component: () => import('../views/home/index.vue')
+        component: () => import('@/views/home/index.vue')
     }
 ]
 

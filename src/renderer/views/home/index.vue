@@ -5,10 +5,13 @@
 </template>
 
 <script setup lang="ts">
-// import { onBeforeUpdate, onBeforeUnmount } from 'vue'
+import { useUserStore } from '@/store/modules/user'
 import { useRouter } from 'vue-router'
 
-localStorage.clear()
+// localStorage.clear()
+const userStore = useUserStore()
+userStore.update('李四')
+console.log(userStore.name)
 
 const router = useRouter()
 

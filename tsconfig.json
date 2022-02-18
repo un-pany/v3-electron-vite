@@ -16,10 +16,12 @@
         "types": [
             "node",
             "vite-plugin-svg-icons/client",
-            "element-plus/global" // element-plus 的 Volar 支持
+            "element-plus/global" // Element-Plus 的 Volar 支持
         ],
         "paths": {
             "@/*": ["src/renderer/*"]
         }
-    }
+    },
+    "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "**/*.ts"]
+    // "exclude": ["node_modules", "dist"]
 }
