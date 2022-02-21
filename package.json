@@ -1,6 +1,6 @@
 {
     "name": "v3-electron",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "main": "dist/main/index.cjs",
     "author": "nevlf<2863180001@qq.com>",
     "description": "electron",
@@ -80,7 +80,8 @@
         "vue-router": "^4.0.12"
     },
     "devDependencies": {
-        "@vitejs/plugin-vue": "^2.2.0",
+        "@vitejs/plugin-vue": "^2.2.2",
+        "cfonts": "^2.10.0",
         "chalk": "^5.0.0",
         "electron": "17.0.1",
         "electron-builder": "^22.14.13",

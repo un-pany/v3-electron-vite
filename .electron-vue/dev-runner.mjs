@@ -1,13 +1,14 @@
 process.env.NODE_ENV = 'development'
 
 import chalk from 'chalk'
+import cfonts from 'cfonts'
 import electron from 'electron'
 import { join } from 'path'
 import { spawn } from 'child_process'
 import { readFileSync } from 'fs'
 import { createServer, build as viteBuild } from 'vite'
 
-const TAG = chalk.bgGreen(' dev.mjs ')
+const TAG = chalk.bgCyan('\n dev-runner.mjs ')
 const pkg = JSON.parse(readFileSync(join(process.cwd(), 'package.json'), 'utf8'))
 
 /**
@@ -31,11 +32,11 @@ function getWatcher({ name, configFile, writeBundle }) {
  * @returns {Promise<import('rollup').RollupWatcher>}
  */
 async function watchMain() {
+    console.log(TAG, 'main')
     /**
      * @type {import('child_process').ChildProcessWithoutNullStreams | null}
      */
     let electronProcess = null
-
     /**
      * @type {import('rollup').RollupWatcher}
      */
@@ -59,6 +60,7 @@ async function watchMain() {
  * @returns {Promise<import('rollup').RollupWatcher>}
  */
 async function watchPreload(viteDevServer) {
+    console.log(TAG, 'preload')
     return getWatcher({
         name: 'electron-preload-watcher',
         configFile: '.electron-vue/vite-preload.config.ts',
@@ -70,9 +72,10 @@ async function watchPreload(viteDevServer) {
     })
 }
 
+cfonts.say('v3-electron', { colors: ['yellow'], font: 'simple3d' })
+
 // bootstrap
 const viteDevServer = await createServer({ configFile: '.electron-vue/vite-renderer.config.ts' })
-
 await viteDevServer.listen()
 await watchPreload(viteDevServer)
 await watchMain()

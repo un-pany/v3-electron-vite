@@ -10,6 +10,7 @@ export default defineConfig({
     root: join(__dirname, '../src/renderer'),
     plugins: [
         vue(),
+        // SVG 插件
         createSvgIconsPlugin({
             // Specify the icon folder to be cached
             iconDirs: [resolve(process.cwd(), './src/renderer/assets/svg')],

@@ -8,28 +8,25 @@
 # enter the project directory
 cd v3-electron
 
-##### yarn ( 在 .npmrc 中 electron_mirror 需要动态修改 )
+##### yarn
 # install dependency
-# electron_mirror=https://npmmirror.com/mirrors/electron/
 yarn
 
 # develop
 yarn dev
 
 # build exe
-# electron_mirror=https://npmmirror.com/mirrors/electron/v
 yarn build
 
 # build dir
-# electron_mirror=https://npmmirror.com/mirrors/electron/v
 yarn build:dir
 
 # update dependencies
 yarn upgrade-interactive --latest
 
-##### npm ( 在 .npmrc 中 electron_mirror=https://npmmirror.com/mirrors/electron/v )
+##### npm
 # install dependency
-npm i --electron_mirror=https://npmmirror.com/mirrors/electron/
+npm i
 
 # develop
 npm run dev

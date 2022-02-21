@@ -1,6 +1,7 @@
 process.env.NODE_ENV = 'production'
 
 import chalk from 'chalk'
+import cfonts from 'cfonts'
 import { build as viteBuild } from 'vite'
 
 const TAG = chalk.bgBlue(' build.mjs ')
@@ -20,6 +21,8 @@ async function buildElectron() {
         console.log() // for beautiful log.
     }
 }
+
+cfonts.say('let’s-build', { colors: ['yellow'], font: 'simple3d' })
 
 // bootstrap
 await buildElectron()
