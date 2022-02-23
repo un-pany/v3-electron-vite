@@ -20,6 +20,11 @@ export default defineConfig({
         })
     ],
     base: './',
+    define: {
+        process: {
+            env: process.env
+        }
+    },
     resolve: {
         alias: {
             '@': resolve(__dirname, '../src/renderer') // 路径别名
@@ -57,6 +62,16 @@ export default defineConfig({
     },
     server: {
         host: pkg.env.host,
-        port: pkg.env.port
+        port: pkg.env.port,
+        proxy: {
+            // '/': {
+            //     target: 'http://172.23.26.65:20002/api',
+            //     changeOrigin: true
+            //     // rewrite: (path) => {
+            //     //     console.log('proxy', path)
+            //     //     return 'http://172.23.26.65:20002/api'
+            //     // }
+            // }
+        }
     }
 })

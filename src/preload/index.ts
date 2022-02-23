@@ -1,13 +1,13 @@
-import FS from 'fs'
-import LOGGER from 'electron-log'
+import fs from 'fs'
+import logger from 'electron-log'
 import remote from '@electron/remote'
 import { contextBridge, ipcRenderer } from 'electron'
 
-// --------- Expose some API to Renderer process. ---------
-contextBridge.exposeInMainWorld('FS', FS)
-contextBridge.exposeInMainWorld('LOGGER', LOGGER)
-contextBridge.exposeInMainWorld('remote', withPrototype(remote))
-contextBridge.exposeInMainWorld('ipcRenderer', withPrototype(ipcRenderer))
+// --------- Expose some API to Renderer process ---------
+contextBridge.exposeInMainWorld('$fs', fs)
+contextBridge.exposeInMainWorld('$logger', logger)
+contextBridge.exposeInMainWorld('$remote', withPrototype(remote))
+contextBridge.exposeInMainWorld('$ipcRenderer', withPrototype(ipcRenderer))
 
 // `exposeInMainWorld` can not detect `prototype` attribute and methods, manually patch it.
 function withPrototype(obj: Record<string, any>) {

@@ -80,22 +80,10 @@ npm i
 -   **src/preload/index.ts**
 
     ```typescript
-    import FS from 'fs'
-    import LOGGER from 'electron-log'
-    import remote from '@electron/remote'
     import { contextBridge, ipcRenderer } from 'electron'
 
     // --------- Expose some API to Renderer process. ---------
-    contextBridge.exposeInMainWorld('FS', FS)
-    contextBridge.exposeInMainWorld('LOGGER', LOGGER)
-    contextBridge.exposeInMainWorld('remote', withPrototype(remote))
-    contextBridge.exposeInMainWorld('ipcRenderer', withPrototype(ipcRenderer))
-    ```
-
--   **src/renderer/main.ts**
-
-    ```typescript
-    console.log('window', window)
+    contextBridge.exposeInMainWorld('$ipcRenderer', withPrototype(ipcRenderer))
     ```
 
 ## Git 提交规范

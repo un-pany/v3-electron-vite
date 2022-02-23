@@ -1,11 +1,12 @@
-process.env.NODE_ENV = 'production'
-
 import chalk from 'chalk'
 import cfonts from 'cfonts'
 import { build as viteBuild } from 'vite'
 
-const TAG = chalk.bgBlue(' build.mjs ')
+process.env.NODE_ENV = 'production'
+// process.env.VUE_APP_BASE_API = '/api/v1/'
+process.env.VUE_APP_BASE_API = 'http://172.23.26.65:20002/api/v1/'
 
+const TAG = chalk.bgBlue(' build.mjs ')
 const viteConfigs = {
     main: '.electron-vue/vite-main.config.ts',
     preload: '.electron-vue/vite-preload.config.ts',

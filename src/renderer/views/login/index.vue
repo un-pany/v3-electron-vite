@@ -28,7 +28,7 @@
                         <svg-icon icon-name="password" />
                         <el-input v-model="loginForm.captcha" :spellcheck="false" placeholder="请输入验证码" tabindex="3" />
                     </el-form-item>
-                    <img src="@/assets/image/captcha.png" class="captcha" />
+                    <img src="@/assets/image/captcha.png" class="captcha" @click="changeCaptcha()" />
                 </div>
 
                 <!-- 登录按钮 -->
@@ -39,9 +39,10 @@
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from '@/store/modules/user'
+import { reactive, ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { reactive, ref } from 'vue'
+import { useUserStore } from '@/store/modules/user'
+import { getCaptchaCode, login } from '@/api/user'
 
 const userStore = useUserStore()
 console.log(userStore.fullname)
@@ -83,6 +84,28 @@ const loginRule = reactive<iLoginRule>({
     captcha: [validateFactory('请输入验证码')]
 })
 
+// 获取验证码
+const changeCaptcha = () => {
+    const params = {
+        username: loginForm.username.trim(),
+        width: 150,
+        height: 50,
+        count: 4,
+        type: 'image'
+    }
+    try {
+        getCaptchaCode(params)
+            .then((res) => {
+                console.log('getCaptchaCode', res)
+            })
+            .catch((err) => {
+                console.error('getCaptchaCode', err)
+            })
+    } catch (error) {
+        console.error('catch', error)
+    }
+}
+
 // 登录
 const onLogin = () => {
     if (loading.value) return
@@ -94,6 +117,11 @@ const onLogin = () => {
 }
 
 //
+onMounted(() => {
+    // changeCaptcha()
+})
+
+// end
 </script>
 
 <style lang="scss" scoped>

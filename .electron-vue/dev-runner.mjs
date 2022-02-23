@@ -1,5 +1,3 @@
-process.env.NODE_ENV = 'development'
-
 import chalk from 'chalk'
 import cfonts from 'cfonts'
 import electron from 'electron'
@@ -7,6 +5,10 @@ import { join } from 'path'
 import { spawn } from 'child_process'
 import { readFileSync } from 'fs'
 import { createServer, build as viteBuild } from 'vite'
+
+process.env.NODE_ENV = 'development'
+// process.env.VUE_APP_BASE_API = '/api/v1/'
+process.env.VUE_APP_BASE_API = 'http://172.23.26.65:20002/api/v1/'
 
 const TAG = chalk.bgCyan('\n dev-runner.mjs ')
 const pkg = JSON.parse(readFileSync(join(process.cwd(), 'package.json'), 'utf8'))

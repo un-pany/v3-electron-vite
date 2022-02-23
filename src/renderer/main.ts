@@ -14,6 +14,8 @@ import 'element-plus/dist/index.css'
 import 'virtual:svg-icons-register'
 import SvgIcon from '@/components/svg-icon/index.vue'
 
+window.$axiosCache = new Map() // 请求标识 => 取消函数
+
 const app = createApp(App)
 app.component('SvgIcon', SvgIcon) // 全局注册 icon-svg
 
