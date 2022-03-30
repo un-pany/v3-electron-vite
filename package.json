@@ -76,7 +76,7 @@
         "element-plus": "^2.0.2",
         "lodash": "^4.17.21",
         "pinia": "^2.0.11",
-        "pinia-plugin-persist": "^0.0.93",
+        "pinia-plugin-persist": "^1.0.0",
         "vue": "^3.2.31",
         "vue-router": "^4.0.12"
     },
@@ -84,7 +84,7 @@
         "@vitejs/plugin-vue": "^2.2.2",
         "cfonts": "^2.10.0",
         "chalk": "^5.0.0",
-        "electron": "17.0.1",
+        "electron": "18.0.0",
         "electron-builder": "^22.14.13",
         "fast-glob": "^3.2.11",
         "sass": "^1.49.8",
