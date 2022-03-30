@@ -28,7 +28,9 @@
                         <svg-icon icon-name="password" />
                         <el-input v-model="loginForm.captcha" :spellcheck="false" placeholder="请输入验证码" tabindex="3" />
                     </el-form-item>
-                    <img src="@/assets/image/captcha.png" class="captcha" @click="changeCaptcha()" />
+                    <div v-loading="captcha.loading" class="image-code" @click="changeCaptcha()">
+                        <img :src="captcha.image" />
+                    </div>
                 </div>
 
                 <!-- 登录按钮 -->
@@ -39,10 +41,10 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, onMounted } from 'vue'
+import { reactive, ref, onMounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/store/modules/user'
-import { getCaptchaCode, login } from '@/api/user'
+import { getCaptchaCode } from '@/api/user'
 
 const userStore = useUserStore()
 console.log(userStore.fullname)
@@ -62,7 +64,7 @@ interface iLoginForm {
 const loginForm = reactive<iLoginForm>({
     username: 'admin',
     password: '123456',
-    captcha: 'hyEv'
+    captcha: '6666'
 })
 
 /**
@@ -84,26 +86,34 @@ const loginRule = reactive<iLoginRule>({
     captcha: [validateFactory('请输入验证码')]
 })
 
+interface iCaptcha {
+    key: string
+    image: string
+    loading: boolean
+}
+const captcha = reactive<iCaptcha>({
+    key: '',
+    image: '',
+    loading: false
+})
+
 // 获取验证码
 const changeCaptcha = () => {
-    const params = {
-        username: loginForm.username.trim(),
-        width: 150,
-        height: 50,
-        count: 4,
-        type: 'image'
-    }
-    try {
-        getCaptchaCode(params)
-            .then((res) => {
-                console.log('getCaptchaCode', res)
-            })
-            .catch((err) => {
-                console.error('getCaptchaCode', err)
-            })
-    } catch (error) {
-        console.error('catch', error)
-    }
+    if (captcha.loading) return
+    captcha.loading = true
+    loginForm.captcha = '6666'
+    nextTick(() => loginFormRef.value.clearValidate('captcha'))
+    const params = { username: loginForm.username.trim(), width: 150, height: 50, count: 4, type: 'image' }
+    getCaptchaCode(params)
+        .then((res: any) => {
+            captcha.key = res.data.key
+            captcha.image = res.data.image + ''
+            captcha.loading = false
+        })
+        .catch((err: any) => {
+            console.warn(err)
+            captcha.loading = false
+        })
 }
 
 // 登录
@@ -118,7 +128,7 @@ const onLogin = () => {
 
 //
 onMounted(() => {
-    // changeCaptcha()
+    changeCaptcha()
 })
 
 // end
@@ -180,10 +190,23 @@ onMounted(() => {
             margin-bottom: 0;
         }
 
-        .captcha {
+        .image-code {
             width: 160px;
-            height: 100%;
+            height: 52px;
+            cursor: pointer;
             margin-left: 20px;
+            background-color: #fff;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+
+            img {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+            }
         }
     }
 }
@@ -200,6 +223,7 @@ onMounted(() => {
 
     .el-input .el-input__inner {
         border: 0;
+        box-shadow: none;
         border-radius: 0px;
         background-color: transparent;
 

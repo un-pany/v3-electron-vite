@@ -37,7 +37,7 @@ if (app.requestSingleInstanceLock()) {
 function startApp() {
     // 初始化 变量
     if (process.env.NODE_ENV !== 'development') {
-        logo = PATH.join(PATH.resolve('.'), `./resources/static/icons/logo.ico`)
+        logo = PATH.join(PATH.resolve('.'), `./resources/app/static/icons/logo.ico`)
         winURL = PATH.join(__dirname, '../renderer/index.html')
     } else {
         logo = PATH.join(PATH.resolve('.'), `./static/icons/logo.ico`)
@@ -68,8 +68,9 @@ function startApp() {
 // 注册快捷键
 function setShortcut() {
     // 显示调试工具
-    globalShortcut.register('Alt+Ctrl+D', () => {
+    globalShortcut.register('Alt+D', () => {
         if (winMain) {
+            winMain.webContents.closeDevTools()
             winMain.webContents.openDevTools()
             winMain.setResizable(true)
         }

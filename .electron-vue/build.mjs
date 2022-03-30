@@ -3,8 +3,6 @@ import cfonts from 'cfonts'
 import { build as viteBuild } from 'vite'
 
 process.env.NODE_ENV = 'production'
-// process.env.VUE_APP_BASE_API = '/api/v1/'
-process.env.VUE_APP_BASE_API = 'http://172.23.26.65:20002/api/v1/'
 
 const TAG = chalk.bgBlue(' build.mjs ')
 const viteConfigs = {

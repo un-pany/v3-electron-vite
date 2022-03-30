@@ -20,11 +20,7 @@ export default defineConfig({
         })
     ],
     base: './',
-    define: {
-        process: {
-            env: process.env
-        }
-    },
+    define: {},
     resolve: {
         alias: {
             '@': resolve(__dirname, '../src/renderer') // 路径别名
@@ -64,12 +60,18 @@ export default defineConfig({
         host: pkg.env.host,
         port: pkg.env.port,
         proxy: {
-            // '/': {
-            //     target: 'http://172.23.26.65:20002/api',
-            //     changeOrigin: true
+            // 注意：
+            // 1. 由于在 renderer 目录下创建了 api 文件夹存放各种请求，
+            //    在引用 @/api/xxx.ts 文件时, 也会被系统识别而造成页面无法渲染,
+            //    所以 key 不使用 '/api/', 或者在 renderer 目录下不创建 api 文件夹
+            // 2. 打包后，请求协议将由 http 变为 file,
+            //    如果使用代理, 将请求失败, 目前尚无解决方案，所以不建议使用代理设置
+            // '/api/v1': {
+            //     changeOrigin: true,
+            //     target: 'http://172.23.26.65:20002'
             //     // rewrite: (path) => {
-            //     //     console.log('proxy', path)
-            //     //     return 'http://172.23.26.65:20002/api'
+            //     //     console.log('rewrite: ', path)
+            //     //     return path.replace(/\/api\/v1/, '')
             //     // }
             // }
         }

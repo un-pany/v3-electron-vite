@@ -1,31 +1,18 @@
 import { request } from '@/utils/service'
 
-interface CaptchaDto {
-    username?: string
-    width: number
-    height: number
-    count: number
-    type: string
-}
 // 获取验证码
-export function getCaptchaCode(data: CaptchaDto) {
+export function getCaptchaCode(data: any) {
     return request({
-        url: '/user/getCaptchaCode',
+        url: '/api/v1/user/getCaptchaCode',
         method: 'get',
         params: data
     })
 }
 
-interface LoginDto {
-    username: string
-    password: string
-    captcha: string
-    codeKey: string
-}
 // 登录
-export function login(data: LoginDto) {
+export function login(data: any) {
     return request({
-        url: '/user/login',
+        url: '/api/v1/user/login',
         method: 'post',
         data
     })

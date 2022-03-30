@@ -41,6 +41,7 @@ function createService() {
         (config) => {
             // deletePendingAjax(config)
             // insertPendingAjax(config)
+            console.log('request', config)
             return config
         },
         (error) => {
@@ -135,12 +136,12 @@ function createRequest() {
                 'Content-Type': get(config, 'headers.Content-Type', 'application/json')
             },
             timeout: 30000,
-            baseURL: process.env.VUE_APP_BASE_API,
+            // baseURL: '/api/v1/',
+            baseURL: 'http://172.23.26.65:20002/',
             data: {}
         }
         return service(Object.assign(configDefault, config))
     }
 }
 
-//
 export const request = createRequest()
