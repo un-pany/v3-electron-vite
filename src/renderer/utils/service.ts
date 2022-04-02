@@ -41,7 +41,7 @@ function createService() {
         (config) => {
             // deletePendingAjax(config)
             // insertPendingAjax(config)
-            console.log('request', config)
+            // console.log('request', config)
             return config
         },
         (error) => {
@@ -82,11 +82,9 @@ function createService() {
                     error.message = '请求错误'
                     break
                 case 401:
-                    // useStore().dispatch(UserActionTypes.ACTION_LOGIN_OUT, undefined); location.reload()
                     error.message = '未授权，请登录'
                     break
                 case 403:
-                    // useStore().dispatch(UserActionTypes.ACTION_LOGIN_OUT, undefined); location.reload()
                     error.message = '拒绝访问'
                     break
                 case 404:

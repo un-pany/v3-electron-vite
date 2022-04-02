@@ -46,10 +46,10 @@ import { useRouter } from 'vue-router'
 import { useUserStore } from '@/store/modules/user'
 import { getCaptchaCode } from '@/api/user'
 
-const userStore = useUserStore()
-console.log(userStore.fullname)
-
 const router = useRouter()
+const userStore = useUserStore()
+// console.log('fullname : ', userStore.fullname)
+
 const loading = ref<boolean>(false)
 const loginFormRef = ref<any>()
 
@@ -122,13 +122,14 @@ const onLogin = () => {
     loginFormRef.value.validate((valid: any) => {
         if (!valid) return
         loading.value = true
+        userStore.update(loginForm.username)
         router.push({ path: '/home' })
     })
 }
 
 //
 onMounted(() => {
-    changeCaptcha()
+    // changeCaptcha()
 })
 
 // end

@@ -10,7 +10,7 @@ export const useUserStore = defineStore({
         }
     },
     getters: {
-        fullname: (state) => 'Mr ' + state.name
+        fullname: (state) => state.name
     },
     actions: {
         update(name: string) {

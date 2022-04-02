@@ -1,6 +1,6 @@
 # v3-electron
 
-🥳 `Electron17` + `Vue3` + `Vite2` + `Pinia`
+🥳 `Electron` + `Vue3` + `Vite2` + `Pinia`
 
 ## 运行项目
 
