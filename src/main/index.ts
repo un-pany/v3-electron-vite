@@ -7,6 +7,10 @@ import { app, BrowserWindow, Tray, Menu, globalShortcut } from 'electron'
 // 关闭安全警告
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
 
+// 日志路径
+// on Linux: ~/.config/{app name}/logs/{process type}.log
+// on macOS: ~/Library/Logs/{app name}/{process type}.log
+// on Windows: %USERPROFILE%\AppData\Roaming\{app name}\logs\{process type}.log
 // 日志设置
 LOGGER.transports.file.format = `[{y}-{m}-{d} {h}:{i}:{s}.{ms}] [{level}]{scope} \n{text} \n`
 LOGGER.transports.file.maxSize = 10 * 1024 * 1024
@@ -56,11 +60,7 @@ function startApp() {
     // 当运行第二个实例时, 将会聚焦到主窗口
     app.on('second-instance', showMainWindow)
 
-    app.on('window-all-closed', () => {
-        if (process.platform !== 'darwin') {
-            app.quit()
-        }
-    })
+    app.on('window-all-closed', () => app.quit())
 
     // app.commandLine.appendSwitch('ignore-certificate-errors')
 }
@@ -93,7 +93,6 @@ function createMainWindow() {
         frame: true, // 是否有边框
         center: true, // 是否在屏幕居中
         resizable: true, // 是否允许拉伸大小
-        titleBarStyle: 'default', // 标题栏样式 default | hidden | hiddenInset
         fullscreenable: false, // 是否允许全屏
         autoHideMenuBar: false, // 自动隐藏菜单栏, 除非按了Alt键, 默认值为 false
         backgroundColor: '#fff', // 背景颜色为十六进制值
@@ -124,11 +123,9 @@ function createMainWindow() {
     })
 
     winMain.on('closed', () => {
+        tray?.destroy()
+        tray = null
         winMain = null
-        if (tray) {
-            tray.destroy()
-            tray = null
-        }
     })
 }
 
