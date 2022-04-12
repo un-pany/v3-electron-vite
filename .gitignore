@@ -7,7 +7,6 @@ dist-ssr
 tmp
 **/.tmp
 release
-build
 .vscode
 *.log
 package-lock.json

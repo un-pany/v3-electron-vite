@@ -4,6 +4,12 @@ import LOGGER from 'electron-log'
 import remote from '@electron/remote/main'
 import { app, BrowserWindow, Tray, Menu, globalShortcut } from 'electron'
 
+// 必要的全局错误捕获
+process.on('uncaughtException', (error) => {
+    LOGGER.error('uncaughtException: ', error.stack || JSON.stringify(error))
+    app.exit()
+})
+
 // 关闭安全警告
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
 
@@ -15,6 +21,8 @@ process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
 LOGGER.transports.file.format = `[{y}-{m}-{d} {h}:{i}:{s}.{ms}] [{level}]{scope} \n{text} \n`
 LOGGER.transports.file.maxSize = 10 * 1024 * 1024
 
+const isDev = process.env.NODE_ENV !== 'production'
+
 // 变量
 let logo: string = ''
 let tray: Tray | null = null // 托盘
@@ -22,6 +30,8 @@ let winURL: string = '' // 加载 url
 let winMain: BrowserWindow | null = null // 主窗口
 const loginSize = { width: 1200, height: 800 }
 const preload: string = PATH.join(__dirname, '../preload/index.cjs') // 预加载脚本
+
+LOGGER.info('run', app.requestSingleInstanceLock())
 
 // 应用 单例
 if (app.requestSingleInstanceLock()) {
@@ -40,12 +50,17 @@ if (app.requestSingleInstanceLock()) {
 // 启动应用
 function startApp() {
     // 初始化 变量
-    if (process.env.NODE_ENV !== 'development') {
-        logo = PATH.join(PATH.resolve('.'), `./resources/app/static/icons/logo.ico`)
-        winURL = PATH.join(__dirname, '../renderer/index.html')
-    } else {
-        logo = PATH.join(PATH.resolve('.'), `./static/icons/logo.ico`)
+    const ext = process.platform === 'darwin' ? 'icns' : 'ico'
+    if (isDev) {
+        logo = PATH.join(PATH.resolve('.'), `./static/icons/logo.${ext}`)
         winURL = `http://${PKG.env.host || '127.0.0.1'}:${PKG.env.port}`
+    } else {
+        if (process.platform === 'darwin') {
+            logo = PATH.join(__dirname, `../../static/icons/logo.${ext}`)
+        } else {
+            logo = PATH.join(PATH.resolve('.'), `./resources/app/static/icons/logo.${ext}`)
+        }
+        winURL = PATH.join(__dirname, '../renderer/index.html')
     }
 
     // 初始化 remote
@@ -68,7 +83,7 @@ function startApp() {
 // 注册快捷键
 function setShortcut() {
     // 显示调试工具
-    globalShortcut.register('Alt+D', () => {
+    globalShortcut.register('CommandOrControl+D', () => {
         if (winMain) {
             winMain.webContents.closeDevTools()
             winMain.webContents.openDevTools()
@@ -80,7 +95,6 @@ function setShortcut() {
 // 创建 主窗口
 function createMainWindow() {
     if (winMain) return
-
     // 配置
     const options: Object = {
         icon: logo, // 图标
@@ -106,22 +120,19 @@ function createMainWindow() {
             nodeIntegrationInWorker: false // 是否在Web工作器中启用了Node集成
         }
     }
-
     winMain = new BrowserWindow(options)
     winMain.setMenu(null)
-    winMain.loadURL(winURL)
+    isDev ? winMain.loadURL(winURL) : winMain.loadFile(winURL)
     remote.enable(winMain.webContents) // 渲染进程中使用remote
-    if (process.env.NODE_ENV === 'development') {
+    if (isDev) {
         winMain.webContents.openDevTools() // 显示调试工具
     }
 
     // 初始化完成后显示
     winMain.on('ready-to-show', () => {
-        if (!winMain) return
         showMainWindow() // 显示主窗口
         createTray() // 系统托盘
     })
-
     winMain.on('closed', () => {
         tray?.destroy()
         tray = null
@@ -150,10 +161,10 @@ function createTray() {
         }
     ])
 
+    // tray = new Tray(nativeImage.createFromPath(logo))
     tray = new Tray(logo)
     tray.setToolTip(PKG.env.title) // 设置此托盘图标的悬停提示内容
     tray.setContextMenu(contextMenu) // 设置此图标的右键菜单
-
     // 打开应用
     // tray.on('click', showMainWindow)
     tray.on('double-click', showMainWindow)

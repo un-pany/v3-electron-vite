@@ -1,6 +1,6 @@
 {
     "name": "v3-electron",
-    "version": "0.0.7",
+    "version": "0.0.8",
     "main": "dist/main/index.cjs",
     "author": "nevlf<2863180001@qq.com>",
     "description": "electron",
@@ -18,7 +18,12 @@
     "env": {
         "host": "127.0.0.1",
         "port": 9090,
-        "title": "v3-electron"
+        "title": "v3-electron",
+        "identity": null,
+        "provisioningProfile": "build/v3electron.provisionprofile",
+        "entitlements": "build/entitlements.mac.plist",
+        "entitlementsInherit": "build/entitlements.mac.plist",
+        "afterSign": "build/notarize.js"
     },
     "scripts": {
         "dev": "node .electron-vue/dev-runner.mjs",
@@ -29,7 +34,7 @@
         "productName": "v3-electron",
         "appId": "com.app.v3-electron",
         "directories": {
-            "output": "build/v${version}"
+            "output": "release/v${version}"
         },
         "extraResources": [],
         "files": [
@@ -54,10 +59,18 @@
         ],
         "mac": {
             "target": [
-                "dmg",
-                "zip"
+                "dmg"
             ],
-            "icon": "static/icons/logo.icns"
+            "hardenedRuntime": true,
+            "gatekeeperAssess": false,
+            "provisioningProfile": "build/v3electron.provisionprofile",
+            "entitlements": "build/entitlements.mac.plist",
+            "entitlementsInherit": "build/entitlements.mac.plist",
+            "icon": "static/icons/logo.icns",
+            "artifactName": "${productName} ${version} ${platform} ${arch}.${ext}"
+        },
+        "dmg": {
+            "sign": false
         },
         "win": {
             "target": [
@@ -73,7 +86,8 @@
         "axios": "^0.26.0",
         "dayjs": "^1.10.7",
         "electron-log": "^4.4.6",
-        "element-plus": "^2.1.8",
+        "electron-notarize": "^1.2.1",
+        "element-plus": "^2.1.9",
         "lodash": "^4.17.21",
         "pinia": "^2.0.13",
         "pinia-plugin-persist": "^1.0.0",
@@ -84,8 +98,8 @@
         "@vitejs/plugin-vue": "^2.3.1",
         "cfonts": "^2.10.1",
         "chalk": "^5.0.0",
-        "electron": "18.0.3",
-        "electron-builder": "^22.14.13",
+        "electron": "18.0.0",
+        "electron-builder": "^23.0.3",
         "fast-glob": "^3.2.11",
         "sass": "^1.50.0",
         "typescript": "^4.5.5",
