@@ -1283,10 +1283,10 @@ electron-publish@23.0.2:
     lazy-val "^1.0.5"
     mime "^2.5.2"
 
-electron@18.0.0:
-  version "18.0.0"
-  resolved "https://registry.npmmirror.com/electron/-/electron-18.0.0.tgz#c43fda5b8470a69313cdd79ba370ee6e42cda5b8"
-  integrity sha512-olAmqc+pNCDM9/nvYnZxhbAwQlMF01lDCesTKJjwItu2DaWZZm959OFTD+1mc/Q/YHDq9eqyD7MjqxjKuoWgWQ==
+electron@18.0.3:
+  version "18.0.3"
+  resolved "https://registry.npmmirror.com/electron/-/electron-18.0.3.tgz#58713c92b44e439881540d18910d193defb0c2b4"
+  integrity sha512-QRUZkGL8O/8CyDmTLSjBeRsZmGTPlPVeWnnpkdNqgHYYaOc/A881FKMiNzvQ9Cj0a+rUavDdwBUfUL82U3Ay7w==
   dependencies:
     "@electron/get" "^1.13.0"
     "@types/node" "^16.11.26"

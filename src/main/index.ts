@@ -31,8 +31,6 @@ let winMain: BrowserWindow | null = null // 主窗口
 const loginSize = { width: 1200, height: 800 }
 const preload: string = PATH.join(__dirname, '../preload/index.cjs') // 预加载脚本
 
-LOGGER.info('run', app.requestSingleInstanceLock())
-
 // 应用 单例
 if (app.requestSingleInstanceLock()) {
     // 启动应用

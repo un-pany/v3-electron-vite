@@ -15,7 +15,7 @@ yarn
 # develop
 yarn dev
 
-# build exe
+# build
 yarn build
 
 # build dir
