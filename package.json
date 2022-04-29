@@ -83,27 +83,27 @@
     },
     "dependencies": {
         "@electron/remote": "^2.0.5",
-        "axios": "^0.26.0",
-        "dayjs": "^1.10.7",
+        "axios": "^0.27.2",
+        "dayjs": "^1.11.1",
         "electron-log": "^4.4.6",
         "electron-notarize": "^1.2.1",
-        "element-plus": "^2.1.9",
+        "element-plus": "^2.1.11",
         "lodash": "^4.17.21",
         "pinia": "^2.0.13",
         "pinia-plugin-persist": "^1.0.0",
-        "vue": "^3.2.32",
+        "vue": "^3.2.33",
         "vue-router": "^4.0.12"
     },
     "devDependencies": {
         "@vitejs/plugin-vue": "^2.3.1",
         "cfonts": "^2.10.1",
         "chalk": "^5.0.0",
-        "electron": "18.0.3",
+        "electron": "18.2.0",
         "electron-builder": "^23.0.3",
         "fast-glob": "^3.2.11",
-        "sass": "^1.50.0",
-        "typescript": "^4.5.5",
-        "vite": "^2.9.1",
+        "sass": "^1.51.0",
+        "typescript": "^4.6.4",
+        "vite": "^2.9.6",
         "vite-plugin-svg-icons": "^2.0.1"
     }
 }

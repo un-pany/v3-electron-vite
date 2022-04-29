@@ -2,6 +2,7 @@
 *:before,
 *:after {
     outline: none;
+    user-select: none;
     box-sizing: border-box;
 }
 
@@ -14,7 +15,7 @@ body {
     padding: 0;
     height: 100%;
     -webkit-font-smoothing: antialiased;
-    font-family: "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+    font-family: 'Helvetica Neue', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
 }
 
 #main,

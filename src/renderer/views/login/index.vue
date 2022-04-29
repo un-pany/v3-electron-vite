@@ -13,20 +13,20 @@
                 <!-- 用户名 -->
                 <el-form-item prop="username">
                     <svg-icon icon-name="user" />
-                    <el-input v-model="loginForm.username" :spellcheck="false" placeholder="请输入用户名" tabindex="1" />
+                    <el-input v-model.trim="loginForm.username" :spellcheck="false" placeholder="请输入用户名" tabindex="1" />
                 </el-form-item>
 
                 <!-- 密码 -->
                 <el-form-item prop="password">
                     <svg-icon icon-name="password" />
-                    <el-input v-model="loginForm.password" :spellcheck="false" placeholder="请输入密码" tabindex="2" show-password />
+                    <el-input v-model.trim="loginForm.password" :spellcheck="false" placeholder="请输入密码" tabindex="2" show-password />
                 </el-form-item>
 
                 <!-- 验证码 -->
                 <div class="captcha-container">
                     <el-form-item prop="captcha">
                         <svg-icon icon-name="password" />
-                        <el-input v-model="loginForm.captcha" :spellcheck="false" placeholder="请输入验证码" tabindex="3" />
+                        <el-input v-model.trim="loginForm.captcha" :spellcheck="false" placeholder="请输入验证码" tabindex="3" :maxlength="6" />
                     </el-form-item>
                     <div v-loading="captcha.loading" class="image-code" @click="changeCaptcha()">
                         <img :src="captcha.image" />
@@ -78,7 +78,7 @@ interface iLoginRule {
 const validateFactory = (text: string | undefined) => ({
     required: true,
     trigger: ['blur', 'change'],
-    validator: (rule: any, value: any, callback: (arg0: Error | undefined) => any) => (value ? callback(undefined) : callback(new Error(text)))
+    validator: (rule: any, value: any, callback: Function) => (value ? callback() : callback(new Error(text)))
 })
 const loginRule = reactive<iLoginRule>({
     username: [validateFactory('请输入用户名')],
@@ -222,20 +222,29 @@ onMounted(() => {
         font-size: 18px;
     }
 
-    .el-input .el-input__inner {
-        border: 0;
-        box-shadow: none;
-        border-radius: 0px;
-        background-color: transparent;
+    .el-input {
+        --el-color-danger: transparent;
+        --el-border-color: transparent;
+        --el-input-hover-border-color: transparent;
+        --el-input-focus-border-color: transparent;
 
-        &:focus {
-            color: #7879f1;
+        &__wrapper {
+            background-color: transparent;
+        }
+
+        &__inner {
+            border: 0;
+            box-shadow: none;
+            border-radius: 0px;
+            background-color: transparent;
+
+            &:focus {
+                color: #7879f1;
+            }
         }
     }
 }
-:deep(.el-input__validateIcon) {
-    display: none !important;
-}
+
 :deep(.el-form-item__error) {
     margin-left: 50px;
 }

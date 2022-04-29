@@ -8,7 +8,6 @@
 # enter the project directory
 cd v3-electron
 
-##### yarn
 # install dependency
 yarn
 
@@ -23,25 +22,6 @@ yarn build:dir
 
 # update dependencies
 yarn upgrade-interactive --latest
-
-##### npm
-# install dependency
-npm i
-
-# develop
-npm run dev
-
-# build exe
-npm run build
-
-# build dir
-npm run build:dir
-
-# update dependencies
-npm install -g npm-check-updates
-ncu -u
-npm i
-
 ```
 
 ## 目录结构

@@ -3,7 +3,7 @@ import { request } from '@/utils/service'
 // 获取验证码
 export function getCaptchaCode(data: any) {
     return request({
-        url: '/api/v1/user/getCaptchaCode',
+        url: '/api/v1/sys/user/getCaptchaCode',
         method: 'get',
         params: data
     })
@@ -12,7 +12,7 @@ export function getCaptchaCode(data: any) {
 // 登录
 export function login(data: any) {
     return request({
-        url: '/api/v1/user/login',
+        url: '/api/v1/sys/user/login',
         method: 'post',
         data
     })
