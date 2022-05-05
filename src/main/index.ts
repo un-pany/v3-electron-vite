@@ -18,15 +18,15 @@ process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
 // on macOS: ~/Library/Logs/{app name}/{process type}.log
 // on Windows: %USERPROFILE%\AppData\Roaming\{app name}\logs\{process type}.log
 // 日志设置
-LOGGER.transports.file.format = `[{y}-{m}-{d} {h}:{i}:{s}.{ms}] [{level}]{scope} \n{text} \n`
+LOGGER.transports.file.format = '[{y}-{m}-{d} {h}:{i}:{s}.{ms}] [{level}]{scope} \n{text} \n'
 LOGGER.transports.file.maxSize = 10 * 1024 * 1024
 
 const isDev = process.env.NODE_ENV !== 'production'
 
 // 变量
-let logo: string = ''
+let logo = ''
 let tray: Tray | null = null // 托盘
-let winURL: string = '' // 加载 url
+let winURL = '' // 加载 url
 let winMain: BrowserWindow | null = null // 主窗口
 const loginSize = { width: 1200, height: 800 }
 const preload: string = PATH.join(__dirname, '../preload/index.cjs') // 预加载脚本
@@ -40,7 +40,7 @@ if (app.requestSingleInstanceLock()) {
     app.quit()
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------------------------- 
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------
  ------------------------------------------------------------------ functions-------------------------------------------------------------------------------
  ------------------------------------------------------------------ ----------------------------------------------------------------------------------------
 */
@@ -147,7 +147,7 @@ function showMainWindow() {
     winMain.setAlwaysOnTop(false)
 }
 
-// 创建 系统托盘
+/** 创建 系统托盘 */
 function createTray() {
     if (tray) return
 

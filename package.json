@@ -1,109 +1,123 @@
 {
-    "name": "v3-electron",
-    "version": "0.0.8",
-    "main": "dist/main/index.cjs",
-    "author": "nevlf<2863180001@qq.com>",
-    "description": "electron",
-    "license": "MIT",
-    "keywords": [
-        "vite2",
-        "electron",
-        "vue3",
-        "pinia",
-        "rollup"
+  "name": "v3-electron",
+  "version": "0.0.8",
+  "main": "dist/main/index.cjs",
+  "author": "nevlf<2863180001@qq.com>",
+  "description": "electron",
+  "license": "MIT",
+  "keywords": [
+    "vite2",
+    "electron",
+    "vue3",
+    "pinia",
+    "rollup"
+  ],
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "env": {
+    "host": "127.0.0.1",
+    "port": 9090,
+    "title": "v3-electron",
+    "identity": null,
+    "provisioningProfile": "build/v3electron.provisionprofile",
+    "entitlements": "build/entitlements.mac.plist",
+    "entitlementsInherit": "build/entitlements.mac.plist",
+    "afterSign": "build/notarize.js"
+  },
+  "scripts": {
+    "dev": "node .electron-vue/dev-runner.mjs",
+    "build": "node .electron-vue/build.mjs && electron-builder",
+    "build:dir": "node .electron-vue/build.mjs && electron-builder --dir",
+    "lint:eslint": "eslint \"src/**/*.{vue,ts,tsx}\" --fix",
+    "lint:prettier": "prettier --write  \"src/**/*.{js,json,tsx,css,less,scss,vue,html,md}\"",
+    "lint": "yarn lint:eslint && yarn lint:prettier",
+    "prepare": "husky install"
+  },
+  "build": {
+    "productName": "v3-electron",
+    "appId": "com.app.v3-electron",
+    "directories": {
+      "output": "release/v${version}"
+    },
+    "extraResources": [],
+    "files": [
+      "dist/**/*",
+      "static/**/*"
     ],
-    "engines": {
-        "node": ">=16.0.0"
+    "asar": false,
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "shortcutName": "${productName}",
+      "uninstallDisplayName": "${productName}",
+      "runAfterFinish": true,
+      "deleteAppDataOnUninstall": true,
+      "allowToChangeInstallationDirectory": true
     },
-    "env": {
-        "host": "127.0.0.1",
-        "port": 9090,
-        "title": "v3-electron",
-        "identity": null,
-        "provisioningProfile": "build/v3electron.provisionprofile",
-        "entitlements": "build/entitlements.mac.plist",
-        "entitlementsInherit": "build/entitlements.mac.plist",
-        "afterSign": "build/notarize.js"
+    "publish": [
+      {
+        "provider": "generic",
+        "url": ""
+      }
+    ],
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "provisioningProfile": "build/v3electron.provisionprofile",
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist",
+      "icon": "static/icons/logo.icns",
+      "artifactName": "${productName} ${version} ${platform} ${arch}.${ext}"
     },
-    "scripts": {
-        "dev": "node .electron-vue/dev-runner.mjs",
-        "build": "node .electron-vue/build.mjs && electron-builder",
-        "build:dir": "node .electron-vue/build.mjs && electron-builder --dir"
+    "dmg": {
+      "sign": false
     },
-    "build": {
-        "productName": "v3-electron",
-        "appId": "com.app.v3-electron",
-        "directories": {
-            "output": "release/v${version}"
-        },
-        "extraResources": [],
-        "files": [
-            "dist/**/*",
-            "static/**/*"
-        ],
-        "asar": false,
-        "nsis": {
-            "oneClick": false,
-            "perMachine": true,
-            "shortcutName": "${productName}",
-            "uninstallDisplayName": "${productName}",
-            "runAfterFinish": true,
-            "deleteAppDataOnUninstall": true,
-            "allowToChangeInstallationDirectory": true
-        },
-        "publish": [
-            {
-                "provider": "generic",
-                "url": ""
-            }
-        ],
-        "mac": {
-            "target": [
-                "dmg"
-            ],
-            "hardenedRuntime": true,
-            "gatekeeperAssess": false,
-            "provisioningProfile": "build/v3electron.provisionprofile",
-            "entitlements": "build/entitlements.mac.plist",
-            "entitlementsInherit": "build/entitlements.mac.plist",
-            "icon": "static/icons/logo.icns",
-            "artifactName": "${productName} ${version} ${platform} ${arch}.${ext}"
-        },
-        "dmg": {
-            "sign": false
-        },
-        "win": {
-            "target": [
-                "nsis"
-            ],
-            "icon": "static/icons/logo.ico",
-            "artifactName": "${productName} v${version}.${ext}",
-            "requestedExecutionLevel": "requireAdministrator"
-        }
-    },
-    "dependencies": {
-        "@electron/remote": "^2.0.5",
-        "axios": "^0.27.2",
-        "dayjs": "^1.11.1",
-        "electron-log": "^4.4.6",
-        "electron-notarize": "^1.2.1",
-        "element-plus": "^2.1.11",
-        "lodash": "^4.17.21",
-        "pinia": "^2.0.13",
-        "pinia-plugin-persist": "^1.0.0",
-        "vue": "^3.2.33",
-        "vue-router": "^4.0.12"
-    },
-    "devDependencies": {
-        "@vitejs/plugin-vue": "^2.3.1",
-        "cfonts": "^2.10.1",
-        "chalk": "^5.0.0",
-        "electron": "18.2.0",
-        "electron-builder": "^23.0.3",
-        "fast-glob": "^3.2.11",
-        "sass": "^1.51.0",
-        "typescript": "^4.6.4",
-        "vite": "^2.9.6",
-        "vite-plugin-svg-icons": "^2.0.1"
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "static/icons/logo.ico",
+      "artifactName": "${productName} v${version}.${ext}",
+      "requestedExecutionLevel": "requireAdministrator"
     }
+  },
+  "dependencies": {
+    "@electron/remote": "^2.0.5",
+    "axios": "^0.27.2",
+    "dayjs": "^1.11.1",
+    "electron-log": "^4.4.7",
+    "electron-notarize": "^1.2.1",
+    "element-plus": "^2.1.11",
+    "lodash": "^4.17.21",
+    "pinia": "^2.0.13",
+    "pinia-plugin-persist": "^1.0.0",
+    "vue": "^3.2.33",
+    "vue-router": "^4.0.15"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.21.0",
+    "@typescript-eslint/parser": "^5.21.0",
+    "@vitejs/plugin-vue": "^2.3.2",
+    "@vue/eslint-config-prettier": "^7.0.0",
+    "@vue/eslint-config-typescript": "^10.0.0",
+    "cfonts": "^2.10.1",
+    "chalk": "^5.0.0",
+    "electron": "18.2.0",
+    "electron-builder": "^23.0.3",
+    "eslint": "^8.14.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-vue": "^8.7.1",
+    "fast-glob": "^3.2.11",
+    "husky": "^7.0.4",
+    "prettier": "^2.6.2",
+    "sass": "^1.51.0",
+    "typescript": "^4.6.4",
+    "vite": "^2.9.8",
+    "vite-plugin-svg-icons": "^2.0.1",
+    "vue-eslint-parser": "^8.3.0"
+  }
 }

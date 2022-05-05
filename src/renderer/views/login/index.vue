@@ -26,7 +26,13 @@
                 <div class="captcha-container">
                     <el-form-item prop="captcha">
                         <svg-icon icon-name="password" />
-                        <el-input v-model.trim="loginForm.captcha" :spellcheck="false" placeholder="请输入验证码" tabindex="3" :maxlength="6" />
+                        <el-input
+                            v-model.trim="loginForm.captcha"
+                            :spellcheck="false"
+                            placeholder="请输入验证码"
+                            tabindex="3"
+                            :maxlength="6"
+                        />
                     </el-form-item>
                     <div v-loading="captcha.loading" class="image-code" @click="changeCaptcha()">
                         <img :src="captcha.image" />

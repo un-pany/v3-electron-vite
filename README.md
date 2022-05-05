@@ -5,11 +5,18 @@
 ## 运行项目
 
 ```bash
+# config
+1. 安装 .vscode 中推荐的插件
+2. node 版本 16+
+
 # enter the project directory
 cd v3-electron
 
 # install dependency
 yarn
+
+# initial husky
+yarn prepare
 
 # develop
 yarn dev
@@ -65,6 +72,20 @@ yarn upgrade-interactive --latest
     // --------- Expose some API to Renderer process. ---------
     contextBridge.exposeInMainWorld('$ipcRenderer', withPrototype(ipcRenderer))
     ```
+
+-   **src/renderer/shims-vue.d.ts**
+
+    ```typescript
+    interface Window {
+        $ipcRenderer: typeof import('electron')['ipcRenderer']
+    }
+    ```
+
+## 代码格式检查
+
+```bash
+yarn lint
+```
 
 ## Git 提交规范
 
