@@ -73,7 +73,7 @@ yarn upgrade-interactive --latest
     contextBridge.exposeInMainWorld('$ipcRenderer', withPrototype(ipcRenderer))
     ```
 
--   **src/renderer/shims-vue.d.ts**
+-   **src/renderer/@types/shims-vue.d.ts**
 
     ```typescript
     interface Window {

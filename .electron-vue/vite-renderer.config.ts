@@ -10,7 +10,7 @@ export default defineConfig({
     root: join(__dirname, '../src/renderer'),
     plugins: [
         vue(),
-        // SVG 插件
+        /** SVG 插件 */
         createSvgIconsPlugin({
             // Specify the icon folder to be cached
             iconDirs: [resolve(process.cwd(), './src/renderer/assets/svg')],
@@ -40,12 +40,29 @@ export default defineConfig({
                     }
                 }
             ]
+        },
+        preprocessorOptions: {
+            scss: {
+                additionalData: '@import "@/styles/variables.scss";'
+            }
         }
     },
     build: {
         emptyOutDir: true,
         outDir: '../../dist/renderer',
         chunkSizeWarningLimit: 1000,
+        /** 在 build 代码时移除 console.log、debugger 和 注释 */
+        terserOptions: {
+            compress: {
+                drop_console: false,
+                drop_debugger: true,
+                pure_funcs: ['console.log']
+            },
+            output: {
+                /** 删除注释 */
+                comments: false
+            }
+        },
         rollupOptions: {
             output: {
                 manualChunks(id) {
