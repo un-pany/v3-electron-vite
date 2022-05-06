@@ -13,7 +13,7 @@ declare module 'virtual:*' {
 }
 
 interface Window {
-    $axiosCache: Map<string, import('axios').Canceler>
+    // $axiosCache: Map<string, import('axios').Canceler>
     $fs: typeof import('fs')
     $logger: typeof import('electron-log')
     $remote: typeof import('@electron/remote')

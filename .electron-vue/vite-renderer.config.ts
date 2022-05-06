@@ -13,7 +13,7 @@ export default defineConfig({
         /** SVG 插件 */
         createSvgIconsPlugin({
             // Specify the icon folder to be cached
-            iconDirs: [resolve(process.cwd(), './src/renderer/assets/svg')],
+            iconDirs: [resolve(process.cwd(), './src/renderer/icons/svg')],
             // Specify symbolId format
             symbolId: 'icon-[dir]-[name]',
             inject: 'body-first'
@@ -40,17 +40,20 @@ export default defineConfig({
                     }
                 }
             ]
-        },
-        preprocessorOptions: {
-            scss: {
-                additionalData: '@import "@/styles/variables.scss";'
-            }
         }
+        // preprocessorOptions: {
+        //     scss: {
+        //         // additionalData: '@import "@/styles/variables.scss";'
+        //     }
+        // }
     },
     build: {
         emptyOutDir: true,
         outDir: '../../dist/renderer',
+        /** 消除打包大小超过 500kb 警告 */
         chunkSizeWarningLimit: 1000,
+        /** vite 2.6.x 以上需要配置 minify: terser，terserOptions 才能生效 */
+        minify: 'terser',
         /** 在 build 代码时移除 console.log、debugger 和 注释 */
         terserOptions: {
             compress: {

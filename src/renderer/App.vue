@@ -1,11 +1,13 @@
-<template>
-    <div id="app">
-        <router-view />
-    </div>
-</template>
+<script lang="ts" setup>
+import { useAppStore } from '@/store/modules/app'
+import zhCn from 'element-plus/lib/locale/lang/zh-cn'
 
-<script setup lang="ts">
-// import { onBeforeUpdate, onBeforeUnmount } from 'vue'
+useAppStore().initTheme() // 初始化 theme
+const locale = zhCn // element-plus 设置为中文
 </script>
 
-<style lang="scss" scoped></style>
+<template>
+    <ElConfigProvider :locale="locale">
+        <router-view />
+    </ElConfigProvider>
+</template>

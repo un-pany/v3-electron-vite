@@ -1,33 +1,89 @@
+import store from '@/store'
 import { defineStore } from 'pinia'
+import { usePermissionStore } from './permission'
+import { getToken, removeToken, setToken } from '@/utils/cookies'
+import router, { resetRouter } from '@/router'
+import { accountLogin, userInfoRequest } from '@/api/login'
+import { RouteRecordRaw } from 'vue-router'
+
+interface IUserState {
+    token: string
+    roles: string[]
+}
 
 export const useUserStore = defineStore({
-    id: 'user', // id必填，且需要唯一
-    state: () => {
+    id: 'user',
+    state: (): IUserState => {
         return {
-            name: '张三',
-            age: 20,
-            gender: '男'
+            token: getToken() || '',
+            roles: []
         }
-    },
-    getters: {
-        fullname: (state) => state.name
     },
     actions: {
-        update(name: string) {
-            this.name = name
+        /** 设置角色数组 */
+        setRoles(roles: string[]) {
+            this.roles = roles
+        },
+        /** 登录 */
+        login(userInfo: { username: string; password: string }) {
+            return new Promise((resolve, reject) => {
+                accountLogin({
+                    username: userInfo.username.trim(),
+                    password: userInfo.password
+                })
+                    .then((res: any) => {
+                        setToken(res.data.accessToken)
+                        this.token = res.data.accessToken
+                        resolve(true)
+                    })
+                    .catch((error) => {
+                        reject(error)
+                    })
+            })
+        },
+        /** 获取用户详情 */
+        getInfo() {
+            return new Promise((resolve, reject) => {
+                userInfoRequest()
+                    .then((res: any) => {
+                        this.roles = res.data.user.roles
+                        resolve(res)
+                    })
+                    .catch((error) => {
+                        reject(error)
+                    })
+            })
+        },
+        /** 切换角色 */
+        async changeRoles(role: string) {
+            const token = role + '-token'
+            this.token = token
+            setToken(token)
+            await this.getInfo()
+            const permissionStore = usePermissionStore()
+            permissionStore.setRoutes(this.roles)
+            resetRouter()
+            permissionStore.dynamicRoutes.forEach((item: RouteRecordRaw) => {
+                router.addRoute(item)
+            })
+        },
+        /** 登出 */
+        logout() {
+            removeToken()
+            this.token = ''
+            this.roles = []
+            resetRouter()
+        },
+        /** 重置 token */
+        resetToken() {
+            removeToken()
+            this.token = ''
+            this.roles = []
         }
-    },
-    persist: {
-        // 数据缓存
-        // 默认存在 sessionStorage 里，并且会以 store 的 id 作为 key
-        // 默认所有 state 都会进行缓存，可以通过 paths 指定要持久化的字段，其他的则不会进行持久化
-        enabled: true,
-        strategies: [
-            {
-                key: 'user-key',
-                storage: localStorage,
-                paths: ['name', 'age']
-            }
-        ]
     }
 })
+
+/** 在 setup 外使用 */
+export function useUserStoreHook() {
+    return useUserStore(store)
+}

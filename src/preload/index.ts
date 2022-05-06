@@ -1,10 +1,8 @@
-import fs from 'fs'
 import logger from 'electron-log'
 import remote from '@electron/remote'
 import { contextBridge, ipcRenderer } from 'electron'
 
 // --------- Expose some API to Renderer process ---------
-contextBridge.exposeInMainWorld('$fs', fs)
 contextBridge.exposeInMainWorld('$logger', logger)
 contextBridge.exposeInMainWorld('$remote', withPrototype(remote))
 contextBridge.exposeInMainWorld('$ipcRenderer', withPrototype(ipcRenderer))

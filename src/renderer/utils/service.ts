@@ -1,81 +1,47 @@
-import { get } from 'lodash'
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
+import { useUserStoreHook } from '@/store/modules/user'
 import { ElMessage } from 'element-plus'
-import axios, { AxiosRequestConfig, Canceler } from 'axios'
+import { get } from 'lodash-es'
+import { getToken } from '@/utils/cookies'
 
-// 请求标识
-function createAjaxKey(config: AxiosRequestConfig) {
-    return `${config.method}${config.url}${JSON.stringify(config.params)}${JSON.stringify(config.data)}`
-}
-
-// 添加请求到缓存
-function insertPendingAjax(config: AxiosRequestConfig) {
-    const key = createAjaxKey(config)
-    config.cancelToken =
-        config.cancelToken ||
-        new axios.CancelToken((cancel: Canceler) => {
-            // 不存在当前请求，添加进去
-            if (key && !window.$axiosCache.has(key)) {
-                window.$axiosCache.set(key, cancel)
-            }
-        })
-}
-
-// 从缓存中移除请求
-function deletePendingAjax(config: AxiosRequestConfig) {
-    const key = createAjaxKey(config)
-    const cancel = window.$axiosCache.get(key)
-    // 存在当前请求，取消并将删除
-    if (cancel) {
-        cancel(key)
-        window.$axiosCache.delete(key)
-    }
-}
-
-// 创建请求实例
+/** 创建请求实例 */
 function createService() {
     // 创建一个 axios 实例
     const service = axios.create()
-
     // 请求拦截
     service.interceptors.request.use(
-        (config) => {
-            // deletePendingAjax(config)
-            // insertPendingAjax(config)
-            // console.log('request', config)
-            return config
-        },
-        (error) => {
-            // 发送失败
-            return Promise.reject(error)
-        }
+        (config) => config,
+        // 发送失败
+        (error) => Promise.reject(error)
     )
-
-    // 响应拦截
+    // 响应拦截（可根据具体业务作出相应的调整）
     service.interceptors.response.use(
         (response) => {
-            // deletePendingAjax(response.config)
-            const data = response.data
-            const code = data.code // 这个状态码是和后端约定的
-            if (code === 0 || code === 200) {
-                return data
+            // apiData 是 api 返回的数据
+            const apiData = response.data as any
+            // 这个 code 是和后端约定的业务 code
+            const code = apiData.code
+            // 如果没有 code, 代表这不是项目后端开发的 api
+            if (code === undefined) {
+                ElMessage.error('非本系统的接口')
+                return Promise.reject(new Error('非本系统的接口'))
+            } else {
+                switch (code) {
+                    case 0:
+                        // code === 0 代表没有错误
+                        return apiData
+                    case 20000:
+                        // code === 20000 代表没有错误
+                        return apiData
+                    default:
+                        // 不是正确的 code
+                        ElMessage.error(apiData.msg || 'Error')
+                        return Promise.reject(new Error('Error'))
+                }
             }
-            return Promise.reject(data)
         },
         (error) => {
-            console.log('response', error)
-            // const config = error.config || {}
-            // deletePendingAjax(config)
-            // // 类型是否为重复请求
-            // // 取消请求会报错，但不应该返回给用户
-            // let isDuplicatedType: boolean
-            // try {
-            //     const errorType = (JSON.parse(error.message) || {}).type
-            //     isDuplicatedType = errorType === 'DUPLICATED_REQUEST'
-            // } catch (error) {
-            //     isDuplicatedType = false
-            // }
-            // if (isDuplicatedType) return
-
+            // status 是 HTTP 状态码
             const status = get(error, 'response.status')
             switch (status) {
                 case 400:
@@ -85,10 +51,12 @@ function createService() {
                     error.message = '未授权，请登录'
                     break
                 case 403:
-                    error.message = '拒绝访问'
+                    // token 过期时，直接退出登录并强制刷新页面（会重定向到登录页）
+                    useUserStoreHook().logout()
+                    location.reload()
                     break
                 case 404:
-                    error.message = `请求地址出错: ${error.response.config.url}`
+                    error.message = '请求地址出错'
                     break
                 case 408:
                     error.message = '请求超时'
@@ -121,25 +89,24 @@ function createService() {
     return service
 }
 
-//
-export const service = createService()
-
-// 创建请求方法
-function createRequest() {
+/** 创建请求方法 */
+function createRequestFunction(service: AxiosInstance) {
     return function (config: AxiosRequestConfig) {
-        //   const token = useStore().state.user.token
         const configDefault = {
             headers: {
-                //   Authorization: 'Bearer ' + token,
+                // 携带 token
+                'X-Access-Token': getToken(),
                 'Content-Type': get(config, 'headers.Content-Type', 'application/json')
             },
-            timeout: 30000,
-            // baseURL: '/api/v1/',
-            baseURL: 'http://172.23.26.65:20002/',
+            timeout: 5000,
+            baseURL: 'https://vue-typescript-admin-mock-server-armour.vercel.app/mock-api/v1',
             data: {}
         }
         return service(Object.assign(configDefault, config))
     }
 }
 
-export const request = createRequest()
+/** 用于网络请求的实例 */
+export const service = createService()
+/** 用于网络请求的方法 */
+export const request = createRequestFunction(service)
