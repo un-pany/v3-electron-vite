@@ -15,9 +15,6 @@ cd v3-electron
 # install dependency
 yarn
 
-# initial husky
-yarn prepare
-
 # develop
 yarn dev
 
