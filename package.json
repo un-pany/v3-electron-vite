@@ -91,7 +91,7 @@
         "dayjs": "^1.11.1",
         "electron-log": "^4.4.7",
         "electron-notarize": "^1.2.1",
-        "element-plus": "^2.1.11",
+        "element-plus": "2.2.2",
         "lodash": "^4.17.21",
         "normalize.css": "^8.0.1",
         "nprogress": "^0.2.0",
