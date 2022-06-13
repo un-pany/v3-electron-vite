@@ -1,16 +1,15 @@
 {
-    "name": "v3-electron",
-    "version": "1.0.0",
+    "name": "v3-electron-vite",
+    "version": "3.1.7",
     "main": "dist/main/index.cjs",
     "author": "nevlf<2863180001@qq.com>",
     "description": "electron",
     "license": "MIT",
     "keywords": [
-        "vite2",
+        "vite",
         "electron",
         "vue3",
-        "pinia",
-        "rollup"
+        "pinia"
     ],
     "engines": {
         "node": ">=16.0.0"
@@ -18,7 +17,7 @@
     "env": {
         "host": "127.0.0.1",
         "port": 9090,
-        "title": "v3-electron",
+        "title": "v3-electron-vite",
         "identity": null,
         "provisioningProfile": "build/v3electron.provisionprofile",
         "entitlements": "build/entitlements.mac.plist",
@@ -34,8 +33,8 @@
         "lint": "yarn lint:eslint && yarn lint:prettier"
     },
     "build": {
-        "productName": "v3-electron",
-        "appId": "com.app.v3-electron",
+        "productName": "v3-electron-vite",
+        "appId": "com.app.v3-electron-vite",
         "directories": {
             "output": "release/v${version}"
         },

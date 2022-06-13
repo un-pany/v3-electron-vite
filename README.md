@@ -1,6 +1,8 @@
-# v3-electron
+# 简介
 
-🥳 `Electron` + `Vue3` + `Vite2` + `Pinia`
+🥳 `Electron` + `Vue3` + `Vite` + `Pinia` + `Element-Plus` + `TypeScript`.
+
+renderer 渲染进程中源码来自 [v3-admin-vite](https://github.com/un-pany/v3-admin-vite).
 
 ## 运行项目
 
@@ -10,7 +12,7 @@
 2. node 版本 16+
 
 # enter the project directory
-cd v3-electron
+cd v3-electron-vite
 
 # install dependency
 yarn
@@ -28,9 +30,15 @@ yarn build:dir
 yarn upgrade-interactive --latest
 ```
 
+## 代码格式检查
+
+```bash
+yarn lint
+```
+
 ## 目录结构
 
-一旦启动或打包脚本执行过，会在根目录产生 **`dist` 文件夹，里面的文件夹同 `src` 一模一样**；在使用一些路径计算时，尤其是相对路径计算；`dist` 与 `src` 里面保持相同的目录结构能避开好多问题
+一旦启动或打包脚本执行过，会在根目录产生 **`dist` 文件夹，里面的文件夹同 `src` 一模一样**；在使用一些路径计算时，尤其是相对路径计算；`dist` 与 `src` 里面保持相同的目录结构能避开好多问题.
 
 ```tree
 ├── .electron-vue
@@ -52,10 +60,9 @@ yarn upgrade-interactive --latest
 ├
 ├── static                           静态资源
 ├   ├── icons                        系统图标
-├
 ```
 
-## 渲染进程使用 NodeJs API
+## 渲染进程使用 Node API
 
 > 🚧 因为安全的原因 Electron 默认不支持在 渲染进程 中使用 NodeJs API
 
@@ -77,12 +84,6 @@ yarn upgrade-interactive --latest
         $ipcRenderer: typeof import('electron')['ipcRenderer']
     }
     ```
-
-## 代码格式检查
-
-```bash
-yarn lint
-```
 
 ## Git 提交规范
 
@@ -106,9 +107,3 @@ yarn lint
 -   [electron-vue-vite](https://github.com/caoxiemeihao/electron-vue-vite)
 -   [electron-vue-admin](https://github.com/PanJiaChen/electron-vue-admin)
 -   [fast-vue3](https://github.com/study-vue3/fast-vue3)
-
-## 交流（吹水）群
-
-QQ 群：1014374415
-
-![v3-admin.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/19291ab4cbb24c8c9e743f1701609cb6~tplv-k3u1fbpfcp-watermark.image)

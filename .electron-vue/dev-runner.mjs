@@ -49,7 +49,7 @@ function watchPreload(server) {
     })
 }
 
-cfonts.say('v3-electron', { colors: ['yellow'], font: 'simple3d' })
+cfonts.say('v3-electron-vite', { colors: ['yellow'], font: 'simple3d' })
 
 // bootstrap
 const server = await createServer({ configFile: '.electron-vue/vite-renderer.config.ts' })

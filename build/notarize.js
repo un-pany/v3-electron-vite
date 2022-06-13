@@ -16,7 +16,7 @@ exports.default = async function notarizing(context) {
     }
 
     return await notarize({
-        appBundleId: 'com.app.v3-electron',
+        appBundleId: 'com.app.v3-electron-vite',
         appPath: `${appOutDir}/${appName}.app`,
         appleId: '',
         appleIdPassword: '',
