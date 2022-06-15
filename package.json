@@ -16,7 +16,7 @@
     },
     "env": {
         "host": "127.0.0.1",
-        "port": 9090,
+        "port": 3333,
         "title": "v3-electron-vite",
         "identity": null,
         "provisioningProfile": "build/v3electron.provisionprofile",
