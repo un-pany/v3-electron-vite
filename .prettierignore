@@ -8,3 +8,4 @@ dist-ssr
 *.d.ts
 build
 release
+.npmrc
