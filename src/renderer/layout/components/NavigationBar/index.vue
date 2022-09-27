@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import { computed, reactive } from 'vue'
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAppStore } from '@/store/modules/app'
 import { useSettingsStore } from '@/store/modules/settings'
 import { useUserStore } from '@/store/modules/user'
 import { UserFilled } from '@element-plus/icons-vue'
-import BreadCrumb from '../BreadCrumb/index.vue'
+import Breadcrumb from '../Breadcrumb/index.vue'
 import Hamburger from '../Hamburger/index.vue'
 import ThemeSwitch from '@/components/ThemeSwitch/index.vue'
 import Screenfull from '@/components/Screenfull/index.vue'
@@ -25,23 +25,19 @@ const showScreenfull = computed(() => {
     return settingsStore.showScreenfull
 })
 
-const state = reactive({
-    toggleSideBar: () => {
-        appStore.toggleSidebar(false)
-    },
-    logout: () => {
-        userStore.logout()
-        router.push('/login').catch((err) => {
-            console.warn(err)
-        })
-    }
-})
+const toggleSidebar = () => {
+    appStore.toggleSidebar(false)
+}
+const logout = () => {
+    userStore.logout()
+    router.push('/login')
+}
 </script>
 
 <template>
-    <div class="navbar">
-        <Hamburger :is-active="sidebar.opened" class="hamburger" @toggle-click="state.toggleSideBar" />
-        <BreadCrumb class="breadcrumb" />
+    <div class="navigation-bar">
+        <Hamburger :is-active="sidebar.opened" class="hamburger" @toggle-click="toggleSidebar" />
+        <Breadcrumb class="breadcrumb" />
         <div class="right-menu">
             <Screenfull v-if="showScreenfull" class="right-menu-item" />
             <ThemeSwitch v-if="showThemeSwitch" class="right-menu-item" />
@@ -49,13 +45,28 @@ const state = reactive({
                 <el-avatar :icon="UserFilled" :size="34" />
                 <template #dropdown>
                     <el-dropdown-menu>
-                        <a target="_blank" href="https://github.com/un-pany/v3-electron-vite">
-                            <el-dropdown-item>GitHub 地址</el-dropdown-item>
+                        <a target="_blank" href="https://juejin.cn/post/7089377403717287972">
+                            <el-dropdown-item>V3-Admin-Vite 中文文档</el-dropdown-item>
                         </a>
-                        <a target="_blank" href="https://gitee.com/un-pany/v3-electron-vite">
-                            <el-dropdown-item>Gitee 地址</el-dropdown-item>
+                        <a target="_blank" href="https://github.com/un-pany/v3-admin-vite">
+                            <el-dropdown-item>V3-Admin-Vite GitHub</el-dropdown-item>
                         </a>
-                        <el-dropdown-item divided @click="state.logout">
+                        <a target="_blank" href="https://gitee.com/un-pany/v3-admin-vite">
+                            <el-dropdown-item>V3-Admin-Vite Gitee</el-dropdown-item>
+                        </a>
+                        <a target="_blank" href="https://juejin.cn/post/6963876125428678693">
+                            <el-dropdown-item divided>V3-Admin 中文文档</el-dropdown-item>
+                        </a>
+                        <a target="_blank" href="https://github.com/un-pany/v3-admin/blob/master/README.en.md">
+                            <el-dropdown-item>V3-Admin English Docs</el-dropdown-item>
+                        </a>
+                        <a target="_blank" href="https://github.com/un-pany/v3-admin">
+                            <el-dropdown-item>V3-Admin GitHub</el-dropdown-item>
+                        </a>
+                        <a target="_blank" href="https://gitee.com/un-pany/v3-admin">
+                            <el-dropdown-item>V3-Admin Gitee</el-dropdown-item>
+                        </a>
+                        <el-dropdown-item divided @click="logout">
                             <span style="display: block">退出登录</span>
                         </el-dropdown-item>
                     </el-dropdown-menu>
@@ -66,8 +77,8 @@ const state = reactive({
 </template>
 
 <style lang="scss" scoped>
-.navbar {
-    height: 50px;
+.navigation-bar {
+    height: var(--v3-navigationbar-height);
     overflow: hidden;
     background: #fff;
     .hamburger {

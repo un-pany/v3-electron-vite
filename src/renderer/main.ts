@@ -1,24 +1,29 @@
-import { createApp, Directive } from 'vue'
+import { createApp } from 'vue'
+import type { Directive } from 'vue'
 import store from './store'
 import router from './router'
 import '@/router/permission'
 import App from './App.vue'
 import ElementPlus from 'element-plus'
-import 'element-plus/dist/index.css'
-import 'element-plus/theme-chalk/dark/css-vars.css'
 import loadSvg from '@/icons'
 import * as directives from '@/directives'
-import '@/styles/index.scss'
+
+import 'uno.css'
 import 'normalize.css'
+import 'element-plus/dist/index.css'
+import 'element-plus/theme-chalk/dark/css-vars.css'
+import '@/styles/index.scss'
 
 const app = createApp(App)
-/** element-plus 组件完整引入 */
+/** Element-Plus 组件完整引入 */
 app.use(ElementPlus)
-/** 加载全局 svg */
+/** 加载全局 SVG */
 loadSvg(app)
 /** 自定义指令 */
 Object.keys(directives).forEach((key) => {
     app.directive(key, (directives as { [key: string]: Directive })[key])
 })
+
+window.$logger.log('This is main.ts')
 
 app.use(store).use(router).mount('#app')

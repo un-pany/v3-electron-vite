@@ -2,18 +2,19 @@
 import { ref } from 'vue'
 import { Setting } from '@element-plus/icons-vue'
 
-defineProps({
+const props = defineProps({
     buttonTop: {
         type: Number,
         default: 250
     }
 })
 
+const buttonTopCss = props.buttonTop + 'px'
 const show = ref(false)
 </script>
 
 <template>
-    <div class="handle-button" :style="{ top: buttonTop + 'px' }" @click="show = true">
+    <div class="handle-button" @click="show = true">
         <el-icon :size="24">
             <Setting />
         </el-icon>
@@ -27,10 +28,10 @@ const show = ref(false)
 .handle-button {
     width: 48px;
     height: 48px;
-    background-color: #152d3d;
+    background-color: var(--v3-rightpanel-button-bg-color);
     position: absolute;
+    top: v-bind(buttonTopCss);
     right: 0px;
-    text-align: center;
     font-size: 24px;
     border-radius: 6px 0 0 6px !important;
     z-index: 10;

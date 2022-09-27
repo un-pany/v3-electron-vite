@@ -1,14 +1,10 @@
 <script lang="ts" setup>
 import { useRoute, useRouter } from 'vue-router'
 
-const { params, query } = useRoute()
-const { path } = params
+const route = useRoute()
+const router = useRouter()
 
-useRouter()
-    .replace({ path: '/' + path, query })
-    .catch((err) => {
-        console.warn(err)
-    })
+router.replace({ path: '/' + route.params.path, query: route.query })
 </script>
 
 <template>

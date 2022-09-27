@@ -1,6 +1,7 @@
 import { join, resolve } from 'path'
 import { defineConfig } from 'vite'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
+import UnoCSS from 'unocss/vite'
 import vue from '@vitejs/plugin-vue'
 import pkg from '../package.json'
 
@@ -10,6 +11,7 @@ export default defineConfig({
     root: join(__dirname, '../src/renderer'),
     plugins: [
         vue(),
+        UnoCSS(),
         /** SVG 插件 */
         createSvgIconsPlugin({
             // Specify the icon folder to be cached

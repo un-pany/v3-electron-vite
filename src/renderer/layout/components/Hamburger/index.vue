@@ -1,14 +1,16 @@
 <script lang="ts" setup>
 import { Expand, Fold } from '@element-plus/icons-vue'
 
-defineProps({
+const props = defineProps({
     isActive: {
         type: Boolean,
         default: false
     }
 })
 
-const emit = defineEmits(['toggle-click'])
+const emit = defineEmits<{
+    (e: 'toggle-click'): void
+}>()
 
 const toggleClick = () => {
     emit('toggle-click')
@@ -18,8 +20,8 @@ const toggleClick = () => {
 <template>
     <div @click="toggleClick">
         <el-icon :size="20" class="icon">
-            <fold v-if="isActive" />
-            <expand v-else />
+            <Fold v-if="props.isActive" />
+            <Expand v-else />
         </el-icon>
     </div>
 </template>

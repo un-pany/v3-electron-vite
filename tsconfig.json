@@ -22,6 +22,6 @@
             "@/*": ["src/renderer/*"]
         }
     },
-    "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "**/*.ts"]
+    "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "**/*.ts", "unocss.config.ts"]
     // "exclude": ["node_modules", "dist"]
 }

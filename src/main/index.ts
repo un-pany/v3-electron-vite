@@ -21,7 +21,7 @@ process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
 LOGGER.transports.file.format = '[{y}-{m}-{d} {h}:{i}:{s}.{ms}] [{level}]{scope} \n{text} \n'
 LOGGER.transports.file.maxSize = 10 * 1024 * 1024
 
-const isDev = process.env.NODE_ENV !== 'production'
+const isDev = import.meta.env.DEV
 
 // 变量
 let logo = ''
@@ -111,20 +111,20 @@ function createMainWindow() {
         webPreferences: {
             devTools: true, // 是否开启 DevTools, 如果设置为 false, 则无法使用 BrowserWindow.webContents.openDevTools()。 默认值为 true
             preload: preload, // 预先加载指定的脚本
-            contextIsolation: true, // 是否在独立 JavaScript 环境中运行 Electron API和指定的preload脚本，默认为 true
             webSecurity: false, // 当设置为 false, 将禁用同源策略
-            nodeIntegration: false, // 是否启用Node集成
+            nodeIntegration: true, // 是否启用Node集成
+            contextIsolation: true, // 是否在独立 JavaScript 环境中运行 Electron API和指定的preload脚本，默认为 true
             backgroundThrottling: false, // 是否在页面成为背景时限制动画和计时器，默认值为 true
-            nodeIntegrationInWorker: false // 是否在Web工作器中启用了Node集成
+            nodeIntegrationInWorker: true // 是否在Web工作器中启用了Node集成
         }
     }
     winMain = new BrowserWindow(options)
     winMain.setMenu(null)
     isDev ? winMain.loadURL(winURL) : winMain.loadFile(winURL)
     remote.enable(winMain.webContents) // 渲染进程中使用remote
-    if (isDev) {
-        winMain.webContents.openDevTools() // 显示调试工具
-    }
+    // if (isDev) {
+    winMain.webContents.openDevTools() // 显示调试工具
+    // }
 
     // 初始化完成后显示
     winMain.on('ready-to-show', () => {

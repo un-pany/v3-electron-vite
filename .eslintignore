@@ -7,3 +7,4 @@ dist-ssr
 *.local
 build
 release
+.npmrc

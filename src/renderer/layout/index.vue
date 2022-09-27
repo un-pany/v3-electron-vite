@@ -1,25 +1,22 @@
 <script lang="ts" setup>
-import { computed, onBeforeMount, onBeforeUnmount, onMounted, reactive } from 'vue'
+import { computed } from 'vue'
 import { useAppStore, DeviceType } from '@/store/modules/app'
 import { useSettingsStore } from '@/store/modules/settings'
 import { AppMain, NavigationBar, Settings, Sidebar, TagsView, RightPanel } from './components'
-import useResize from './useResize'
+import useResize from './hooks/useResize'
 
 const appStore = useAppStore()
 const settingsStore = useSettingsStore()
-const { sidebar, device, addEventListenerOnResize, resizeMounted, removeEventListenerResize, watchRouter } = useResize()
 
-const state = reactive({
-    handleClickOutside: () => {
-        appStore.closeSidebar(false)
-    }
-})
+/** Layout 布局响应式 */
+useResize()
+
 const classObj = computed(() => {
     return {
-        hideSidebar: !sidebar.value.opened,
-        openSidebar: sidebar.value.opened,
-        withoutAnimation: sidebar.value.withoutAnimation,
-        mobile: device.value === DeviceType.Mobile
+        hideSidebar: !appStore.sidebar.opened,
+        openSidebar: appStore.sidebar.opened,
+        withoutAnimation: appStore.sidebar.withoutAnimation,
+        mobile: appStore.device === DeviceType.Mobile
     }
 })
 const showSettings = computed(() => {
@@ -31,22 +28,14 @@ const showTagsView = computed(() => {
 const fixedHeader = computed(() => {
     return settingsStore.fixedHeader
 })
-
-watchRouter()
-onBeforeMount(() => {
-    addEventListenerOnResize()
-})
-onMounted(() => {
-    resizeMounted()
-})
-onBeforeUnmount(() => {
-    removeEventListenerResize()
-})
+const handleClickOutside = () => {
+    appStore.closeSidebar(false)
+}
 </script>
 
 <template>
     <div :class="classObj" class="app-wrapper">
-        <div v-if="classObj.mobile && sidebar.opened" class="drawer-bg" @click="state.handleClickOutside" />
+        <div v-if="classObj.mobile && classObj.openSidebar" class="drawer-bg" @click="handleClickOutside" />
         <Sidebar class="sidebar-container" />
         <div :class="{ hasTagsView: showTagsView }" class="main-container">
             <div :class="{ 'fixed-header': fixedHeader }">
@@ -63,7 +52,6 @@ onBeforeUnmount(() => {
 
 <style lang="scss" scoped>
 @import '@/styles/mixins.scss';
-$sideBarWidth: 220px;
 
 .app-wrapper {
     @include clearfix;
@@ -72,7 +60,7 @@ $sideBarWidth: 220px;
 }
 
 .drawer-bg {
-    background: #000;
+    background-color: #000;
     opacity: 0.3;
     width: 100%;
     top: 0;
@@ -84,16 +72,16 @@ $sideBarWidth: 220px;
 .main-container {
     min-height: 100%;
     transition: margin-left 0.28s;
-    margin-left: $sideBarWidth;
+    margin-left: var(--v3-sidebar-width);
     position: relative;
 }
 
 .sidebar-container {
     transition: width 0.28s;
-    width: $sideBarWidth !important;
+    width: var(--v3-sidebar-width) !important;
     height: 100%;
     position: fixed;
-    font-size: 0;
+    font-size: 0px;
     top: 0;
     bottom: 0;
     left: 0;
@@ -106,30 +94,30 @@ $sideBarWidth: 220px;
     top: 0;
     right: 0;
     z-index: 9;
-    width: calc(100% - #{$sideBarWidth});
+    width: calc(100% - var(--v3-sidebar-width));
     transition: width 0.28s;
 }
 
 .hideSidebar {
     .main-container {
-        margin-left: 54px;
+        margin-left: var(--v3-sidebar-hide-width);
     }
     .sidebar-container {
-        width: 54px !important;
+        width: var(--v3-sidebar-hide-width) !important;
     }
     .fixed-header {
-        width: calc(100% - 54px);
+        width: calc(100% - var(--v3-sidebar-hide-width));
     }
 }
 
 // for mobile response 适配移动端
 .mobile {
     .main-container {
-        margin-left: 0;
+        margin-left: 0px;
     }
     .sidebar-container {
         transition: transform 0.28s;
-        width: $sideBarWidth !important;
+        width: var(--v3-sidebar-width) !important;
     }
     &.openSidebar {
         position: fixed;
@@ -139,7 +127,7 @@ $sideBarWidth: 220px;
         .sidebar-container {
             pointer-events: none;
             transition-duration: 0.3s;
-            transform: translate3d(-$sideBarWidth, 0, 0);
+            transform: translate3d(calc(0px - var(--v3-sidebar-width)), 0, 0);
         }
     }
 
