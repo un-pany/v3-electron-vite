@@ -29,6 +29,5 @@ lerna-debug.log*
 *.sln
 *.sw?
 
-# Use the PNPM
+# Use the Yarn
 package-lock.json
-yarn.lock
