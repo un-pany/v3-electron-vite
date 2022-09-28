@@ -17,6 +17,9 @@ cd v3-electron-vite
 # install dependency
 yarn
 
+# initialize husky
+yarn prepare
+
 # develop
 yarn dev
 
@@ -68,42 +71,41 @@ yarn lint
 
 #### 推荐所有的 NodeJs、Electron API 通过 `preload-script` 注入到 渲染进程中，例如：
 
--   **src/preload/index.ts**
+- **src/preload/index.ts**
 
-    ```typescript
-    import { contextBridge, ipcRenderer } from 'electron'
+  ```typescript
+  import { contextBridge, ipcRenderer } from "electron"
 
-    // --------- Expose some API to Renderer process. ---------
-    contextBridge.exposeInMainWorld('$ipcRenderer', withPrototype(ipcRenderer))
-    ```
+  // --------- Expose some API to Renderer process. ---------
+  contextBridge.exposeInMainWorld("$ipcRenderer", withPrototype(ipcRenderer))
+  ```
 
--   **src/renderer/@types/shims-vue.d.ts**
+- **src/renderer/@types/shims-vue.d.ts**
 
-    ```typescript
-    interface Window {
-        $ipcRenderer: typeof import('electron')['ipcRenderer']
-    }
-    ```
+  ```typescript
+  interface Window {
+    $ipcRenderer: typeof import("electron")["ipcRenderer"]
+  }
+  ```
 
 ## Git 提交规范
 
--   `feat` 增加新功能
--   `fix` 修复问题/BUG
--   `style` 代码风格相关无影响运行结果的
--   `perf` 优化/性能提升
--   `refactor` 重构
--   `revert` 撤销修改
--   `test` 测试相关
--   `docs` 文档/注释
--   `chore` 依赖更新/脚手架配置修改等
--   `workflow` 工作流改进
--   `ci` 持续集成
--   `types` 类型定义文件更改
--   `wip` 开发中
--   `mod` 不确定分类的修改
+- `feat` 增加新的业务功能
+- `fix` 修复业务问题/BUG
+- `perf` 优化性能
+- `style` 更改代码风格, 不影响运行结果
+- `refactor` 重构代码
+- `revert` 撤销更改
+- `test` 测试相关, 不涉及业务代码的更改
+- `docs` 文档和注释相关
+- `chore` 更新依赖/修改脚手架配置等琐事
+- `workflow` 工作流改进
+- `ci` 持续集成相关
+- `types` 类型定义文件更改
+- `wip` 开发中
 
 ## 站在巨人的肩膀上
 
--   [electron-vue-vite](https://github.com/caoxiemeihao/electron-vue-vite)
--   [electron-vue-admin](https://github.com/PanJiaChen/electron-vue-admin)
--   [fast-vue3](https://github.com/study-vue3/fast-vue3)
+- [electron-vite-vue](https://github.com/electron-vite/electron-vite-vue)
+- [electron-vue-admin](https://github.com/PanJiaChen/electron-vue-admin)
+- [fast-vue3](https://github.com/study-vue3/fast-vue3)

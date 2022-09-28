@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { useAppStore } from '@/store/modules/app'
-import zhCn from 'element-plus/lib/locale/lang/zh-cn'
+import { useAppStore } from "@/store/modules/app"
+import zhCn from "element-plus/lib/locale/lang/zh-cn"
 
 const appStore = useAppStore()
 
@@ -11,7 +11,7 @@ const locale = zhCn
 </script>
 
 <template>
-    <ElConfigProvider :locale="locale">
-        <router-view />
-    </ElConfigProvider>
+  <ElConfigProvider :locale="locale">
+    <router-view />
+  </ElConfigProvider>
 </template>
