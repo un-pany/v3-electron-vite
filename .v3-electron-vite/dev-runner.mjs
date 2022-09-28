@@ -23,7 +23,7 @@ function watchMain() {
   }
   return build({
     mode: process.env.NODE_ENV,
-    configFile: ".electron-vue/vite-main.config.ts",
+    configFile: ".v3-electron-vite/vite-main.config.ts",
     plugins: [startElectron],
     build: { watch: {} }
   })
@@ -36,7 +36,7 @@ function watchPreload(server) {
   console.log(TAG, "preload")
   return build({
     mode: process.env.NODE_ENV,
-    configFile: ".electron-vue/vite-preload.config.ts",
+    configFile: ".v3-electron-vite/vite-preload.config.ts",
     plugins: [
       {
         name: "electron-preload-watcher",
@@ -52,7 +52,7 @@ function watchPreload(server) {
 cfonts.say("v3-electron-vite", { colors: ["yellow"], font: "simple3d" })
 
 // bootstrap
-const server = await createServer({ configFile: ".electron-vue/vite-renderer.config.ts" })
+const server = await createServer({ configFile: ".v3-electron-vite/vite-renderer.config.ts" })
 
 await server.listen()
 await watchPreload(server)
