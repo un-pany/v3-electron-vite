@@ -105,7 +105,7 @@ function createMainWindow() {
     frame: true, // 是否有边框
     center: true, // 是否在屏幕居中
     resizable: true, // 是否允许拉伸大小
-    fullscreenable: false, // 是否允许全屏
+    fullscreenable: true, // 是否允许全屏，为false则插件screenfull不起作用
     autoHideMenuBar: false, // 自动隐藏菜单栏, 除非按了Alt键, 默认值为 false
     backgroundColor: "#fff", // 背景颜色为十六进制值
     webPreferences: {
