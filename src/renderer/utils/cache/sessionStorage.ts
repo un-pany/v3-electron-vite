@@ -10,5 +10,5 @@ export const setToken = (token: string) => {
   sessionStorage.setItem(CacheKey.TOKEN, token)
 }
 export const removeToken = () => {
-  sessionStorage.remove(CacheKey.TOKEN)
+  sessionStorage.removeItem(CacheKey.TOKEN)
 }
