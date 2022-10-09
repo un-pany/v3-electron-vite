@@ -1,6 +1,7 @@
 import { join, resolve } from "path"
 import { defineConfig } from "vite"
 import { createSvgIconsPlugin } from "vite-plugin-svg-icons"
+import svgLoader from "vite-svg-loader"
 import UnoCSS from "unocss/vite"
 import vue from "@vitejs/plugin-vue"
 import pkg from "../package.json"
@@ -11,6 +12,8 @@ export default defineConfig({
   root: join(__dirname, "../src/renderer"),
   plugins: [
     vue(),
+    /** 将 SVG 静态图转化为 Vue 组件 */
+    svgLoader(),
     UnoCSS(),
     /** SVG 插件 */
     createSvgIconsPlugin({
@@ -79,6 +82,8 @@ export default defineConfig({
     }
   },
   server: {
+    /** 是否自动打开浏览器 */
+    open: false, // true false
     host: pkg.env.host,
     port: pkg.env.port
   }

@@ -18,6 +18,21 @@ export const constantRoutes: RouteRecordRaw[] = [
     ]
   },
   {
+    path: "/403",
+    component: () => import("@/views/error-page/403.vue"),
+    meta: {
+      hidden: true
+    }
+  },
+  {
+    path: "/404",
+    component: () => import("@/views/error-page/404.vue"),
+    meta: {
+      hidden: true
+    },
+    alias: "/:pathMatch(.*)*"
+  },
+  {
     path: "/login",
     component: () => import("@/views/login/index.vue"),
     meta: {
@@ -35,7 +50,7 @@ export const constantRoutes: RouteRecordRaw[] = [
         name: "Dashboard",
         meta: {
           title: "首页",
-          icon: "dashboard",
+          svgIcon: "dashboard",
           affix: true
         }
       }
@@ -52,7 +67,7 @@ export const constantRoutes: RouteRecordRaw[] = [
         name: "UnoCSS",
         meta: {
           title: "unocss",
-          icon: "unocss"
+          svgIcon: "unocss"
         }
       }
     ]
@@ -67,7 +82,7 @@ export const constantRoutes: RouteRecordRaw[] = [
         name: "Link",
         meta: {
           title: "外链",
-          icon: "link"
+          svgIcon: "link"
         }
       }
     ]
@@ -79,7 +94,7 @@ export const constantRoutes: RouteRecordRaw[] = [
     name: "Menu",
     meta: {
       title: "多级菜单",
-      icon: "menu"
+      svgIcon: "menu"
     },
     children: [
       {
@@ -87,32 +102,42 @@ export const constantRoutes: RouteRecordRaw[] = [
         component: () => import("@/views/menu/menu1/index.vue"),
         redirect: "/menu/menu1/menu1-1",
         name: "Menu1",
-        meta: { title: "menu1" },
+        meta: {
+          title: "menu1"
+        },
         children: [
           {
             path: "menu1-1",
             component: () => import("@/views/menu/menu1/menu1-1/index.vue"),
             name: "Menu1-1",
-            meta: { title: "menu1-1" }
+            meta: {
+              title: "menu1-1"
+            }
           },
           {
             path: "menu1-2",
             component: () => import("@/views/menu/menu1/menu1-2/index.vue"),
             redirect: "/menu/menu1/menu1-2/menu1-2-1",
             name: "Menu1-2",
-            meta: { title: "menu1-2" },
+            meta: {
+              title: "menu1-2"
+            },
             children: [
               {
                 path: "menu1-2-1",
                 component: () => import("@/views/menu/menu1/menu1-2/menu1-2-1/index.vue"),
                 name: "Menu1-2-1",
-                meta: { title: "menu1-2-1" }
+                meta: {
+                  title: "menu1-2-1"
+                }
               },
               {
                 path: "menu1-2-2",
                 component: () => import("@/views/menu/menu1/menu1-2/menu1-2-2/index.vue"),
                 name: "Menu1-2-2",
-                meta: { title: "menu1-2-2" }
+                meta: {
+                  title: "menu1-2-2"
+                }
               }
             ]
           },
@@ -120,7 +145,9 @@ export const constantRoutes: RouteRecordRaw[] = [
             path: "menu1-3",
             component: () => import("@/views/menu/menu1/menu1-3/index.vue"),
             name: "Menu1-3",
-            meta: { title: "menu1-3" }
+            meta: {
+              title: "menu1-3"
+            }
           }
         ]
       },
@@ -128,7 +155,9 @@ export const constantRoutes: RouteRecordRaw[] = [
         path: "menu2",
         component: () => import("@/views/menu/menu2/index.vue"),
         name: "Menu2",
-        meta: { title: "menu2" }
+        meta: {
+          title: "menu2"
+        }
       }
     ]
   }
@@ -147,7 +176,7 @@ export const asyncRoutes: RouteRecordRaw[] = [
     name: "Permission",
     meta: {
       title: "权限管理",
-      icon: "lock",
+      svgIcon: "lock",
       roles: ["admin", "editor"], // 可以在根路由中设置角色
       alwaysShow: true // 将始终显示根菜单
     },
@@ -172,38 +201,17 @@ export const asyncRoutes: RouteRecordRaw[] = [
     ]
   },
   {
-    path: "/:pathMatch(.*)*", // 必须将 'ErrorPage' 路由放在最后, Must put the 'ErrorPage' route at the end
-    component: Layout,
+    path: "/:pathMatch(.*)*", // Must put the 'ErrorPage' route at the end, 必须将 'ErrorPage' 路由放在最后
     redirect: "/404",
     name: "ErrorPage",
     meta: {
-      title: "错误页面",
-      icon: "404",
       hidden: true
-    },
-    children: [
-      {
-        path: "403",
-        component: () => import("@/views/error-page/403.vue"),
-        name: "403",
-        meta: {
-          title: "403"
-        }
-      },
-      {
-        path: "404",
-        component: () => import("@/views/error-page/404.vue"),
-        name: "404",
-        meta: {
-          title: "404"
-        }
-      }
-    ]
+    }
   }
 ]
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes: constantRoutes
 })
 
