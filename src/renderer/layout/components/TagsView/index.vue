@@ -1,9 +1,7 @@
 <script lang="ts" setup>
 import { getCurrentInstance, onMounted, ref, watch } from "vue"
-import { useRoute, useRouter } from "vue-router"
-import type { RouteRecordRaw } from "vue-router"
-import { useTagsViewStore } from "@/store/modules/tags-view"
-import type { ITagView } from "@/store/modules/tags-view"
+import { type RouteRecordRaw, useRoute, useRouter } from "vue-router"
+import { type ITagView, useTagsViewStore } from "@/store/modules/tags-view"
 import { usePermissionStore } from "@/store/modules/permission"
 import ScrollPane from "./ScrollPane.vue"
 import path from "path-browserify"
@@ -198,6 +196,7 @@ onMounted(() => {
       height: 26px;
       line-height: 26px;
       border: 1px solid var(--v3-tagsview-tag-border-color);
+      border-radius: var(--v3-tagsview-tag-border-radius);
       color: var(--v3-tagsview-tag-text-color);
       background-color: var(--v3-tagsview-tag-bg-color);
       padding: 0 8px;
@@ -205,10 +204,10 @@ onMounted(() => {
       margin-left: 5px;
       margin-top: 4px;
       &:first-of-type {
-        margin-left: 15px;
+        margin-left: 5px;
       }
       &:last-of-type {
-        margin-right: 15px;
+        margin-right: 5px;
       }
       &.active {
         background-color: var(--v3-tagsview-tag-active-bg-color);
