@@ -15,11 +15,6 @@ import "element-plus/dist/index.css"
 import "element-plus/theme-chalk/dark/css-vars.css"
 import "@/styles/index.scss"
 
-window.$IsWeb = window.navigator.userAgent.includes("Electron")
-if (window.$IsWeb) {
-  window.$logger.log("This is main.ts \n")
-}
-
 const app = createApp(App)
 
 /** 加载插件 */
@@ -30,3 +25,12 @@ loadSvg(app)
 loadDirectives(app)
 
 app.use(store).use(router).mount("#app")
+
+/** 是否以浏览器打开 */
+window.$IsWeb = !window.navigator.userAgent.includes("Electron")
+
+if (import.meta.env.DEV) {
+  const style1 = "color: #fff; background: #41b883; padding: 4px; border-radius: 4px;"
+  const style2 = "color: #fff; background: #409EFF; padding: 4px 8px; border-radius: 4px;"
+  console.log(`%c Hi! %c${document.title}`, style1, style2, window.origin)
+}
