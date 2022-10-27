@@ -34,5 +34,5 @@ window.$IsWeb = !window.navigator.userAgent.includes("Electron")
 if (import.meta.env.DEV) {
   const style1 = "color: #fff; background: #41b883; padding: 4px; border-radius: 4px;"
   const style2 = "color: #fff; background: #409EFF; padding: 4px 8px; border-radius: 4px;"
-  console.log(`%c Hi! %c${document.title}`, style1, style2, window.origin)
+  console.log(`%c Hi! %c${document.title}`, style1, style2)
 }

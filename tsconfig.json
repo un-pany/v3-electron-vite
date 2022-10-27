@@ -20,9 +20,17 @@
       "element-plus/global"
     ],
     "paths": {
-      "@/*": ["src/renderer/*"]
+      "@/*": ["src/*"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "**/*.ts", "unocss.config.ts"]
+  "include": [
+    "electron/**/*.ts",
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "**/*.ts",
+    "unocss.config.ts"
+  ]
   // "exclude": ["node_modules", "dist"]
 }
