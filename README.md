@@ -15,28 +15,28 @@ renderer 渲染进程中源码来自 [v3-admin-vite](https://github.com/un-pany/
 cd v3-electron-vite
 
 # install dependency
-yarn
+pnpm i
 
 # initialize husky
-yarn prepare
+pnpm prepare
 
 # develop
-yarn dev
+pnpm dev
 
 # build
-yarn build
+pnpm build
 
 # build dir
-yarn build:dir
+pnpm build:dir
 
 # update dependencies
-yarn upgrade-interactive --latest
+pnpm up --latest
 ```
 
 ## 代码格式检查
 
 ```bash
-yarn lint
+pnpm lint
 ```
 
 ## 目录结构
@@ -45,8 +45,8 @@ yarn lint
 
 ```tree
 ├── .v3-electron-vite
-├   ├── build.mjs                    项目构建脚本，对应 yarn build
-├   ├── dev-runner.mjs               项目开发脚本，对应 yarn dev
+├   ├── build.mjs                    项目构建脚本，对应 pnpm build
+├   ├── dev-runner.mjs               项目开发脚本，对应 pnpm dev
 ├   ├── vite-main.config.ts          主进程配置文件，编译 src/main
 ├   ├── vite-preload.config.ts       预加载脚本配置文件，编译 src/preload
 ├   ├── vite-renderer.config.ts      渲染进程配置文件，编译 src/renderer
