@@ -26,7 +26,7 @@
     "afterSign": "build/notarize.js"
   },
   "scripts": {
-    "dev": "vite --host",
+    "dev": "vite",
     "build": "vite build && electron-builder",
     "build:dir": "vite build && electron-builder --dir",
     "lint:eslint": "eslint --cache --max-warnings 0 \"src/**/*.{vue,js,ts,tsx}\" --fix",
@@ -99,7 +99,6 @@
     "path-browserify": "^1.0.1",
     "path-to-regexp": "^6.2.1",
     "pinia": "^2.0.23",
-    "pinia-plugin-persist": "^1.0.0",
     "screenfull": "^6.0.2",
     "vue": "^3.2.41",
     "vue-router": "^4.1.6",
@@ -129,10 +128,9 @@
     "sass": "^1.55.0",
     "terser": "^5.15.1",
     "typescript": "^4.8.4",
-    "unocss": "^0.46.0",
+    "unocss": "^0.46.1",
     "vite": "^3.2.0",
     "vite-electron-plugin": "^0.4.6",
-    "vite-plugin-electron-renderer": "^0.10.2",
     "vite-plugin-svg-icons": "^2.0.1",
     "vite-svg-loader": "^3.6.0",
     "vue-eslint-parser": "^9.1.0",

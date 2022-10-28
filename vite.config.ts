@@ -7,7 +7,6 @@ import UnoCSS from "unocss/vite"
 import vueJsx from "@vitejs/plugin-vue-jsx"
 import svgLoader from "vite-svg-loader"
 import electron from "vite-electron-plugin"
-import renderer from "vite-plugin-electron-renderer"
 import pkg from "./package.json"
 
 /** 清空dist */
@@ -42,10 +41,6 @@ export default defineConfig({
       transformOptions: {
         sourcemap: false
       }
-    }),
-    // Use Node.js API in the Renderer-process
-    renderer({
-      nodeIntegration: false
     })
   ],
   resolve: {
@@ -68,33 +63,35 @@ export default defineConfig({
         }
       ]
     }
+  },
+  build: {
+    // emptyOutDir: true,
+    /** 打包后静态资源目录 */
+    // assetsDir: "",
+    /** 消除打包大小超过 500kb 警告 */
+    chunkSizeWarningLimit: 2000,
+    /** vite 2.6.x 以上需要配置 minify: terser，terserOptions 才能生效 */
+    minify: "terser",
+    /** 在 build 代码时移除 console.log、debugger 和 注释 */
+    terserOptions: {
+      compress: {
+        drop_console: false,
+        drop_debugger: true,
+        pure_funcs: ["console.log"]
+      },
+      output: {
+        /** 删除注释 */
+        comments: false
+      }
+    },
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes("node_modules")) {
+            return id.toString().split("node_modules/")[1].split("/")[0].toString()
+          }
+        }
+      }
+    }
   }
-  // build: {
-  //   // emptyOutDir: true,
-  //   /** 消除打包大小超过 500kb 警告 */
-  //   chunkSizeWarningLimit: 1000,
-  //   /** vite 2.6.x 以上需要配置 minify: terser，terserOptions 才能生效 */
-  //   minify: "terser",
-  //   /** 在 build 代码时移除 console.log、debugger 和 注释 */
-  //   terserOptions: {
-  //     compress: {
-  //       drop_console: false,
-  //       drop_debugger: true,
-  //       pure_funcs: ["console.log"]
-  //     },
-  //     output: {
-  //       /** 删除注释 */
-  //       comments: false
-  //     }
-  //   },
-  //   rollupOptions: {
-  //     output: {
-  //       manualChunks(id) {
-  //         if (id.includes("node_modules")) {
-  //           return id.toString().split("node_modules/")[1].split("/")[0].toString()
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
 })

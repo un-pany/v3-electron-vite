@@ -29,7 +29,7 @@ pnpm build
 # build dir
 pnpm build:dir
 
-# update dependencies
+# update all dependencies
 pnpm up --latest
 ```
 
@@ -41,52 +41,22 @@ pnpm lint
 
 ## 目录结构
 
-一旦启动或打包脚本执行过，会在根目录产生 **`dist` 文件夹，里面的文件夹同 `src` 一模一样**；在使用一些路径计算时，尤其是相对路径计算；`dist` 与 `src` 里面保持相同的目录结构能避开好多问题.
-
 ```tree
-├── .v3-electron-vite
-├   ├── build.mjs                    项目构建脚本，对应 pnpm build
-├   ├── dev-runner.mjs               项目开发脚本，对应 pnpm dev
-├   ├── vite-main.config.ts          主进程配置文件，编译 src/main
-├   ├── vite-preload.config.ts       预加载脚本配置文件，编译 src/preload
-├   ├── vite-renderer.config.ts      渲染进程配置文件，编译 src/renderer
-├
-├── dist                             构建后，根据 src 目录生成
+├── dist                构建后，根据 src 目录生成
 ├   ├── main
 ├   ├── preload
-├   ├── renderer
 ├
-├── src
-├   ├── main                         主进程源码
-├   ├── preload                      预加载脚本源码
-├   ├── renderer                     渲染进程源码
+├── electron
+├   ├── main            主进程源码
+├   ├   ├── index.ts
+├   ├── preload         预加载脚本源码
+├   ├   ├── index.ts
 ├
-├── static                           静态资源
-├   ├── icons                        系统图标
+├── src                 渲染进程源码
+├
+├── static              静态资源
+├   ├── icons           系统图标
 ```
-
-## 渲染进程使用 Node API
-
-> 🚧 因为安全的原因 Electron 默认不支持在 渲染进程 中使用 NodeJs API
-
-#### 推荐所有的 NodeJs、Electron API 通过 `preload-script` 注入到 渲染进程中，例如：
-
-- **src/preload/index.ts**
-
-  ```typescript
-  import { contextBridge, ipcRenderer } from "electron"
-
-  // --------- Expose some API to Renderer process. ---------
-  contextBridge.exposeInMainWorld("$ipcRenderer", withPrototype(ipcRenderer))
-  ```
-
-- **src/renderer/@types/shims-vue.d.ts**
-
-  ```typescript
-  interface Window {
-    $ipcRenderer: typeof import("electron")["ipcRenderer"]
-  }
-  ```
 
 ## Git 提交规范
 
