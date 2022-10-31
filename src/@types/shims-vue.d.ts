@@ -13,7 +13,6 @@ declare module 'virtual:*' {
 }
 
 interface Window {
-    $IsWeb: Boolean
     $fs: typeof import('fs')
     $logger: typeof import('electron-log')
     $remote: typeof import('@electron/remote')

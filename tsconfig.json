@@ -24,7 +24,7 @@
     }
   },
   "include": [
-    "electron/**/*.ts",
+    "script/**/*.ts",
     "src/**/*.ts",
     "src/**/*.d.ts",
     "src/**/*.tsx",

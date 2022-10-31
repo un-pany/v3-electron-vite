@@ -20,7 +20,7 @@ cd v3-electron-vite
 # 安装依赖
 pnpm i
 
-# initialize husky
+# 初始化 husky
 pnpm prepare
 
 # 启动服务
@@ -53,7 +53,7 @@ pnpm lint
 ├   ├── main
 ├   ├── preload
 ├
-├── electron
+├── script
 ├   ├── main            主进程源码
 ├   ├   ├── index.ts
 ├   ├── preload         预加载脚本源码
@@ -64,6 +64,29 @@ pnpm lint
 ├── static              静态资源
 ├   ├── icons           系统图标
 ```
+
+## 渲染进程使用 Node API
+
+> 🚧 因为安全的原因 Electron 默认不支持在 渲染进程 中使用 NodeJs API
+
+#### 推荐所有的 NodeJs、Electron API 通过 `preload-script` 注入到 渲染进程中，例如：
+
+- **src/preload/index.ts**
+
+  ```typescript
+  import { contextBridge, ipcRenderer } from "electron"
+
+  // --------- Expose some API to Renderer process. ---------
+  contextBridge.exposeInMainWorld("$ipcRenderer", withPrototype(ipcRenderer))
+  ```
+
+- **src/@types/shims-vue.d.ts**
+
+  ```typescript
+  interface Window {
+    $ipcRenderer: typeof import("electron")["ipcRenderer"]
+  }
+  ```
 
 ## Git 提交规范
 

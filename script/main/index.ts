@@ -1,8 +1,9 @@
 import PATH from "path"
 import PKG from "../../package.json"
 import LOGGER from "electron-log"
-// import remote from "@electron/remote/main"
-import { app, BrowserWindow, Tray, Menu, globalShortcut } from "electron"
+import { app, BrowserWindow, Tray, Menu, globalShortcut, ipcMain } from "electron"
+const remote = require("@electron/remote/main")
+remote.initialize() // 初始化
 
 // 必要的全局错误捕获
 process.on("uncaughtException", (error) => {
@@ -29,10 +30,10 @@ let tray: Tray | null = null // 托盘
 let winURL = "" // 加载 url
 let winMain: BrowserWindow | null = null // 主窗口
 const loginSize = { width: 1200, height: 800 }
-const preload: string = PATH.join(__dirname, "../preload/index.cjs") // 预加载脚本
+const preload: string = PATH.join(__dirname, "../preload/index.js") // 预加载脚本
 
 // 全局变量
-// global.title = PKG.env.title
+global.version = PKG.version
 
 // 应用 单例
 if (app.requestSingleInstanceLock()) {
@@ -48,7 +49,8 @@ if (app.requestSingleInstanceLock()) {
  ------------------------------------------------------------------ ----------------------------------------------------------------------------------------
 */
 
-// 启动应用
+//#region
+/** 启动应用 */
 function startApp() {
   // 初始化 变量
   const ext = process.platform === "darwin" ? "icns" : "ico"
@@ -64,11 +66,9 @@ function startApp() {
     winURL = PATH.join(__dirname, "../index.html")
   }
 
-  // // 初始化 remote
-  // remote.initialize()
-
   // electron 初始化完成
   app.whenReady().then(() => {
+    monitorRenderer()
     createMainWindow()
     setShortcut()
   })
@@ -80,8 +80,7 @@ function startApp() {
 
   // app.commandLine.appendSwitch('ignore-certificate-errors')
 }
-
-// 注册快捷键
+/** 注册快捷键 */
 function setShortcut() {
   // 显示调试工具
   globalShortcut.register("CommandOrControl+D", () => {
@@ -92,8 +91,17 @@ function setShortcut() {
     }
   })
 }
+/** 监听渲染进程 */
+function monitorRenderer() {
+  /** 获取应用标题 */
+  ipcMain.on("query_title", () => {
+    winMain && winMain.webContents.send("get_title", PKG.env.title)
+  })
+}
+//#endregion
 
-// 创建 主窗口
+//#region 主窗口+托盘
+/** 创建 主窗口 */
 function createMainWindow() {
   if (winMain) return
   // 配置
@@ -113,10 +121,10 @@ function createMainWindow() {
     backgroundColor: "#fff", // 背景颜色为十六进制值
     webPreferences: {
       devTools: true, // 是否开启 DevTools, 如果设置为 false, 则无法使用 BrowserWindow.webContents.openDevTools()。 默认值为 true
-      // preload: preload, // 预先加载指定的脚本
+      preload: preload, // 预先加载指定的脚本
       webSecurity: false, // 当设置为 false, 将禁用同源策略
       nodeIntegration: true, // 是否启用Node集成
-      contextIsolation: false, // 是否在独立 JavaScript 环境中运行 Electron API和指定的preload脚本，默认为 true
+      contextIsolation: true, // 是否在独立 JavaScript 环境中运行 Electron API和指定的preload脚本，默认为 true
       backgroundThrottling: false, // 是否在页面成为背景时限制动画和计时器，默认值为 true
       nodeIntegrationInWorker: true // 是否在Web工作器中启用了Node集成
     }
@@ -124,7 +132,7 @@ function createMainWindow() {
   winMain = new BrowserWindow(options)
   winMain.setMenu(null)
   isDev ? winMain.loadURL(winURL) : winMain.loadFile(winURL)
-  // remote.enable(winMain.webContents) // 渲染进程中使用remote
+  remote.enable(winMain.webContents)
   // if (isDev) {
   winMain.webContents.openDevTools() // 显示调试工具
   // }
@@ -140,16 +148,14 @@ function createMainWindow() {
     winMain = null
   })
 }
-
-// 显示 主窗口
+/** 显示 主窗口 */
 function showMainWindow() {
   if (!winMain) return
   winMain.show()
   winMain.focus()
-  winMain.setAlwaysOnTop(true)
-  winMain.setAlwaysOnTop(false)
+  // winMain.setAlwaysOnTop(true)
+  // winMain.setAlwaysOnTop(false)
 }
-
 /** 创建 系统托盘 */
 function createTray() {
   if (tray) return
@@ -170,3 +176,4 @@ function createTray() {
   // tray.on('click', showMainWindow)
   tray.on("double-click", showMainWindow)
 }
+//#endregion

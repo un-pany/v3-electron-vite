@@ -37,7 +37,7 @@ export default defineConfig({
     }),
     electron({
       outDir: "dist",
-      include: ["electron"],
+      include: ["script"],
       transformOptions: {
         sourcemap: false
       }
