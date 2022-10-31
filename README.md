@@ -2,35 +2,42 @@
 
 🥳 `Electron` + `Vue3` + `Vite` + `Pinia` + `Element-Plus` + `TypeScript`.
 
-renderer 渲染进程中源码来自 [v3-admin-vite](https://github.com/un-pany/v3-admin-vite).
+src 渲染进程中源码来自 [v3-admin-vite](https://github.com/un-pany/v3-admin-vite).
 
 ## 运行项目
 
 ```bash
-# config
+# 配置
 1. 安装 .vscode 中推荐的插件
 2. node 版本 16+
 
-# enter the project directory
+# 克隆项目
+git clone https://github.com/un-pany/v3-electron-vite.git
+
+# 进入项目目录
 cd v3-electron-vite
 
-# install dependency
+# 安装依赖
 pnpm i
 
 # initialize husky
 pnpm prepare
 
-# develop
+# 启动服务
 pnpm dev
 
-# build
+# 升级所有依赖
+pnpm up --latest
+```
+
+## 打包
+
+```bash
+# 打包成安装程序
 pnpm build
 
-# build dir
+# 打包成解压后的目录
 pnpm build:dir
-
-# update all dependencies
-pnpm up --latest
 ```
 
 ## 代码格式检查
@@ -42,7 +49,7 @@ pnpm lint
 ## 目录结构
 
 ```tree
-├── dist                构建后，根据 src 目录生成
+├── dist                构建后
 ├   ├── main
 ├   ├── preload
 ├
