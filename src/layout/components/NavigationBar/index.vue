@@ -9,6 +9,7 @@ import Breadcrumb from "../Breadcrumb/index.vue"
 import Hamburger from "../Hamburger/index.vue"
 import ThemeSwitch from "@/components/ThemeSwitch/index.vue"
 import Screenfull from "@/components/Screenfull/index.vue"
+import Notify from "@/components/Notify/index.vue"
 
 const router = useRouter()
 const appStore = useAppStore()
@@ -17,6 +18,9 @@ const userStore = useUserStore()
 
 const sidebar = computed(() => {
   return appStore.sidebar
+})
+const showNotify = computed(() => {
+  return settingsStore.showNotify
 })
 const showThemeSwitch = computed(() => {
   return settingsStore.showThemeSwitch
@@ -41,30 +45,22 @@ const logout = () => {
     <div class="right-menu">
       <Screenfull v-if="showScreenfull" class="right-menu-item" />
       <ThemeSwitch v-if="showThemeSwitch" class="right-menu-item" />
+      <Notify v-if="showNotify" class="right-menu-item" />
       <el-dropdown class="right-menu-item">
-        <el-avatar :icon="UserFilled" :size="34" />
+        <div class="right-menu-avatar">
+          <el-avatar :icon="UserFilled" :size="30" />
+          <span>{{ userStore.username }}</span>
+        </div>
         <template #dropdown>
           <el-dropdown-menu>
             <a target="_blank" href="https://juejin.cn/post/7089377403717287972">
-              <el-dropdown-item>V3-Admin-Vite 中文文档</el-dropdown-item>
+              <el-dropdown-item>中文文档</el-dropdown-item>
             </a>
             <a target="_blank" href="https://github.com/un-pany/v3-admin-vite">
-              <el-dropdown-item>V3-Admin-Vite GitHub</el-dropdown-item>
+              <el-dropdown-item>GitHub</el-dropdown-item>
             </a>
             <a target="_blank" href="https://gitee.com/un-pany/v3-admin-vite">
-              <el-dropdown-item>V3-Admin-Vite Gitee</el-dropdown-item>
-            </a>
-            <a target="_blank" href="https://juejin.cn/post/6963876125428678693">
-              <el-dropdown-item divided>V3-Admin 中文文档</el-dropdown-item>
-            </a>
-            <a target="_blank" href="https://github.com/un-pany/v3-admin/blob/master/README.en.md">
-              <el-dropdown-item>V3-Admin English Docs</el-dropdown-item>
-            </a>
-            <a target="_blank" href="https://github.com/un-pany/v3-admin">
-              <el-dropdown-item>V3-Admin GitHub</el-dropdown-item>
-            </a>
-            <a target="_blank" href="https://gitee.com/un-pany/v3-admin">
-              <el-dropdown-item>V3-Admin Gitee</el-dropdown-item>
+              <el-dropdown-item>Gitee</el-dropdown-item>
             </a>
             <el-dropdown-item divided @click="logout">
               <span style="display: block">退出登录</span>
@@ -91,6 +87,10 @@ const logout = () => {
   }
   .breadcrumb {
     float: left;
+    // 参考 Bootstrap 的响应式设计 WIDTH = 576
+    @media screen and (max-width: 576px) {
+      display: none;
+    }
   }
   .right-menu {
     float: right;
@@ -102,6 +102,16 @@ const logout = () => {
     .right-menu-item {
       padding: 0 10px;
       cursor: pointer;
+      .right-menu-avatar {
+        display: flex;
+        align-items: center;
+        .el-avatar {
+          margin-right: 10px;
+        }
+        span {
+          font-size: 16px;
+        }
+      }
     }
   }
 }
