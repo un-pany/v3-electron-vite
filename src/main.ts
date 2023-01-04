@@ -16,6 +16,10 @@ import "element-plus/theme-chalk/dark/css-vars.css"
 import "vxe-table/lib/style.css"
 import "vxe-table-plugin-element/dist/style.css"
 import "@/styles/index.scss"
+// window
+const remote = require("@electron/remote")
+window.vRemote = remote
+window.vIpcRenderer = require("electron").ipcRenderer
 
 const app = createApp(App)
 
@@ -27,12 +31,3 @@ loadSvg(app)
 loadDirectives(app)
 
 app.use(store).use(router).mount("#app")
-
-/** 打印 应用标题与版本号 */
-window.$ipcRenderer.send("query_title")
-window.$ipcRenderer.on("get_title", (e: Electron.IpcRendererEvent, args: string) => {
-  const style1 = "color: #fff; background: #41b883; padding: 4px; border-radius: 4px;"
-  const style2 = "color: #fff; background: #409EFF; padding: 4px 8px; border-radius: 4px;"
-  console.log(`%c Hi! %c${args}@v${window.$remote.getGlobal("version")}`, style1, style2)
-})
-// window.$fs.readdir(".", (err, list) => console.log(err, list))

@@ -13,8 +13,6 @@ declare module 'virtual:*' {
 }
 
 interface Window {
-    $fs: typeof import('fs')
-    $logger: typeof import('electron-log')
-    $remote: typeof import('@electron/remote')
-    $ipcRenderer: typeof import('electron')['ipcRenderer']
+  vRemote: typeof import('@electron/remote')
+  vIpcRenderer: typeof import("electron")["ipcRenderer"]
 }

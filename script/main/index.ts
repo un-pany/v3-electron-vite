@@ -1,7 +1,7 @@
 import PATH from "path"
 import PKG from "../../package.json"
 import LOGGER from "electron-log"
-import { app, BrowserWindow, Tray, Menu, globalShortcut, ipcMain } from "electron"
+import { app, BrowserWindow, Tray, Menu, globalShortcut, ipcMain, screen } from "electron"
 const remote = require("@electron/remote/main")
 remote.initialize() // 初始化
 
@@ -22,7 +22,7 @@ process.env["ELECTRON_DISABLE_SECURITY_WARNINGS"] = "true"
 LOGGER.transports.file.format = "[{y}-{m}-{d} {h}:{i}:{s}.{ms}] [{level}]{scope} \n{text} \n"
 LOGGER.transports.file.maxSize = 10 * 1024 * 1024
 
-const isDev = !app.isPackaged
+const DevEnv = !app.isPackaged
 
 // 变量
 let logo = ""
@@ -30,7 +30,6 @@ let tray: Tray | null = null // 托盘
 let winURL = "" // 加载 url
 let winMain: BrowserWindow | null = null // 主窗口
 const loginSize = { width: 1200, height: 800 }
-const preload: string = PATH.join(__dirname, "../preload/index.js") // 预加载脚本
 
 // 全局变量
 global.version = PKG.version
@@ -54,7 +53,7 @@ if (app.requestSingleInstanceLock()) {
 function startApp() {
   // 初始化 变量
   const ext = process.platform === "darwin" ? "icns" : "ico"
-  if (isDev) {
+  if (DevEnv) {
     logo = PATH.join(PATH.resolve("."), `./static/icons/logo.${ext}`)
     winURL = `http://${PKG.env.host || "127.0.0.1"}:${PKG.env.port}`
   } else {
@@ -80,6 +79,20 @@ function startApp() {
 
   // app.commandLine.appendSwitch('ignore-certificate-errors')
 }
+/** 根据分辨率适配窗口大小 */
+function adaptSizeWithScreen(params: any) {
+  const devWidth = 1920 // 1920 2160
+  const devHight = 1080 // 1080 1440
+  const workAreaSize = screen.getPrimaryDisplay().workAreaSize // 显示器工作区域大小
+  const zoomFactor = Math.max(workAreaSize.width / devWidth, workAreaSize.height / devHight)
+  winMain?.webContents.send("zoom_win", zoomFactor)
+
+  const realSize = { width: 0, height: 0 }
+  realSize.width = Math.round(params.width * zoomFactor)
+  realSize.height = Math.round(params.height * zoomFactor)
+  // console.log(workAreaSize, realSize, zoomFactor)
+  return realSize
+}
 /** 注册快捷键 */
 function setShortcut() {
   // 显示调试工具
@@ -97,6 +110,17 @@ function monitorRenderer() {
   ipcMain.on("query_title", () => {
     winMain && winMain.webContents.send("get_title", PKG.env.title)
   })
+
+  /** 设置窗口大小 */
+  ipcMain.on("set_win_size", (e, params: any) => {
+    if (!winMain) return
+    const size = adaptSizeWithScreen(params)
+    winMain.setResizable(true)
+    winMain.setSize(size.width, size.height)
+    winMain.setMaximizable(params.maxable)
+    params.center && winMain.center()
+    winMain.setResizable(params.resizable)
+  })
 }
 //#endregion
 
@@ -110,38 +134,43 @@ function createMainWindow() {
     title: PKG.env.title, // 标题，默认为"Electron"。如果由loadURL()加载的HTML文件中含有标签<title>，此属性将被忽略
     width: loginSize.width, // 宽度
     height: loginSize.height, // 高度
-    minWidth: loginSize.width,
-    minHeight: loginSize.height,
+    // minWidth: loginSize.width,
+    // minHeight: loginSize.height,
     show: false, // 是否在创建时显示, 默认值为 true
     frame: true, // 是否有边框
     center: true, // 是否在屏幕居中
+    opacity: 0, // 设置窗口的初始透明度
     resizable: true, // 是否允许拉伸大小
+    skipTaskbar: !DevEnv, // 是否在任务栏中显示窗口, 默认值为 false
     fullscreenable: true, // 是否允许全屏，为false则插件screenfull不起作用
     autoHideMenuBar: false, // 自动隐藏菜单栏, 除非按了Alt键, 默认值为 false
     backgroundColor: "#fff", // 背景颜色为十六进制值
     webPreferences: {
       devTools: true, // 是否开启 DevTools, 如果设置为 false, 则无法使用 BrowserWindow.webContents.openDevTools()。 默认值为 true
-      preload: preload, // 预先加载指定的脚本
       webSecurity: false, // 当设置为 false, 将禁用同源策略
       nodeIntegration: true, // 是否启用Node集成
-      contextIsolation: true, // 是否在独立 JavaScript 环境中运行 Electron API和指定的preload脚本，默认为 true
+      contextIsolation: false, // 是否在独立 JavaScript 环境中运行 Electron API和指定的preload脚本，默认为 true
       backgroundThrottling: false, // 是否在页面成为背景时限制动画和计时器，默认值为 true
       nodeIntegrationInWorker: true // 是否在Web工作器中启用了Node集成
     }
   }
   winMain = new BrowserWindow(options)
   winMain.setMenu(null)
-  isDev ? winMain.loadURL(winURL) : winMain.loadFile(winURL)
+  DevEnv ? winMain.loadURL(winURL) : winMain.loadFile(winURL)
   remote.enable(winMain.webContents)
-  // if (isDev) {
+  // if (DevEnv) {
   winMain.webContents.openDevTools() // 显示调试工具
   // }
 
   // 初始化完成后显示
   winMain.on("ready-to-show", () => {
+    winMain?.setOpacity(1)
     showMainWindow() // 显示主窗口
     createTray() // 系统托盘
+    winMain?.setAlwaysOnTop(true)
+    winMain?.once("focus", () => winMain?.setAlwaysOnTop(false))
   })
+
   winMain.on("closed", () => {
     tray?.destroy()
     tray = null
@@ -150,11 +179,10 @@ function createMainWindow() {
 }
 /** 显示 主窗口 */
 function showMainWindow() {
-  if (!winMain) return
-  winMain.show()
-  winMain.focus()
-  // winMain.setAlwaysOnTop(true)
-  // winMain.setAlwaysOnTop(false)
+  winMain?.center()
+  winMain?.show()
+  winMain?.focus()
+  // winMain?.setSkipTaskbar(!DevEnv)
 }
 /** 创建 系统托盘 */
 function createTray() {
