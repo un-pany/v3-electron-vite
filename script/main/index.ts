@@ -1,7 +1,16 @@
 import PATH from "path"
 import PKG from "../../package.json"
 import LOGGER from "electron-log"
-import { app, BrowserWindow, Tray, Menu, globalShortcut, ipcMain, screen } from "electron"
+import {
+  app,
+  BrowserWindow,
+  Tray,
+  Menu,
+  globalShortcut,
+  ipcMain,
+  screen,
+  BrowserWindowConstructorOptions
+} from "electron"
 const remote = require("@electron/remote/main")
 remote.initialize() // 初始化
 
@@ -129,7 +138,7 @@ function monitorRenderer() {
 function createMainWindow() {
   if (winMain) return
   // 配置
-  const options: Object = {
+  const options: BrowserWindowConstructorOptions = {
     icon: logo, // 图标
     title: PKG.env.title, // 标题，默认为"Electron"。如果由loadURL()加载的HTML文件中含有标签<title>，此属性将被忽略
     width: loginSize.width, // 宽度
@@ -141,7 +150,7 @@ function createMainWindow() {
     center: true, // 是否在屏幕居中
     opacity: 0, // 设置窗口的初始透明度
     resizable: true, // 是否允许拉伸大小
-    skipTaskbar: !DevEnv, // 是否在任务栏中显示窗口, 默认值为 false
+    // skipTaskbar: !DevEnv, // 是否在任务栏中显示窗口, 默认值为 false
     fullscreenable: true, // 是否允许全屏，为false则插件screenfull不起作用
     autoHideMenuBar: false, // 自动隐藏菜单栏, 除非按了Alt键, 默认值为 false
     backgroundColor: "#fff", // 背景颜色为十六进制值
@@ -158,9 +167,9 @@ function createMainWindow() {
   winMain.setMenu(null)
   DevEnv ? winMain.loadURL(winURL) : winMain.loadFile(winURL)
   remote.enable(winMain.webContents)
-  // if (DevEnv) {
-  winMain.webContents.openDevTools() // 显示调试工具
-  // }
+  if (DevEnv) {
+    winMain.webContents.openDevTools() // 显示调试工具
+  }
 
   // 初始化完成后显示
   winMain.on("ready-to-show", () => {
