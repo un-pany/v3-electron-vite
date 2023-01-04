@@ -5,6 +5,7 @@ node_modules
 dist*
 release
 .eslintcache
+src-*
 
 # Local env files
 *.local
