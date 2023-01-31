@@ -17,8 +17,8 @@ onMounted(() => {
     width: 1200,
     height: 800,
     center: true,
-    maxable: false,
-    resizable: false
+    maxable: true,
+    resizable: true
   }
   window.vIpcRenderer.send("set_win_size", params)
   /** 打印 应用标题与版本号 */
