@@ -2,7 +2,7 @@
 
 🥳 `Electron` + `Vue3` + `Vite` + `Pinia` + `Element-Plus` + `TypeScript`.
 
-src 渲染进程中源码来自 [v3-admin-vite](https://github.com/un-pany/v3-admin-vite).
+src 渲染进程的源码主要来自 [v3-admin-vite](https://github.com/un-pany/v3-admin-vite).
 
 ## 运行项目
 
@@ -50,13 +50,17 @@ pnpm lint
 
 ```tree
 ├── dist                构建后
-├   ├── main
+├   ├── assets
+├   ├── index.html
+├   ├── index.js
 ├
-├── script
-├   ├── main            主进程源码
-├   ├   ├── index.ts
+├── script              主进程源码
+├   ├── index.ts
 ├
 ├── src                 渲染进程源码
+├   ├── api
+├   ├── assets
+├   ├── ......
 ├
 ├── static              静态资源
 ├   ├── icons           系统图标
