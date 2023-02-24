@@ -2,9 +2,11 @@ import { ref } from "vue"
 import store from "@/store"
 import { defineStore } from "pinia"
 import { usePermissionStore } from "./permission"
+import { useTagsViewStore } from "./tags-view"
 import { getToken, removeToken, setToken } from "@/utils/cache/sessionStorage"
 import router, { resetRouter } from "@/router"
-import { type ILoginData, loginApi, getUserInfoApi } from "@/api/login"
+import { loginApi, getUserInfoApi } from "@/api/login"
+import { type ILoginRequestData } from "@/api/login/types/login"
 import { type RouteRecordRaw } from "vue-router"
 
 export const useUserStore = defineStore("user", () => {
@@ -12,19 +14,22 @@ export const useUserStore = defineStore("user", () => {
   const roles = ref<string[]>([])
   const username = ref<string>("")
 
+  const permissionStore = usePermissionStore()
+  const tagsViewStore = useTagsViewStore()
+
   /** 设置角色数组 */
   const setRoles = (value: string[]) => {
     roles.value = value
   }
   /** 登录 */
-  const login = (loginData: ILoginData) => {
+  const login = (loginData: ILoginRequestData) => {
     return new Promise((resolve, reject) => {
       loginApi({
         username: loginData.username,
         password: loginData.password,
         code: loginData.code
       })
-        .then((res: any) => {
+        .then((res) => {
           setToken(res.data.token)
           token.value = res.data.token
           resolve(true)
@@ -38,7 +43,7 @@ export const useUserStore = defineStore("user", () => {
   const getInfo = () => {
     return new Promise((resolve, reject) => {
       getUserInfoApi()
-        .then((res: any) => {
+        .then((res) => {
           roles.value = res.data.roles
           username.value = res.data.username
           resolve(res)
@@ -54,12 +59,12 @@ export const useUserStore = defineStore("user", () => {
     token.value = newToken
     setToken(newToken)
     await getInfo()
-    const permissionStore = usePermissionStore()
     permissionStore.setRoutes(roles.value)
     resetRouter()
     permissionStore.dynamicRoutes.forEach((item: RouteRecordRaw) => {
       router.addRoute(item)
     })
+    _resetTagsView()
   }
   /** 登出 */
   const logout = () => {
@@ -67,12 +72,18 @@ export const useUserStore = defineStore("user", () => {
     token.value = ""
     roles.value = []
     resetRouter()
+    _resetTagsView()
   }
   /** 重置 Token */
   const resetToken = () => {
     removeToken()
     token.value = ""
     roles.value = []
+  }
+  /** 重置 visited views 和 cached views */
+  const _resetTagsView = () => {
+    tagsViewStore.delAllVisitedViews()
+    tagsViewStore.delAllCachedViews()
   }
 
   return { token, roles, username, setRoles, login, getInfo, changeRoles, logout, resetToken }

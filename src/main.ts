@@ -18,8 +18,9 @@ import "vxe-table-plugin-element/dist/style.css"
 import "@/styles/index.scss"
 // window
 const remote = require("@electron/remote")
+const { ipcRenderer } = require("electron")
 window.vRemote = remote
-window.vIpcRenderer = require("electron").ipcRenderer
+window.vIpcRenderer = ipcRenderer
 
 const app = createApp(App)
 

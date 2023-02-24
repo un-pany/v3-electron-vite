@@ -5,6 +5,10 @@ import { type FormInstance, type FormRules, ElMessage, ElMessageBox } from "elem
 import { Search, Refresh, CirclePlus, Delete, Download, RefreshRight } from "@element-plus/icons-vue"
 import { usePagination } from "@/hooks/usePagination"
 
+defineOptions({
+  name: "ElementPlus"
+})
+
 const loading = ref<boolean>(false)
 const { paginationData, handleCurrentChange, handleSizeChange } = usePagination()
 
@@ -93,7 +97,7 @@ const getTableData = () => {
     username: searchData.username || undefined,
     phone: searchData.phone || undefined
   })
-    .then((res: any) => {
+    .then((res) => {
       paginationData.total = res.data.total
       tableData.value = res.data.list
     })

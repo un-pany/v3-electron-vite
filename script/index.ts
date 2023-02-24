@@ -1,5 +1,5 @@
 import PATH from "path"
-import PKG from "../../package.json"
+import PKG from "../package.json"
 import LOGGER from "electron-log"
 import {
   app,
@@ -11,7 +11,7 @@ import {
   screen,
   BrowserWindowConstructorOptions
 } from "electron"
-const remote = require("@electron/remote/main")
+import * as remote from "@electron/remote/main"
 remote.initialize() // 初始化
 
 // 必要的全局错误捕获
@@ -200,8 +200,16 @@ function createTray() {
   // 系统托盘右键菜单
   const contextMenu = Menu.buildFromTemplate([
     {
+      label: "显示",
+      click: showMainWindow
+    },
+    {
+      label: "控制台",
+      click: () => winMain?.webContents.openDevTools()
+    },
+    {
       role: "quit",
-      label: "退出"
+      label: "关闭应用"
     }
   ])
 

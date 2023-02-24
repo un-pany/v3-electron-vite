@@ -1,24 +1,17 @@
 import { request } from "@/utils/service"
-
-export interface ILoginData {
-  /** admin 或 editor */
-  username: "admin" | "editor"
-  /** 密码 */
-  password: string
-  /** 验证码 */
-  code: string
-}
+import type * as Login from "./types/login"
 
 /** 获取登录验证码 */
 export function getLoginCodeApi() {
-  return request({
+  return request<Login.LoginCodeResponseData>({
     url: "login/code",
     method: "get"
   })
 }
+
 /** 登录并返回 Token */
-export function loginApi(data: ILoginData) {
-  return request({
+export function loginApi(data: Login.ILoginRequestData) {
+  return request<Login.LoginResponseData>({
     url: "users/login",
     method: "post",
     data
@@ -26,7 +19,7 @@ export function loginApi(data: ILoginData) {
 }
 /** 获取用户详情 */
 export function getUserInfoApi() {
-  return request({
+  return request<Login.UserInfoResponseData>({
     url: "users/info",
     method: "get"
   })

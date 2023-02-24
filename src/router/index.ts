@@ -102,7 +102,8 @@ export const constantRoutes: RouteRecordRaw[] = [
         component: () => import("@/views/table/element-plus/index.vue"),
         name: "ElementPlus",
         meta: {
-          title: "Element Plus"
+          title: "Element Plus",
+          keepAlive: true
         }
       },
       {
@@ -110,7 +111,8 @@ export const constantRoutes: RouteRecordRaw[] = [
         component: () => import("@/views/table/vxe-table/index.vue"),
         name: "VxeTable",
         meta: {
-          title: "Vxe Table"
+          title: "Vxe Table",
+          keepAlive: true
         }
       }
     ]
@@ -185,6 +187,35 @@ export const constantRoutes: RouteRecordRaw[] = [
         name: "Menu2",
         meta: {
           title: "menu2"
+        }
+      }
+    ]
+  },
+  {
+    path: "/hook-demo",
+    component: Layout,
+    redirect: "/hook-demo/use-fetch-select",
+    name: "HookDemo",
+    meta: {
+      title: "hook 示例",
+      elIcon: "Menu",
+      alwaysShow: true
+    },
+    children: [
+      {
+        path: "use-fetch-select",
+        component: () => import("@/views/hook-demo/use-fetch-select.vue"),
+        name: "UseFetchSelect",
+        meta: {
+          title: "useFetchSelect"
+        }
+      },
+      {
+        path: "use-fullscreen-loading",
+        component: () => import("@/views/hook-demo/use-fullscreen-loading.vue"),
+        name: "UseFullscreenLoading",
+        meta: {
+          title: "useFullscreenLoading"
         }
       }
     ]
