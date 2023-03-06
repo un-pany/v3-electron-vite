@@ -71,7 +71,7 @@ function startApp() {
     } else {
       logo = PATH.join(PATH.resolve("."), `./resources/app/static/icons/logo.${ext}`)
     }
-    winURL = PATH.join(__dirname, "../index.html")
+    winURL = PATH.join(__dirname, "./index.html")
   }
 
   // electron 初始化完成
