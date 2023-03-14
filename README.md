@@ -33,11 +33,17 @@ pnpm up --latest
 ## 打包
 
 ```bash
-# 打包成安装程序
+# 根据当前系统环境构建
 pnpm build
 
 # 打包成解压后的目录
 pnpm build:dir
+
+# 构建 x64 位
+pnpm build:x64
+
+# 构建 x32 位
+pnpm build:x32
 ```
 
 ## 代码格式检查
