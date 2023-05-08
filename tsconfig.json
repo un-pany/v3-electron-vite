@@ -9,7 +9,6 @@
     "resolveJsonModule": true,
     "noImplicitAny": false,
     "allowSyntheticDefaultImports": true,
-    "suppressImplicitAnyIndexErrors": true,
     "sourceMap": true,
     "baseUrl": "./",
     "strict": true,
@@ -23,6 +22,10 @@
     "paths": {
       "@/*": ["src/*"]
     }
+  },
+  "vueCompilerOptions": {
+    "target": 3,
+    "plugins": ["@vue-macros/volar/define-options"]
   },
   "include": [
     "script/**/*.ts",

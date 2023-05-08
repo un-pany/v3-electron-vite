@@ -5,7 +5,7 @@ node_modules
 dist
 dist-ssr
 *.local
-*.d.ts
+# *.d.ts
 build
 release
 .npmrc
