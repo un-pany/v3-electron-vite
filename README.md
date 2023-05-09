@@ -10,6 +10,7 @@ src 渲染进程的源码主要来自 [v3-admin-vite](https://github.com/un-pany
 # 配置
 1. 安装 .vscode 中推荐的插件
 2. node 版本 16+
+3. pnpm 版本 8.x
 
 # 克隆项目
 git clone https://github.com/un-pany/v3-electron-vite.git
