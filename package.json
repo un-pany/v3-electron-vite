@@ -82,9 +82,16 @@
       "artifactName": "${productName} ${version} ${platform} ${arch}.${ext}"
     },
     "linux": {
+      "target": [
+        "AppImage",
+        "deb",
+        "zip"
+      ],
       "icon": "static/icons/logo@291x290.png",
       "artifactName": "${productName} v${version}.${ext}",
-      "desktop": "${productName}"
+      "desktop": {
+        "Icon": "/opt/v3-electron-vite/resources/app/static/icons/logo@291x290.png"
+      }
     }
   },
   "dependencies": {
