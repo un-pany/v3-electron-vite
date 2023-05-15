@@ -72,9 +72,7 @@
       "sign": false
     },
     "mac": {
-      "target": [
-        "dmg"
-      ],
+      "target": "dmg",
       "hardenedRuntime": true,
       "gatekeeperAssess": false,
       "provisioningProfile": "build/v3electron.provisionprofile",
@@ -84,9 +82,9 @@
       "artifactName": "${productName} ${version} ${platform} ${arch}.${ext}"
     },
     "linux": {
-      "target": "dmg",
       "icon": "static/icons/logo@291x290.png",
-      "artifactName": "${productName} v${version}.${ext}"
+      "artifactName": "${productName} v${version}.${ext}",
+      "desktop": "${productName}"
     }
   },
   "dependencies": {
