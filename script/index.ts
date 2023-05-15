@@ -1,156 +1,168 @@
-import PATH from "path"
 import PKG from "../package.json"
-import LOGGER from "electron-log"
-import {
-  app,
-  BrowserWindow,
-  Tray,
-  Menu,
-  globalShortcut,
-  ipcMain,
-  screen,
-  BrowserWindowConstructorOptions
-} from "electron"
+import NodePath from "path"
+import EleLog from "electron-log"
+import { app, BrowserWindow, Tray, Menu, ipcMain, screen, BrowserWindowConstructorOptions, dialog } from "electron"
 import * as remote from "@electron/remote/main"
-remote.initialize() // 初始化
 
-// 必要的全局错误捕获
-process.on("uncaughtException", (error) => {
-  LOGGER.error("uncaughtException: ", error.stack || JSON.stringify(error))
-  app.exit()
-})
-
-// 关闭安全警告
-process.env["ELECTRON_DISABLE_SECURITY_WARNINGS"] = "true"
-
+//#region 全局配置 - 日志器
 // 日志路径
 // on Linux: ~/.config/{app name}/logs/{process type}.log
 // on macOS: ~/Library/Logs/{app name}/{process type}.log
 // on Windows: %USERPROFILE%\AppData\Roaming\{app name}\logs\{process type}.log
 // 日志设置
-LOGGER.transports.file.format = "[{y}-{m}-{d} {h}:{i}:{s}.{ms}] [{level}]{scope} \n{text} \n"
-LOGGER.transports.file.maxSize = 10 * 1024 * 1024
+EleLog.transports.file.format = "[{y}-{m}-{d} {h}:{i}:{s}.{ms}] [{level}]{scope} \n{text} \n"
+EleLog.transports.file.maxSize = 10 * 1024 * 1024
+//#endregion
 
-const DevEnv = !app.isPackaged
+//#region 全局配置 - 进程
+/** 关闭安全警告 */
+process.env["ELECTRON_DISABLE_SECURITY_WARNINGS"] = "false"
+/** 必要的全局错误捕获 */
+process.on("uncaughtException", (error) => {
+  console.log("[uncaughtException]", error)
+  EleLog.error("[uncaughtException]", error)
+  exitApp("异常捕获", error.message || error.stack)
+})
+//#endregion
 
-// 变量
-let logo = ""
-let tray: Tray | null = null // 托盘
-let winURL = "" // 加载 url
-let winMain: BrowserWindow | null = null // 主窗口
-const loginSize = { width: 1200, height: 800 }
+//#region 全局声明 - 变量、常量
+/** 是否为开发环境 */
+const isDevEnv = !app.isPackaged
+/** app 目录路径
+ * - dev : {project directory}/
+ * - prod :
+ *    1. on macOS : /Applications/{app name}.app/Contents/Resources/app/
+ *    2. on Linux : {installation directory}/resources/app/
+ *    3. on Windows : {installation directory}/resources/app/
+ */
+const appDirPath = NodePath.resolve(__dirname, "..")
+/** static 目录路径
+ * - dev : {project directory}/static
+ * - prod :
+ *    1. on macOS : /Applications/{app name}.app/Contents/Resources/app/static/
+ *    2. on Linux : {installation directory}/resources/app/static/
+ *    3. on Windows : {installation directory}/resources/app/static/
+ */
+const staticDirPath = NodePath.resolve(appDirPath, "static")
+/** 根路径
+ * - dev : {project directory}/
+ * - prod :
+ *    1. on macOS : /Applications/{app name}.app/Contents/
+ *    2. on Linux : {installation directory}/
+ *    3. on Windows : {installation directory}/
+ */
+const rootDirPath = NodePath.resolve(appDirPath, "../".repeat(isDevEnv ? 0 : 2))
+/** 客户端 logo
+ * https://www.electron.build/icons
+ */
+const logoMap = new Map([
+  ["win32", "logo.ico"],
+  ["darwin", "logo.icns"],
+  ["linux", "logo@291x290.png"]
+])
+const winLogo = NodePath.join(staticDirPath, "icons", logoMap.get(process.platform) || "")
+/** 加载 url 路径 */
+const winURL = isDevEnv ? `http://${PKG.env.host}:${PKG.env.port}` : NodePath.join(__dirname, "./index.html")
 
-// 全局变量
-global.version = PKG.version
+console.log("[app   ]", appDirPath)
+console.log("[root  ]", rootDirPath)
+console.log("[static]", staticDirPath)
+console.log("[url   ]", winURL)
+console.log("")
 
-// 应用 单例
-if (app.requestSingleInstanceLock()) {
-  // 启动应用
+/** 系统托盘 */
+let winTray: Tray | null = null
+/** 主窗口 */
+let winMain: BrowserWindow | null = null
+// #endregion
+
+// #region 全局配置 - 挂载全局变量
+/** 根路径 */
+global.RootPath = rootDirPath
+/** 静态资源路径 */
+global.StaticPath = staticDirPath
+/** 客户端版本号 */
+global.ClientVersion = PKG.version
+// #endregion
+
+racketLanuch() // 运行
+
+//#region 函数声明 - 应用程序
+/** 程序入口 */
+function racketLanuch() {
+  /** 应用单例 */
+  if (!app.requestSingleInstanceLock()) {
+    return exitApp("There are already instances running.")
+  }
+  //@todo others
+  // ...
   startApp()
-} else {
-  // 如果获取失败，说明已经有实例在运行了，直接退出
+}
+/** 退出应用 */
+function exitApp(title?: string, content?: string) {
+  console.log("[exitApp]", title, content)
+  title && content && dialog.showErrorBox(title, content)
   app.quit()
 }
-
-/*----------------------------------------------------------------------------------------------------------------------------------------------------------
- ------------------------------------------------------------------ functions-------------------------------------------------------------------------------
- ------------------------------------------------------------------ ----------------------------------------------------------------------------------------
-*/
-
-//#region
 /** 启动应用 */
 function startApp() {
-  // 初始化 变量
-  const ext = process.platform === "darwin" ? "icns" : "ico"
-  if (DevEnv) {
-    logo = PATH.join(PATH.resolve("."), `./static/icons/logo.${ext}`)
-    winURL = `http://${PKG.env.host || "127.0.0.1"}:${PKG.env.port}`
-  } else {
-    if (process.platform === "darwin") {
-      logo = PATH.join(__dirname, `../../static/icons/logo.${ext}`)
-    } else {
-      logo = PATH.join(PATH.resolve("."), `./resources/app/static/icons/logo.${ext}`)
-    }
-    winURL = PATH.join(__dirname, "./index.html")
-  }
+  /** 初始化remote */
+  remote.initialize()
 
-  // electron 初始化完成
+  /** 忽略证书相关错误 禁用GPU */
+  app.commandLine.appendSwitch("ignore-certificate-errors")
+  app.commandLine.appendSwitch("no-sandbox")
+  app.commandLine.appendSwitch("disable-gpu")
+  app.commandLine.appendSwitch("disable-gpu-compositing")
+  app.commandLine.appendSwitch("disable-gpu-rasterization")
+  app.commandLine.appendSwitch("disable-gpu-sandbox")
+  app.commandLine.appendSwitch("disable-software-rasterizer")
+
+  /** 初始化完成 */
   app.whenReady().then(() => {
     monitorRenderer()
     createMainWindow()
-    setShortcut()
   })
 
-  // 当运行第二个实例时, 将会聚焦到主窗口
-  app.on("second-instance", showMainWindow)
-
-  app.on("window-all-closed", () => app.quit())
-
-  // app.commandLine.appendSwitch('ignore-certificate-errors')
-}
-/** 根据分辨率适配窗口大小 */
-function adaptSizeWithScreen(params: any) {
-  const devWidth = 1920 // 1920 2160
-  const devHight = 1080 // 1080 1440
-  const workAreaSize = screen.getPrimaryDisplay().workAreaSize // 显示器工作区域大小
-  const zoomFactor = Math.max(workAreaSize.width / devWidth, workAreaSize.height / devHight)
-  winMain?.webContents.send("zoom_win", zoomFactor)
-
-  const realSize = { width: 0, height: 0 }
-  realSize.width = Math.round(params.width * zoomFactor)
-  realSize.height = Math.round(params.height * zoomFactor)
-  // console.log(workAreaSize, realSize, zoomFactor)
-  return realSize
-}
-/** 注册快捷键 */
-function setShortcut() {
-  // 显示调试工具
-  globalShortcut.register("CommandOrControl+D", () => {
-    if (winMain) {
-      winMain.webContents.closeDevTools()
-      winMain.webContents.openDevTools()
-      winMain.setResizable(true)
+  /** 运行第二个实例时 */
+  app.on("second-instance", (e, argv) => {
+    showMainWindow()
+    const param = "--odt="
+    if (argv[1] && argv[1].indexOf(param) === 0) {
+      if (argv[1].substring(param.length) === "0" && winMain) {
+        winMain.maximize()
+        winMain.setResizable(true)
+        winMain.webContents.openDevTools()
+      }
     }
   })
-}
-/** 监听渲染进程 */
-function monitorRenderer() {
-  /** 获取应用标题 */
-  ipcMain.on("query_title", () => {
-    winMain && winMain.webContents.send("get_title", PKG.env.title)
-  })
 
-  /** 设置窗口大小 */
-  ipcMain.on("set_win_size", (e, params: any) => {
-    if (!winMain) return
-    const size = adaptSizeWithScreen(params)
-    winMain.setResizable(true)
-    winMain.setSize(size.width, size.height)
-    winMain.setMaximizable(params.maxable)
-    params.center && winMain.center()
-    winMain.setResizable(params.resizable)
-  })
+  /** 所有的窗口都被关闭 */
+  app.on("window-all-closed", () => exitApp())
+
+  // app.on("before-quit", (event) => {})
+  // app.on("quit", (event) => {})
 }
 //#endregion
 
-//#region 主窗口+托盘
+//#region 函数声明 - 窗口
 /** 创建 主窗口 */
 function createMainWindow() {
   if (winMain) return
-  // 配置
+
+  /** 窗口配置 */
   const options: BrowserWindowConstructorOptions = {
-    icon: logo, // 图标
-    title: PKG.env.title, // 标题，默认为"Electron"。如果由loadURL()加载的HTML文件中含有标签<title>，此属性将被忽略
-    width: loginSize.width, // 宽度
-    height: loginSize.height, // 高度
-    // minWidth: loginSize.width,
-    // minHeight: loginSize.height,
+    icon: winLogo, // 图标
+    title: PKG.env.title, // 如果由loadURL()加载的HTML文件中含有标签<title>，此属性将被忽略
+    width: 1200,
+    height: 800,
+    minWidth: 500,
+    minHeight: 400,
     show: false, // 是否在创建时显示, 默认值为 true
     frame: true, // 是否有边框
     center: true, // 是否在屏幕居中
     opacity: 0, // 设置窗口的初始透明度
     resizable: true, // 是否允许拉伸大小
-    // skipTaskbar: !DevEnv, // 是否在任务栏中显示窗口, 默认值为 false
     fullscreenable: true, // 是否允许全屏，为false则插件screenfull不起作用
     autoHideMenuBar: false, // 自动隐藏菜单栏, 除非按了Alt键, 默认值为 false
     backgroundColor: "#fff", // 背景颜色为十六进制值
@@ -165,24 +177,27 @@ function createMainWindow() {
   }
   winMain = new BrowserWindow(options)
   winMain.setMenu(null)
-  DevEnv ? winMain.loadURL(winURL) : winMain.loadFile(winURL)
+  isDevEnv ? winMain.loadURL(winURL) : winMain.loadFile(winURL)
   remote.enable(winMain.webContents)
-  if (DevEnv) {
+  if (isDevEnv) {
     winMain.webContents.openDevTools() // 显示调试工具
   }
 
-  // 初始化完成后显示
+  /** 初始化完成后显示 */
   winMain.on("ready-to-show", () => {
     winMain?.setOpacity(1)
     showMainWindow() // 显示主窗口
-    createTray() // 系统托盘
+    createTray() // 创建系统托盘
     winMain?.setAlwaysOnTop(true)
     winMain?.once("focus", () => winMain?.setAlwaysOnTop(false))
   })
 
+  // /** 主窗口-即将关闭 */
+  // winMain.on("close", (event) => {})
+
+  /** 主窗口-已关闭 */
   winMain.on("closed", () => {
-    tray?.destroy()
-    tray = null
+    destroyTray()
     winMain = null
   })
 }
@@ -191,13 +206,52 @@ function showMainWindow() {
   winMain?.center()
   winMain?.show()
   winMain?.focus()
-  // winMain?.setSkipTaskbar(!DevEnv)
 }
-/** 创建 系统托盘 */
-function createTray() {
-  if (tray) return
+/** 根据分辨率适配窗口大小 */
+function adaptSizeWithScreen(params: any) {
+  const devWidth = 1920 // 1920 2160
+  const devHight = 1080 // 1080 1440
+  const workAreaSize = screen.getPrimaryDisplay().workAreaSize // 显示器工作区域大小
+  const zoomFactor = Math.max(workAreaSize.width / devWidth, workAreaSize.height / devHight)
+  winMain?.webContents.send("zoom_win", zoomFactor)
+  // 计算实际窗口大小
+  const realSize = { width: 0, height: 0 }
+  realSize.width = Math.round(params.width * zoomFactor)
+  realSize.height = Math.round(params.height * zoomFactor)
+  // console.log(workAreaSize, realSize, zoomFactor)
+  return realSize
+}
+/** 监听渲染进程 */
+function monitorRenderer() {
+  /** 获取应用标题 */
+  ipcMain.on("query_title", () => {
+    winMain && winMain.webContents.send("get_title", PKG.env.title)
+  })
 
-  // 系统托盘右键菜单
+  /** 设置窗口大小 */
+  ipcMain.on("set_win_size", (_, params: any) => {
+    if (!winMain) return
+    const size = adaptSizeWithScreen(params)
+    winMain.setResizable(true)
+    winMain.setSize(size.width, size.height)
+    winMain.setMaximizable(params.maxable)
+    params.center && winMain.center()
+    winMain.setResizable(params.resizable)
+  })
+}
+//#endregion
+
+//#region 函数声明 - 系统托盘
+/** 销毁 */
+function destroyTray() {
+  winTray?.destroy()
+  winTray = null
+}
+/** 创建 */
+function createTray() {
+  if (winTray) return
+
+  /** 右键菜单选项 */
   const contextMenu = Menu.buildFromTemplate([
     {
       label: "显示",
@@ -205,6 +259,7 @@ function createTray() {
     },
     {
       label: "控制台",
+      // visible: isDevEnv,
       click: () => winMain?.webContents.openDevTools()
     },
     {
@@ -213,12 +268,13 @@ function createTray() {
     }
   ])
 
-  // tray = new Tray(nativeImage.createFromPath(logo))
-  tray = new Tray(logo)
-  tray.setToolTip(PKG.env.title) // 设置此托盘图标的悬停提示内容
-  tray.setContextMenu(contextMenu) // 设置此图标的右键菜单
-  // 打开应用
-  // tray.on('click', showMainWindow)
-  tray.on("double-click", showMainWindow)
+  /** 声明托盘对象 */
+  winTray = new Tray(winLogo)
+  /** 悬停提示内容 */
+  winTray.setToolTip(PKG.env.title)
+  /** 右键菜单 */
+  winTray.setContextMenu(contextMenu)
+  /** 双击图标打开窗口 */
+  winTray.on("double-click", showMainWindow)
 }
 //#endregion

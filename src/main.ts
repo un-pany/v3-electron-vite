@@ -5,6 +5,7 @@ import store from "@/store"
 import router from "@/router"
 import "@/router/permission"
 // load
+import "@/utils/with-prototype"
 import { loadSvg } from "@/icons"
 import { loadPlugins } from "@/plugins"
 import { loadDirectives } from "@/directives"
@@ -16,11 +17,6 @@ import "element-plus/theme-chalk/dark/css-vars.css"
 import "vxe-table/lib/style.css"
 import "vxe-table-plugin-element/dist/style.css"
 import "@/styles/index.scss"
-// window
-const remote = require("@electron/remote")
-const { ipcRenderer } = require("electron")
-window.vRemote = remote
-window.vIpcRenderer = ipcRenderer
 
 const app = createApp(App)
 
