@@ -55,12 +55,12 @@ const rootDirPath = NodePath.resolve(appDirPath, "../".repeat(isDevEnv ? 0 : 2))
 /** 客户端 logo
  * https://www.electron.build/icons
  */
-const logoMap = new Map([
-  ["win32", "logo.ico"],
-  ["darwin", "logo.icns"],
-  ["linux", "logo@291x290.png"]
-])
-const winLogo = NodePath.join(staticDirPath, "icons", logoMap.get(process.platform) || "")
+const logoMap = {
+  win32: "logo_256x256.ico",
+  darwin: "logo_256x256.icns",
+  linux: "logo_256x256.png"
+}
+const winLogo = NodePath.join(staticDirPath, "icons", logoMap[process.platform])
 /** 加载 url 路径 */
 const winURL = isDevEnv ? `http://${PKG.env.host}:${PKG.env.port}` : NodePath.join(__dirname, "./index.html")
 
@@ -109,14 +109,18 @@ function startApp() {
   /** 初始化remote */
   remote.initialize()
 
-  /** 忽略证书相关错误 禁用GPU */
-  app.commandLine.appendSwitch("ignore-certificate-errors")
+  /** 禁用 Chromium 沙箱 */
   app.commandLine.appendSwitch("no-sandbox")
+  /** 忽略证书相关错误 */
+  app.commandLine.appendSwitch("ignore-certificate-errors")
+  /** 禁用GPU */
   app.commandLine.appendSwitch("disable-gpu")
   app.commandLine.appendSwitch("disable-gpu-compositing")
   app.commandLine.appendSwitch("disable-gpu-rasterization")
   app.commandLine.appendSwitch("disable-gpu-sandbox")
   app.commandLine.appendSwitch("disable-software-rasterizer")
+  /** 禁用动画, 解决透明窗口打开闪烁问题 */
+  app.commandLine.appendSwitch("wm-window-animations-disabled")
 
   /** 初始化完成 */
   app.whenReady().then(() => {
@@ -210,9 +214,9 @@ function showMainWindow() {
 /** 根据分辨率适配窗口大小 */
 function adaptSizeWithScreen(params: any) {
   const devWidth = 1920 // 1920 2160
-  const devHight = 1080 // 1080 1440
+  const devHeight = 1080 // 1080 1440
   const workAreaSize = screen.getPrimaryDisplay().workAreaSize // 显示器工作区域大小
-  const zoomFactor = Math.max(workAreaSize.width / devWidth, workAreaSize.height / devHight)
+  const zoomFactor = Math.max(workAreaSize.width / devWidth, workAreaSize.height / devHeight)
   winMain?.webContents.send("zoom_win", zoomFactor)
   // 计算实际窗口大小
   const realSize = { width: 0, height: 0 }
@@ -251,8 +255,8 @@ function destroyTray() {
 function createTray() {
   if (winTray) return
 
-  /** 右键菜单选项 */
-  const contextMenu = Menu.buildFromTemplate([
+  /** 右键/dock 菜单选项 */
+  const menuList = Menu.buildFromTemplate([
     {
       label: "显示",
       click: showMainWindow
@@ -268,13 +272,19 @@ function createTray() {
     }
   ])
 
-  /** 声明托盘对象 */
-  winTray = new Tray(winLogo)
-  /** 悬停提示内容 */
-  winTray.setToolTip(PKG.env.title)
-  /** 右键菜单 */
-  winTray.setContextMenu(contextMenu)
-  /** 双击图标打开窗口 */
-  winTray.on("double-click", showMainWindow)
+  if (process.platform === "darwin") {
+    const dockIcon = NodePath.join(staticDirPath, "icons", logoMap.linux)
+    app.dock.setIcon(dockIcon)
+    app.dock.setMenu(menuList)
+  } else {
+    /** 声明托盘对象 */
+    winTray = new Tray(winLogo)
+    /** 悬停提示内容 */
+    winTray.setToolTip(PKG.env.title)
+    /** 右键菜单 */
+    winTray.setContextMenu(menuList)
+    /** 双击图标打开窗口 */
+    winTray.on("double-click", showMainWindow)
+  }
 }
 //#endregion

@@ -64,7 +64,7 @@
       "allowToChangeInstallationDirectory": true
     },
     "win": {
-      "icon": "static/icons/logo.ico",
+      "icon": "static/icons/logo_256x256.ico",
       "artifactName": "${productName} v${version}.${ext}",
       "requestedExecutionLevel": "requireAdministrator"
     },
@@ -78,7 +78,7 @@
       "provisioningProfile": "build/v3electron.provisionprofile",
       "entitlements": "build/entitlements.mac.plist",
       "entitlementsInherit": "build/entitlements.mac.plist",
-      "icon": "static/icons/logo.icns",
+      "icon": "static/icons/logo_256x256.icns",
       "artifactName": "${productName} ${version} ${platform} ${arch}.${ext}"
     },
     "linux": {
@@ -87,10 +87,10 @@
         "deb",
         "zip"
       ],
-      "icon": "static/icons/logo@291x290.png",
+      "icon": "static/icons/logo_256x256.png",
       "artifactName": "${productName} v${version}.${ext}",
       "desktop": {
-        "Icon": "/opt/v3-electron-vite/resources/app/static/icons/logo@291x290.png"
+        "Icon": "/opt/v3-electron-vite/resources/app/static/icons/logo_256x256.png"
       }
     }
   },
