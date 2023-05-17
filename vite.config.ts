@@ -5,8 +5,6 @@ import { createSvgIconsPlugin } from "vite-plugin-svg-icons"
 import vue from "@vitejs/plugin-vue"
 import UnoCSS from "unocss/vite"
 import vueJsx from "@vitejs/plugin-vue-jsx"
-// @ts-expect-error
-import DefineOptions from "unplugin-vue-define-options/vite"
 import svgLoader from "vite-svg-loader"
 import electron from "vite-electron-plugin"
 import pkg from "./package.json"
@@ -29,8 +27,6 @@ export default defineConfig({
     /** 将 SVG 静态图转化为 Vue 组件 */
     svgLoader({ defaultImport: "url" }),
     UnoCSS(),
-    /** 可以更简单的注册组件名称 */
-    DefineOptions(),
     /** SVG 插件 */
     createSvgIconsPlugin({
       // Specify the icon folder to be cached

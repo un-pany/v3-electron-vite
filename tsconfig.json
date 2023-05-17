@@ -16,16 +16,11 @@
       "node",
       "vite-plugin-svg-icons/client",
       /** Element-Plus 的 Volar 插件支持 */
-      "element-plus/global",
-      "unplugin-vue-define-options/macros-global"
+      "element-plus/global"
     ],
     "paths": {
       "@/*": ["src/*"]
     }
-  },
-  "vueCompilerOptions": {
-    "target": 3,
-    "plugins": ["@vue-macros/volar/define-options"]
   },
   "include": [
     "script/**/*.ts",
