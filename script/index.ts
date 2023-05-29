@@ -1,7 +1,17 @@
 import PKG from "../package.json"
 import NodePath from "path"
 import EleLog from "electron-log"
-import { app, BrowserWindow, Tray, Menu, ipcMain, screen, BrowserWindowConstructorOptions, dialog } from "electron"
+import {
+  app,
+  screen,
+  dialog,
+  ipcMain,
+  Tray,
+  Menu,
+  BrowserWindow,
+  type MessageBoxSyncOptions,
+  type BrowserWindowConstructorOptions
+} from "electron"
 import * as remote from "@electron/remote/main"
 
 //#region 全局配置 - 日志器
@@ -19,29 +29,31 @@ EleLog.transports.file.maxSize = 10 * 1024 * 1024
 process.env["ELECTRON_DISABLE_SECURITY_WARNINGS"] = "false"
 /** 必要的全局错误捕获 */
 process.on("uncaughtException", (error) => {
-  console.log("[uncaughtException]", error)
   EleLog.error("[uncaughtException]", error)
   exitApp("异常捕获", error.message || error.stack)
 })
 //#endregion
 
 //#region 全局声明 - 变量、常量
+/** 当前系统平台 */
+const platformType = { win32: false, darwin: false, linux: false }
+platformType[process.platform] = true
 /** 是否为开发环境 */
 const isDevEnv = !app.isPackaged
 /** app 目录路径
  * - dev : {project directory}/
  * - prod :
- *    1. on macOS : /Applications/{app name}.app/Contents/Resources/app/
- *    2. on Linux : {installation directory}/resources/app/
- *    3. on Windows : {installation directory}/resources/app/
+ *    1. on macOS : /Applications/{app name}.app/Contents/Resources/app?.asar/
+ *    2. on Linux : {installation directory}/resources/app?.asar/
+ *    3. on Windows : {installation directory}/resources/app?.asar/
  */
 const appDirPath = NodePath.resolve(__dirname, "..")
 /** static 目录路径
  * - dev : {project directory}/static
  * - prod :
- *    1. on macOS : /Applications/{app name}.app/Contents/Resources/app/static/
- *    2. on Linux : {installation directory}/resources/app/static/
- *    3. on Windows : {installation directory}/resources/app/static/
+ *    1. on macOS : /Applications/{app name}.app/Contents/Resources/app?.asar/static/
+ *    2. on Linux : {installation directory}/resources/app?.asar/static/
+ *    3. on Windows : {installation directory}/resources/app?.asar/static/
  */
 const staticDirPath = NodePath.resolve(appDirPath, "static")
 /** 根路径
@@ -100,9 +112,26 @@ function racketLanuch() {
 }
 /** 退出应用 */
 function exitApp(title?: string, content?: string) {
-  console.log("[exitApp]", title, content)
-  title && content && dialog.showErrorBox(title, content)
-  app.quit()
+  console.log("[exitApp]", title || "", content || "")
+  if (title && content) {
+    const callback = () => {
+      const opt: MessageBoxSyncOptions = {
+        title: title,
+        message: content,
+        icon: winLogo,
+        type: "warning",
+        noLink: true,
+        buttons: ["确定"],
+        cancelId: -1,
+        defaultId: 0
+      }
+      dialog.showMessageBoxSync(opt)
+      app.quit()
+    }
+    app.isReady() ? callback() : app.whenReady().then(callback)
+  } else {
+    app.quit()
+  }
 }
 /** 启动应用 */
 function startApp() {
@@ -180,7 +209,7 @@ function createMainWindow() {
     }
   }
   winMain = new BrowserWindow(options)
-  winMain.setMenu(null)
+  winMain.removeMenu()
   isDevEnv ? winMain.loadURL(winURL) : winMain.loadFile(winURL)
   remote.enable(winMain.webContents)
   if (isDevEnv) {
@@ -248,6 +277,7 @@ function monitorRenderer() {
 //#region 函数声明 - 系统托盘
 /** 销毁 */
 function destroyTray() {
+  platformType.darwin && app.dock.hide()
   winTray?.destroy()
   winTray = null
 }
@@ -272,7 +302,7 @@ function createTray() {
     }
   ])
 
-  if (process.platform === "darwin") {
+  if (platformType.darwin) {
     const dockIcon = NodePath.join(staticDirPath, "icons", logoMap.linux)
     app.dock.setIcon(dockIcon)
     app.dock.setMenu(menuList)
