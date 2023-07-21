@@ -1,24 +1,33 @@
 {
   "compilerOptions": {
-    "jsx": "preserve",
     "target": "esnext",
+    /** https://cn.vitejs.dev/guide/features.html#typescript-compiler-options */
+    "useDefineForClassFields": true,
     "module": "esnext",
-    "importHelpers": true,
     "moduleResolution": "node",
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
+    /** TS 严格模式 */
+    "strict": true,
+    "jsx": "preserve",
+    "importHelpers": true,
     "noImplicitAny": false,
+    "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
-    "baseUrl": "./",
-    "strict": true,
+    "resolveJsonModule": true,
+    /** https://cn.vitejs.dev/guide/features.html#typescript-compiler-options */
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "lib": ["esnext", "dom"],
+    "skipLibCheck": true,
     "types": [
       "node",
       "vite/client",
-      // "vite-plugin-svg-icons/client",
-      /** Element-Plus 的 Volar 插件支持 */
+      /** Element Plus 的 Volar 插件支持 */
       "element-plus/global"
     ],
+    /** baseUrl 用来告诉编译器到哪里去查找模块，使用非相对模块时必须配置此项 */
+    "baseUrl": ".",
+    /** 非相对模块导入的路径映射配置，根据 baseUrl 配置进行路径计算 */
     "paths": {
       "@/*": ["src/*"]
     }
@@ -29,8 +38,9 @@
     "src/**/*.d.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
-    "**/*.ts",
-    "unocss.config.ts"
-  ]
-  // "exclude": ["node_modules", "dist"]
+    "types/**/*.d.ts",
+    "vite.config.ts"
+  ],
+  /** 编译器默认排除的编译文件 */
+  "exclude": ["node_modules", "dist", "release"]
 }

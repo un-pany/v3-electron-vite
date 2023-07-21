@@ -2,7 +2,8 @@
 
 🥳 `Electron` + `Vue3` + `Vite` + `Pinia` + `Element-Plus` + `TypeScript`.
 
-src 渲染进程的源码主要来自 [v3-admin-vite](https://github.com/un-pany/v3-admin-vite).
+- src 渲染进程的源码主要来自 [v3-admin-vite](https://github.com/un-pany/v3-admin-vite).
+- 注意: **Electron > 21.4.3 不再支持 win7**
 
 ## 运行项目
 

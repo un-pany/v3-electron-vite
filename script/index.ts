@@ -246,7 +246,7 @@ function adaptSizeWithScreen(params: any) {
   const devHeight = 1080 // 1080 1440
   const workAreaSize = screen.getPrimaryDisplay().workAreaSize // 显示器工作区域大小
   const zoomFactor = Math.max(workAreaSize.width / devWidth, workAreaSize.height / devHeight)
-  winMain?.webContents.send("zoom_win", zoomFactor)
+  winMain?.webContents.setZoomFactor(zoomFactor)
   // 计算实际窗口大小
   const realSize = { width: 0, height: 0 }
   realSize.width = Math.round(params.width * zoomFactor)
@@ -256,11 +256,6 @@ function adaptSizeWithScreen(params: any) {
 }
 /** 监听渲染进程 */
 function monitorRenderer() {
-  /** 获取应用标题 */
-  ipcMain.on("query_title", () => {
-    winMain && winMain.webContents.send("get_title", PKG.env.title)
-  })
-
   /** 设置窗口大小 */
   ipcMain.on("set_win_size", (_, params: any) => {
     if (!winMain) return

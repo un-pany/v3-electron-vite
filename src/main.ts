@@ -5,7 +5,6 @@ import store from "@/store"
 import router from "@/router"
 import "@/router/permission"
 // load
-import "@/utils/with-prototype"
 import { loadSvg } from "@/icons"
 import { loadPlugins } from "@/plugins"
 import { loadDirectives } from "@/directives"

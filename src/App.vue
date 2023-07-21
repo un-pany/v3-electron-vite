@@ -1,38 +1,20 @@
 <script lang="ts" setup>
-import { h, onMounted } from "vue"
+import { h } from "vue"
 import { useTheme } from "@/hooks/useTheme"
+import { resetConfigLayout } from "@/utils"
 import { ElNotification } from "element-plus"
-import zhCn from "element-plus/lib/locale/lang/zh-cn"
-const { webFrame } = require("electron")
+// 将 Element Plus 的语言设置为中文
+import zhCn from "element-plus/es/locale/lang/zh-cn"
 
-onMounted(() => {
-  window.vIpcRenderer.once("zoom_win", (_, scale: number) => webFrame.setZoomFactor(scale))
-  window.vIpcRenderer.once("get_title", (_, args: string) => {
-    const style1 = "color: #fff; background: #41b883; padding: 4px; border-radius: 4px;"
-    const style2 = "color: #fff; background: #409EFF; padding: 4px 8px; border-radius: 4px;"
-    console.log(`%c Hi! %c${args}@v${window.CLIENT_VERSION}`, style1, style2)
-  })
-  /** 设置窗口 */
-  const params = {
-    width: 1200,
-    height: 800,
-    center: true,
-    maxable: true,
-    resizable: true
-  }
-  window.vIpcRenderer.send("set_win_size", params)
-  /** 打印 应用标题与版本号 */
-  window.vIpcRenderer.send("query_title")
-})
+const { initTheme } = useTheme()
 
 /** 初始化主题 */
-const { initTheme } = useTheme()
 initTheme()
-/** 将 Element Plus 的语言设置为中文 */
-const locale = zhCn
-/** 欢迎 star 标语 */
+
+/** 作者小心思 */
 ElNotification({
   title: "Hello",
+  type: "success",
   message: h(
     "a",
     { style: "color: teal", target: "_blank", href: "https://github.com/un-pany/v3-admin-vite" },
@@ -41,12 +23,25 @@ ElNotification({
   duration: 0,
   position: "bottom-right"
 })
-
-// end
+ElNotification({
+  title: "破坏性更新",
+  type: "warning",
+  message: h(
+    "span",
+    {
+      style: "color: teal; cursor: pointer;",
+      onClick: resetConfigLayout
+    },
+    "由于平台 4.1.0 版本新增了多种布局模式，如果第一次出现白屏情况，点击这里或手动前往控制台清理 LocalStorage 缓存数据后刷新页面即可！"
+  ),
+  duration: 0,
+  position: "bottom-right",
+  offset: 150
+})
 </script>
 
 <template>
-  <ElConfigProvider :locale="locale">
+  <ElConfigProvider :locale="zhCn">
     <router-view />
   </ElConfigProvider>
 </template>
