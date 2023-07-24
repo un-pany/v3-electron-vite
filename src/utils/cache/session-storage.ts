@@ -1,4 +1,4 @@
-/** 统一处理 Cookie */
+/** 统一处理 sessionStorage */
 
 import CacheKey from "@/constants/cache-key"
 

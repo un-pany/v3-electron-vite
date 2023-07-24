@@ -20,6 +20,7 @@
   &--pager-wrapper {
     .vxe-pager {
       height: 70px !important;
+      padding: 0 20px !important;
       &--wrapper {
         // 参考 Bootstrap 的响应式设计 WIDTH = 768
         @media screen and (max-width: 768px) {

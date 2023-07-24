@@ -1,11 +1,10 @@
-# prettier 会忽略的文件
+# Prettier 会忽略的文件
 
 .DS_Store
 node_modules
 dist
 dist-ssr
 *.local
-# *.d.ts
+.npmrc
 build
 release
-.npmrc

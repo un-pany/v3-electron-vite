@@ -22,9 +22,6 @@ cd v3-electron-vite
 # 安装依赖
 pnpm i
 
-# 初始化 husky
-pnpm prepare
-
 # 启动服务
 pnpm dev
 
