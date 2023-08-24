@@ -4,7 +4,7 @@ import { ElMessage } from "element-plus"
 import { get, merge } from "lodash-es"
 import { getToken } from "./cache/session-storage"
 
-/** 退出登录并强制刷新页面（会重定向到登录页）*/
+/** 退出登录并强制刷新页面（会重定向到登录页） */
 function logout() {
   useUserStoreHook().logout()
   location.reload()

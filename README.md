@@ -1,15 +1,15 @@
 # 简介
 
-🥳 `Electron` + `Vue3` + `Vite` + `Pinia` + `Element-Plus` + `TypeScript`.
+🥳 `Electron` + `Vue3` + `Vite` + `Pinia` + `Element Plus` + `TypeScript`
 
-- src 渲染进程的源码主要来自 [v3-admin-vite](https://github.com/un-pany/v3-admin-vite).
+- src 渲染进程的源码主要来自 [v3-admin-vite](https://github.com/un-pany/v3-admin-vite)
 - 注意: **Electron > 21.4.3 不再支持 win7**
 
 ## 运行项目
 
 ```bash
 # 配置
-1. 安装 .vscode 中推荐的插件
+1. 一键安装 .vscode 目录中推荐的插件
 2. node 版本 16+
 3. pnpm 版本 8.x
 

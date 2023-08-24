@@ -1,17 +1,9 @@
 {
   "name": "v3-electron-vite",
-  "version": "4.2.0",
-  "main": "dist/index.js",
-  "author": "nevlf<2863180001@qq.com>",
+  "version": "4.2.1",
   "description": "v3-electron-client",
-  "license": "MIT",
-  "keywords": [
-    "vite3",
-    "electron",
-    "vue3",
-    "pinia",
-    "rollup"
-  ],
+  "author": "nevlf<2863180001@qq.com>",
+  "main": "dist/index.js",
   "engines": {
     "node": ">=16.0.0"
   },
@@ -103,9 +95,9 @@
     "screenfull": "6.0.2",
     "vue": "3.3.4",
     "vue-router": "4.2.4",
-    "vxe-table": "4.5.5",
+    "vxe-table": "4.4.1",
     "vxe-table-plugin-element": "3.0.7",
-    "xe-utils": "3.5.12"
+    "xe-utils": "3.5.11"
   },
   "devDependencies": {
     "@types/lodash-es": "4.17.8",
@@ -147,5 +139,13 @@
     "package.json": [
       "prettier --write"
     ]
-  }
+  },
+  "keywords": [
+    "vue3",
+    "vite",
+    "electron",
+    "pinia",
+    "rollup"
+  ],
+  "license": "MIT"
 }
