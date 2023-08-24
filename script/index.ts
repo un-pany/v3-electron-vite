@@ -200,6 +200,7 @@ function createMainWindow() {
     autoHideMenuBar: false, // 自动隐藏菜单栏, 除非按了Alt键, 默认值为 false
     backgroundColor: "#fff", // 背景颜色为十六进制值
     webPreferences: {
+      disableBlinkFeatures: "SourceMap", // 以,分隔的禁用特性列表
       devTools: true, // 是否开启 DevTools, 如果设置为 false, 则无法使用 BrowserWindow.webContents.openDevTools()。 默认值为 true
       webSecurity: false, // 当设置为 false, 将禁用同源策略
       nodeIntegration: true, // 是否启用Node集成
