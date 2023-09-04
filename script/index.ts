@@ -1,4 +1,5 @@
 import PKG from "../package.json"
+import { config } from "dotenv"
 import NodePath from "path"
 import EleLog from "electron-log"
 import {
@@ -76,11 +77,23 @@ const winLogo = NodePath.join(staticDirPath, "icons", logoMap[process.platform])
 /** 加载 url 路径 */
 const winURL = isDevEnv ? `http://${PKG.env.host}:${PKG.env.port}` : NodePath.join(__dirname, "./index.html")
 
-console.log("[app   ]", appDirPath)
-console.log("[root  ]", rootDirPath)
-console.log("[static]", staticDirPath)
-console.log("[url   ]", winURL)
-console.log("")
+/**
+ * 注入环境变量，默认为 .env 文件
+ * 若要打包后在主进程中也能访问环境变量，需要将配置文件一起打包
+ * 在 package.json 的 build.files 中添加文件名即可
+ */
+if (isDevEnv) {
+  config()
+} else {
+  config({ path: NodePath.resolve(appDirPath, ".env") })
+}
+
+// 用于调试
+// console.log("[app   ]", appDirPath)
+// console.log("[root  ]", rootDirPath)
+// console.log("[static]", staticDirPath)
+// console.log("[url   ]", winURL)
+// console.log("")
 
 /** 系统托盘 */
 let winTray: Tray | null = null
@@ -186,7 +199,7 @@ function createMainWindow() {
   /** 窗口配置 */
   const options: BrowserWindowConstructorOptions = {
     icon: winLogo, // 图标
-    title: PKG.env.title, // 如果由loadURL()加载的HTML文件中含有标签<title>，此属性将被忽略
+    title: process.env.VITE_APP_TITLE, // 如果由loadURL()加载的HTML文件中含有标签<title>，此属性将被忽略
     width: 1200,
     height: 800,
     minWidth: 500,
@@ -307,7 +320,7 @@ function createTray() {
     /** 声明托盘对象 */
     winTray = new Tray(winLogo)
     /** 悬停提示内容 */
-    winTray.setToolTip(PKG.env.title)
+    winTray.setToolTip(process.env.VITE_APP_TITLE)
     /** 右键菜单 */
     winTray.setContextMenu(menuList)
     /** 双击图标打开窗口 */

@@ -1,6 +1,6 @@
 {
   "name": "v3-electron-vite",
-  "version": "4.2.2-beta",
+  "version": "4.2.2",
   "description": "v3-electron-client",
   "author": "nevlf<2863180001@qq.com>",
   "main": "dist/index.js",
@@ -9,8 +9,7 @@
   },
   "env": {
     "host": "127.0.0.1",
-    "port": 13333,
-    "title": "V3 Electron Vite"
+    "port": 13333
   },
   "scripts": {
     "dev": "vite",
@@ -35,7 +34,8 @@
     "extraResources": [],
     "files": [
       "dist/**/*",
-      "static/**/*"
+      "static/**/*",
+      ".env"
     ],
     "publish": [
       {
@@ -80,10 +80,11 @@
     }
   },
   "dependencies": {
-    "@electron/remote": "2.0.10",
+    "@electron/remote": "2.0.11",
     "@element-plus/icons-vue": "2.1.0",
     "axios": "1.5.0",
     "dayjs": "1.11.9",
+    "dotenv": "^16.3.1",
     "electron-log": "4.4.8",
     "element-plus": "2.3.12",
     "lodash-es": "4.17.21",
@@ -98,11 +99,11 @@
     "vue-router": "4.2.4",
     "vxe-table": "4.4.1",
     "vxe-table-plugin-element": "3.0.7",
-    "xe-utils": "3.5.12"
+    "xe-utils": "3.5.13"
   },
   "devDependencies": {
-    "@types/lodash-es": "4.17.8",
-    "@types/node": "20.5.7",
+    "@types/lodash-es": "4.17.9",
+    "@types/node": "20.5.9",
     "@types/nprogress": "0.2.0",
     "@types/path-browserify": "1.0.0",
     "@typescript-eslint/eslint-plugin": "6.5.0",
@@ -112,7 +113,7 @@
     "@vue/eslint-config-prettier": "8.0.0",
     "@vue/eslint-config-typescript": "11.0.3",
     "electron": "26.1.0",
-    "electron-builder": "24.6.3",
+    "electron-builder": "24.6.4",
     "eslint": "8.48.0",
     "eslint-plugin-prettier": "5.0.0",
     "eslint-plugin-vue": "9.17.0",
@@ -121,7 +122,7 @@
     "prettier": "3.0.3",
     "sass": "1.66.1",
     "typescript": "5.2.2",
-    "unocss": "0.55.3",
+    "unocss": "0.55.6",
     "vite": "4.4.9",
     "vite-electron-plugin": "0.8.2",
     "vite-plugin-svg-icons": "2.0.1",

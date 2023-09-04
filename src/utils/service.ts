@@ -107,7 +107,7 @@ function createRequest(service: AxiosInstance) {
         "Content-Type": "application/json"
       },
       timeout: 5000,
-      baseURL: "https://www.fastmock.site/mock/761e2dda2b8890ab86c928a74e8f6538/api/v1",
+      baseURL: import.meta.env.VITE_BASE_API,
       data: {}
     }
     // 将默认配置 defaultConfig 和传入的自定义配置 config 进行合并成为 mergeConfig

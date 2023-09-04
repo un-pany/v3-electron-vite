@@ -72,7 +72,7 @@ router.beforeEach(async (to, _from, next) => {
 })
 
 router.afterEach((to) => {
-  setTitle(to.meta.title)
   setRouteChange(to)
+  setTitle(to.meta.title)
   NProgress.done()
 })
