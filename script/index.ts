@@ -9,6 +9,7 @@ import {
   ipcMain,
   Tray,
   Menu,
+  shell,
   BrowserWindow,
   type MessageBoxSyncOptions,
   type BrowserWindowConstructorOptions
@@ -76,7 +77,6 @@ const logoMap = {
 const winLogo = NodePath.join(staticDirPath, "icons", logoMap[process.platform])
 /** 加载 url 路径 */
 const winURL = isDevEnv ? `http://${PKG.env.host}:${PKG.env.port}` : NodePath.join(__dirname, "./index.html")
-
 /**
  * 注入环境变量，默认为 .env 文件
  * 若要打包后在主进程中也能访问环境变量，需要将配置文件一起打包
@@ -87,6 +87,7 @@ if (isDevEnv) {
 } else {
   config({ path: NodePath.resolve(appDirPath, ".env") })
 }
+const APP_TITLE = process.env.VITE_APP_TITLE || ""
 
 // 用于调试
 // console.log("[app   ]", appDirPath)
@@ -199,7 +200,7 @@ function createMainWindow() {
   /** 窗口配置 */
   const options: BrowserWindowConstructorOptions = {
     icon: winLogo, // 图标
-    title: process.env.VITE_APP_TITLE, // 如果由loadURL()加载的HTML文件中含有标签<title>，此属性将被忽略
+    title: APP_TITLE, // 如果由loadURL()加载的HTML文件中含有标签<title>，此属性将被忽略
     width: 1200,
     height: 800,
     minWidth: 500,
@@ -307,6 +308,10 @@ function createTray() {
       click: () => winMain?.webContents.openDevTools()
     },
     {
+      label: "本地日志",
+      click: () => shell.openPath(app.getPath("logs"))
+    },
+    {
       role: "quit",
       label: "关闭应用"
     }
@@ -320,7 +325,7 @@ function createTray() {
     /** 声明托盘对象 */
     winTray = new Tray(winLogo)
     /** 悬停提示内容 */
-    winTray.setToolTip(process.env.VITE_APP_TITLE)
+    winTray.setToolTip(APP_TITLE)
     /** 右键菜单 */
     winTray.setContextMenu(menuList)
     /** 双击图标打开窗口 */
