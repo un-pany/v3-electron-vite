@@ -58,13 +58,13 @@ dependencies:
     version: 4.2.5(vue@3.3.4)
   vxe-table:
     specifier: 4.4.1
-    version: 4.4.1(vue@3.3.4)(xe-utils@3.5.13)
+    version: 4.4.1(vue@3.3.4)(xe-utils@3.5.11)
   vxe-table-plugin-element:
-    specifier: 3.1.0
-    version: 3.1.0(vxe-table@4.4.1)
+    specifier: 3.0.7
+    version: 3.0.7(vxe-table@4.4.1)
   xe-utils:
-    specifier: 3.5.13
-    version: 3.5.13
+    specifier: 3.5.11
+    version: 3.5.11
 
 devDependencies:
   '@types/lodash-es':
@@ -5916,22 +5916,22 @@ packages:
       '@vue/server-renderer': 3.3.4(vue@3.3.4)
       '@vue/shared': 3.3.4
 
-  /vxe-table-plugin-element@3.1.0(vxe-table@4.4.1):
-    resolution: {integrity: sha512-8vOXObtLiTjOq8WmPWadVO677rAlCR/XdjltGCd475cOahL9f6u9KC2RBXhwtKMakXxkQ86IZElApCDzBpOcjw==}
+  /vxe-table-plugin-element@3.0.7(vxe-table@4.4.1):
+    resolution: {integrity: sha512-cw9krtPRkqCxszWCnVxzgLOEt1HYN2W5AN+AovlN6i7/4gtp1O7YFFVbqmpGYfUU2uf0deXgJXru53Bx9WY20Q==}
     peerDependencies:
-      vxe-table: ^4.5.0
+      vxe-table: ^4.2.0
     dependencies:
-      vxe-table: 4.4.1(vue@3.3.4)(xe-utils@3.5.13)
+      vxe-table: 4.4.1(vue@3.3.4)(xe-utils@3.5.11)
     dev: false
 
-  /vxe-table@4.4.1(vue@3.3.4)(xe-utils@3.5.13):
+  /vxe-table@4.4.1(vue@3.3.4)(xe-utils@3.5.11):
     resolution: {integrity: sha512-yq19+sds2Av625YiS3vpYjdXUN2BFTAyboOT+v5yhi6sroR7WwOnH7jkJ7/Q4U6ZhCDT59u0UOGAPVT27/4OWQ==}
     peerDependencies:
       vue: ^3.2.28
       xe-utils: ^3.5.0
     dependencies:
       vue: 3.3.4
-      xe-utils: 3.5.13
+      xe-utils: 3.5.11
     dev: false
 
   /which@2.0.2:
@@ -5963,8 +5963,8 @@ packages:
   /wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
 
-  /xe-utils@3.5.13:
-    resolution: {integrity: sha512-ORT6ghCRk0mUVavMBxetcPzUPskS6NGfntzpWazJ86e+XU0uK4HwHfDhN/jKATiyInrOH5RwQo9SO/+DB8XeBw==}
+  /xe-utils@3.5.11:
+    resolution: {integrity: sha512-lyKc/lTBga1Zb63p+FED8mtxLnYIjSS8PVJM1N64NGdCu/3d1XubaVeke2p91RHssP0ExVAl2LUqZYperoz76Q==}
     dev: false
 
   /xml-name-validator@4.0.0:
