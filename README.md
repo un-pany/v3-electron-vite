@@ -40,11 +40,17 @@ pnpm build
 # 打包成解压后的目录
 pnpm build:dir
 
-# 构建 x64 位
-pnpm build:x64
+# 构建 linux 安装包, 已设置构建 AppImage 与 deb 文件
+pnpm build:linux
 
-# 构建 x32 位
-pnpm build:x32
+# 构建 MacOS 安装包, 已设置构建 dmg 文件 (只有在 MacOS 系统上打包)
+pnpm build:macos
+
+# 构建 x64 位 exe
+pnpm build:win-x64
+
+# 构建 x32 位 exe
+pnpm build:win-x32
 ```
 
 ## 代码格式检查
