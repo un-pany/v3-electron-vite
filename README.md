@@ -43,7 +43,7 @@ pnpm build:dir
 # 构建 linux 安装包, 已设置构建 AppImage 与 deb 文件
 pnpm build:linux
 
-# 构建 MacOS 安装包, 已设置构建 dmg 文件 (只有在 MacOS 系统上打包)
+# 构建 MacOS 安装包 (只有在 MacOS 系统上打包), 已设置构建 dmg 文件
 pnpm build:macos
 
 # 构建 x64 位 exe
