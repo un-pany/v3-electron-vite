@@ -100,16 +100,16 @@ const APP_TITLE = process.env.VITE_APP_TITLE || ""
 let winTray: Tray | null = null
 /** 主窗口 */
 let winMain: BrowserWindow | null = null
-// #endregion
+//#endregion
 
-// #region 全局配置 - 挂载全局变量
+//#region 全局配置 - 挂载全局变量
 /** 根路径 */
 global.RootPath = rootDirPath
 /** 静态资源路径 */
 global.StaticPath = staticDirPath
 /** 客户端版本号 */
 global.ClientVersion = PKG.version
-// #endregion
+//#endregion
 
 racketLanuch() // 运行
 
@@ -215,13 +215,13 @@ function createMainWindow() {
     backgroundColor: "#fff", // 背景颜色为十六进制值
     webPreferences: {
       spellcheck: false, // 禁用拼写检查器
-      disableBlinkFeatures: "SourceMap", // 以 , 分隔的禁用特性列表
+      disableBlinkFeatures: "SourceMap", // 以 "," 分隔的禁用特性列表
       devTools: true, // 是否开启 DevTools, 如果设置为 false（默认值为 true）, 则无法使用 BrowserWindow.webContents.openDevTools()
       webSecurity: false, // 当设置为 false, 将禁用同源策略
       nodeIntegration: true, // 是否启用 Node 集成
       contextIsolation: false, // 是否在独立 JavaScript 环境中运行 Electron API 和指定的 preload 脚本，默认为 true
       backgroundThrottling: false, // 是否在页面成为背景时限制动画和计时器，默认值为 true
-      nodeIntegrationInWorker: true // 是否在Web工作器中启用了 Node 集成
+      nodeIntegrationInWorker: true // 是否在 Web 工作器中启用了 Node 集成
     }
   }
   winMain = new BrowserWindow(options)
@@ -241,7 +241,7 @@ function createMainWindow() {
     winMain?.once("focus", () => winMain?.setAlwaysOnTop(false))
   })
 
-  // /** 主窗口 - 即将关闭 */
+  /** 主窗口 - 即将关闭 */
   // winMain.on("close", (event) => {})
 
   /** 主窗口 - 已关闭 */
