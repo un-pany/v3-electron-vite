@@ -9,7 +9,7 @@ import electron from "vite-electron-plugin"
 import { rmSync } from "fs"
 import pkg from "./package.json"
 
-/** 清空dist */
+/** 清空 dist */
 rmSync("dist", { recursive: true, force: true })
 
 /** 配置项文档：https://cn.vitejs.dev/config */

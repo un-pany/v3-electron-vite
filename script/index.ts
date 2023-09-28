@@ -120,7 +120,7 @@ function racketLanuch() {
   if (!app.requestSingleInstanceLock()) {
     return exitApp("There are already instances running.")
   }
-  //@todo others
+  // @todo others
   // ...
   startApp()
 }
@@ -149,14 +149,14 @@ function exitApp(title?: string, content?: string) {
 }
 /** 启动应用 */
 function startApp() {
-  /** 初始化remote */
+  /** 初始化 remote */
   remote.initialize()
 
   /** 禁用 Chromium 沙箱 */
   app.commandLine.appendSwitch("no-sandbox")
   /** 忽略证书相关错误 */
   app.commandLine.appendSwitch("ignore-certificate-errors")
-  /** 禁用GPU */
+  /** 禁用 GPU */
   app.commandLine.appendSwitch("disable-gpu")
   app.commandLine.appendSwitch("disable-gpu-compositing")
   app.commandLine.appendSwitch("disable-gpu-rasterization")
@@ -193,14 +193,14 @@ function startApp() {
 //#endregion
 
 //#region 函数声明 - 窗口
-/** 创建 主窗口 */
+/** 创建主窗口 */
 function createMainWindow() {
   if (winMain) return
 
   /** 窗口配置 */
   const options: BrowserWindowConstructorOptions = {
     icon: winLogo, // 图标
-    title: APP_TITLE, // 如果由loadURL()加载的HTML文件中含有标签<title>，此属性将被忽略
+    title: APP_TITLE, // 如果由 loadURL() 加载的 HTML 文件中含有标签 <title>，此属性将被忽略
     width: 1200,
     height: 800,
     minWidth: 500,
@@ -210,18 +210,18 @@ function createMainWindow() {
     center: true, // 是否在屏幕居中
     opacity: 0, // 设置窗口的初始透明度
     resizable: true, // 是否允许拉伸大小
-    fullscreenable: true, // 是否允许全屏，为false则插件screenfull不起作用
-    autoHideMenuBar: false, // 自动隐藏菜单栏, 除非按了Alt键, 默认值为 false
+    fullscreenable: true, // 是否允许全屏，为 false 则插件 screenfull 不起作用
+    autoHideMenuBar: false, // 自动隐藏菜单栏, 除非按了 Alt 键, 默认值为 false
     backgroundColor: "#fff", // 背景颜色为十六进制值
     webPreferences: {
       spellcheck: false, // 禁用拼写检查器
-      disableBlinkFeatures: "SourceMap", // 以,分隔的禁用特性列表
-      devTools: true, // 是否开启 DevTools, 如果设置为 false, 则无法使用 BrowserWindow.webContents.openDevTools()。 默认值为 true
+      disableBlinkFeatures: "SourceMap", // 以 , 分隔的禁用特性列表
+      devTools: true, // 是否开启 DevTools, 如果设置为 false（默认值为 true）, 则无法使用 BrowserWindow.webContents.openDevTools()
       webSecurity: false, // 当设置为 false, 将禁用同源策略
-      nodeIntegration: true, // 是否启用Node集成
-      contextIsolation: false, // 是否在独立 JavaScript 环境中运行 Electron API和指定的preload脚本，默认为 true
+      nodeIntegration: true, // 是否启用 Node 集成
+      contextIsolation: false, // 是否在独立 JavaScript 环境中运行 Electron API 和指定的 preload 脚本，默认为 true
       backgroundThrottling: false, // 是否在页面成为背景时限制动画和计时器，默认值为 true
-      nodeIntegrationInWorker: true // 是否在Web工作器中启用了Node集成
+      nodeIntegrationInWorker: true // 是否在Web工作器中启用了 Node 集成
     }
   }
   winMain = new BrowserWindow(options)
@@ -241,16 +241,16 @@ function createMainWindow() {
     winMain?.once("focus", () => winMain?.setAlwaysOnTop(false))
   })
 
-  // /** 主窗口-即将关闭 */
+  // /** 主窗口 - 即将关闭 */
   // winMain.on("close", (event) => {})
 
-  /** 主窗口-已关闭 */
+  /** 主窗口 - 已关闭 */
   winMain.on("closed", () => {
     destroyTray()
     winMain = null
   })
 }
-/** 显示 主窗口 */
+/** 显示主窗口 */
 function showMainWindow() {
   winMain?.center()
   winMain?.show()
