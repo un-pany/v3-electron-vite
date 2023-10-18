@@ -76,9 +76,23 @@ export default defineConfig({
     electron({
       outDir: "dist",
       include: ["script"],
-      transformOptions: {
-        sourcemap: false
-      }
+      transformOptions: { sourcemap: false },
+      plugins: [
+        {
+          name: "remove-comments",
+          transform: ({ code }) => {
+            let content = code
+            // 匹配 块级注释、行级注释、Region注释
+            // \s 是匹配所有空白符, 包括换行; \S 非空白符, 不包括换行
+            const pattern1 = /\/\*[\s\S]*?\*\/|(\s)+\/\/[\s\S]*?[\n]+/g
+            content = content.replaceAll(pattern1, "\n")
+            // 匹配 所有空行
+            const pattern2 = /^\s*[\r\n]/gm
+            content = content.replaceAll(pattern2, "")
+            return content
+          }
+        }
+      ]
     })
   ],
   css: {

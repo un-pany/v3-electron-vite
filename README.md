@@ -62,12 +62,9 @@ pnpm lint
 ## 目录结构
 
 ```tree
-├── dist                构建后
-├   ├── assets
-├   ├── index.html
-├   ├── index.js
-├
 ├── script              主进程源码
+├   ├── modules
+├   ├── utils
 ├   ├── index.ts
 ├
 ├── src                 渲染进程源码
