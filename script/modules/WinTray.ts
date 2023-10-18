@@ -18,12 +18,10 @@ class WinTray {
     this.TRAY_MENU = [
       {
         label: "显示",
-        visible: GlobalConfig.IS_WIN32,
         click: () => WinMain.show("tray=>show", true)
       },
       {
         label: "隐藏",
-        visible: GlobalConfig.IS_WIN32,
         click: () => WinMain.getWinInst()?.hide()
       },
       {
@@ -42,8 +40,7 @@ class WinTray {
       },
       {
         role: "quit",
-        label: "关闭客户端",
-        visible: GlobalConfig.IS_WIN32
+        label: "关闭客户端"
       }
     ]
   }
