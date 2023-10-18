@@ -1,5 +1,6 @@
 import PKG from "../package.json"
 import { config } from "dotenv"
+import NodeOS from "os"
 import NodePath from "path"
 import EleLog from "electron-log"
 import {
@@ -122,6 +123,8 @@ function racketLanuch() {
   }
   // @todo others
   // ...
+  /** 禁用默认系统菜单 */
+  Menu.setApplicationMenu(null)
   startApp()
 }
 /** 退出应用 */
@@ -176,10 +179,8 @@ function startApp() {
     showMainWindow()
     const param = "--odt="
     if (argv[1] && argv[1].indexOf(param) === 0) {
-      if (argv[1].substring(param.length) === "0" && winMain) {
-        winMain.maximize()
-        winMain.setResizable(true)
-        winMain.webContents.openDevTools()
+      if (argv[1].substring(param.length) === "0") {
+        openDevTools()
       }
     }
   })
@@ -188,7 +189,9 @@ function startApp() {
   app.on("window-all-closed", () => exitApp())
 
   // app.on("before-quit", (event) => {})
-  // app.on("quit", (event) => {})
+
+  /** 应用程序退出时 */
+  app.on("quit", () => app.releaseSingleInstanceLock())
 }
 //#endregion
 
@@ -208,7 +211,6 @@ function createMainWindow() {
     show: false, // 是否在创建时显示, 默认值为 true
     frame: true, // 是否有边框
     center: true, // 是否在屏幕居中
-    opacity: 0, // 设置窗口的初始透明度
     resizable: true, // 是否允许拉伸大小
     fullscreenable: true, // 是否允许全屏，为 false 则插件 screenfull 不起作用
     autoHideMenuBar: false, // 自动隐藏菜单栏, 除非按了 Alt 键, 默认值为 false
@@ -228,17 +230,12 @@ function createMainWindow() {
   winMain.removeMenu()
   isDevEnv ? winMain.loadURL(winURL) : winMain.loadFile(winURL)
   remote.enable(winMain.webContents)
-  if (isDevEnv) {
-    winMain.webContents.openDevTools() // 显示调试工具
-  }
+  isDevEnv && openDevTools()
 
   /** 初始化完成后显示 */
   winMain.on("ready-to-show", () => {
-    winMain?.setOpacity(1)
     showMainWindow() // 显示主窗口
     createTray() // 创建系统托盘
-    winMain?.setAlwaysOnTop(true)
-    winMain?.once("focus", () => winMain?.setAlwaysOnTop(false))
   })
 
   /** 主窗口 - 即将关闭 */
@@ -255,6 +252,11 @@ function showMainWindow() {
   winMain?.center()
   winMain?.show()
   winMain?.focus()
+}
+/** 打开调试工具 */
+function openDevTools() {
+  winMain?.webContents.closeDevTools()
+  winMain?.webContents.openDevTools({ mode: "undocked" })
 }
 /** 根据分辨率适配窗口大小 */
 function adaptSizeWithScreen(params: any) {
@@ -305,11 +307,20 @@ function createTray() {
     {
       label: "控制台",
       // visible: isDevEnv,
-      click: () => winMain?.webContents.openDevTools()
+      click: openDevTools
     },
     {
       label: "本地日志",
-      click: () => shell.openPath(app.getPath("logs"))
+      click: () => {
+        switch (true) {
+          case platformType.win32:
+            shell.openPath(app.getPath("logs"))
+            break
+          case platformType.darwin:
+            shell.openPath(NodePath.join(NodeOS.homedir(), "Library/Logs", PKG.name))
+            break
+        }
+      }
     },
     {
       role: "quit",
