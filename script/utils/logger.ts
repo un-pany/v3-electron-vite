@@ -41,7 +41,7 @@ class LogFactory {
     this.fileName = name + ".log"
     this.logInst = eleLog.create({ logId: name })
     this.logInst.transports.file.fileName = this.fileName
-    this.logInst.transports.file.format = `\n[{y}-{m}-{d} {h}:{i}:{s}.{ms}] {text}`
+    this.logInst.transports.file.format = `[{y}-{m}-{d} {h}:{i}:{s}.{ms}] {text}`
     this.logInst.transports.console.level = false
     Object.freeze(this) // 禁止修改
   }

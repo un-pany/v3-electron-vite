@@ -56,7 +56,11 @@ class WinMain {
 
     this.WIN_INST = new BrowserWindow(this.WIN_CONFIG)
     this.WIN_INST.removeMenu()
-    this.WIN_INST.loadURL(GlobalConfig.WIN_URL)
+    if (GlobalConfig.IS_DEV_MODE) {
+      this.WIN_INST.loadURL(GlobalConfig.WIN_URL)
+    } else {
+      this.WIN_INST.loadFile(GlobalConfig.WIN_URL)
+    }
 
     /** 启用 remote */
     remote.enable(this.WIN_INST.webContents)

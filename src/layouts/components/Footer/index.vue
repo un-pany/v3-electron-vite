@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-const VITE_APP_TITLE = import.meta.env.VITE_APP_TITLE
+import { APP_TITLE } from "@/hooks/useTitle"
 </script>
 
 <template>
-  <footer class="layout-footer">MIT © 2021-PRESENT {{ VITE_APP_TITLE }}</footer>
+  <footer class="layout-footer">MIT © 2021-PRESENT {{ APP_TITLE }}</footer>
 </template>
 
 <style lang="scss" scoped>

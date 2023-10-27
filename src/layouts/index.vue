@@ -4,6 +4,7 @@ import { storeToRefs } from "pinia"
 import { useAppStore } from "@/store/modules/app"
 import { useSettingsStore } from "@/store/modules/settings"
 import useResize from "./hooks/useResize"
+import { APP_TITLE } from "@/hooks/useTitle"
 import { useWatermark } from "@/hooks/useWatermark"
 import LeftMode from "./LeftMode.vue"
 import TopMode from "./TopMode.vue"
@@ -41,7 +42,7 @@ watchEffect(() => {
 
 /** 开启或关闭系统水印 */
 watchEffect(() => {
-  showWatermark.value ? setWatermark(import.meta.env.VITE_APP_TITLE) : clearWatermark()
+  showWatermark.value ? setWatermark(APP_TITLE) : clearWatermark()
 })
 </script>
 

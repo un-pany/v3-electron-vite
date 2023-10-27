@@ -70,6 +70,7 @@
       ],
       "icon": "static/icons/logo_256x256.icns",
       "artifactName": "${productName} v${version} mac ${arch}.${ext}",
+      "identity": null,
       "hardenedRuntime": true,
       "gatekeeperAssess": false
     },
