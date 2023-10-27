@@ -5,6 +5,8 @@ import { ElNotification } from "element-plus"
 // 将 Element Plus 的语言设置为中文
 import zhCn from "element-plus/es/locale/lang/zh-cn"
 
+window.__electronLog && window.__electronLog.log(`Hello, ${process.env.VITE_APP_TITLE}! `)
+
 const { initTheme } = useTheme()
 
 /** 初始化主题 */

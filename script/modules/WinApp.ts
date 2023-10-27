@@ -39,7 +39,7 @@ class WinApp {
     if (!app.requestSingleInstanceLock()) {
       return this.exitApp("There are already instances running.")
     }
-    console.log(GlobalConfig)
+    // console.log(GlobalConfig)
     /** 禁用默认系统菜单 */
     Menu.setApplicationMenu(null)
     /** 初始化 remote */
