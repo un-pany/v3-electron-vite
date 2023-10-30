@@ -1,9 +1,10 @@
 /**
  * https://github.com/megahertz/electron-log
- * - [Linux  ] ~/.config/v3-electron-vite/logs
- * - [MacOS  ] ~/Library/Logs/v3-electron-vite
+ * - [Linux] ~/.config/v3-electron-vite/logs
+ * - [macOS] ~/Library/Logs/v3-electron-vite
  * - [Windows] %USERPROFILE%\AppData\Roaming\v3-electron-vite\logs
  */
+
 import eleLog from "electron-log"
 
 //#region 配置
@@ -15,7 +16,7 @@ eleLog.initialize()
 eleLog.transports.file.level = "info"
 
 /**
- * 设置日志文件大小 1048576(1M)
+ * 设置日志文件大小 1048576 (1M)
  * 达到规定大小, 备份文件并重命名为 {name}.old.log
  * 有且仅有一个备份日志文件
  */
@@ -27,6 +28,7 @@ eleLog.transports.file.format = `[{y}-{m}-{d} {h}:{i}:{s}.{ms}] {text}`
 /** 设置日志控制台等级, 默认为 silly */
 eleLog.transports.console.level = "info"
 eleLog.transports.console.format = `[{h}:{i}:{s}.{ms}] {text}`
+
 //#endregion
 
 /** 日志工厂 */
@@ -43,7 +45,8 @@ class LogFactory {
     this.logInst.transports.file.fileName = this.fileName
     this.logInst.transports.file.format = `[{y}-{m}-{d} {h}:{i}:{s}.{ms}] {text}`
     this.logInst.transports.console.level = false
-    Object.freeze(this) // 禁止修改
+    // 禁止修改
+    Object.freeze(this)
   }
 
   /** 统一处理, 可在这里对日志进行加密 */

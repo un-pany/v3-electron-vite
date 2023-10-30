@@ -53,13 +53,13 @@ class WinTray {
       app.dock?.setMenu(contextMenu)
       return
     }
-    /** 声明托盘对象 */
+    // 声明托盘对象
     this.TRAY_INST = new Tray(GlobalConfig.APP_LOGO)
-    /** 悬停提示内容 */
+    // 悬停提示内容
     this.TRAY_INST.setToolTip(GlobalConfig.getAppTitle())
-    /** 右键菜单 */
+    // 右键菜单
     this.TRAY_INST.setContextMenu(contextMenu)
-    /** 双击图标打开窗口 */
+    // 双击图标打开窗口
     this.TRAY_INST.on("double-click", () => WinMain.show("tray=>double-click", true))
   }
 
@@ -72,9 +72,9 @@ class WinTray {
 
   /** 监听相关事件 */
   static ipcListening() {
-    /** xxxx */
+    // xxxx
     ipcMain.on(`xxxx`, () => {
-      //
+      // ...
     })
   }
 }

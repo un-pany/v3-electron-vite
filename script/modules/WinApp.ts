@@ -12,25 +12,25 @@ import WinTray from "./WinTray"
 class WinApp {
   /** 初始化 app 配置 */
   private static initAppConfig() {
-    /** 禁用 硬件加速 */
+    // 禁用 硬件加速
     app.disableHardwareAcceleration()
-    /** 禁用 Chromium 沙盒 */
+    // 禁用 Chromium 沙盒
     app.commandLine.appendSwitch("no-sandbox")
-    /** 忽略证书相关错误 */
+    // 忽略证书相关错误
     app.commandLine.appendSwitch("ignore-certificate-errors")
-    /** 禁用 GPU */
+    // 禁用 GPU
     app.commandLine.appendSwitch("disable-gpu")
-    /** 禁用 GPU 沙盒 */
+    // 禁用 GPU 沙盒
     app.commandLine.appendSwitch("disable-gpu-sandbox")
-    // /** 禁用 GPU 合成 */
+    // 禁用 GPU 合成
     // app.commandLine.appendSwitch("disable-gpu-compositing")
-    // /** 禁用 GPU 光栅化 */
+    // 禁用 GPU 光栅化
     // app.commandLine.appendSwitch("disable-gpu-rasterization")
-    // /** 禁用软件光栅化器 */
+    // 禁用软件光栅化器
     // app.commandLine.appendSwitch("disable-software-rasterizer")
-    /** 禁用 HTTP 缓存 */
+    // 禁用 HTTP 缓存
     app.commandLine.appendSwitch("disable-http-cache")
-    /** 禁用动画, 解决透明窗口打开闪烁问题 */
+    // 禁用动画, 解决透明窗口打开闪烁问题
     app.commandLine.appendSwitch("wm-window-animations-disabled")
   }
 
@@ -39,19 +39,19 @@ class WinApp {
     if (!app.requestSingleInstanceLock()) {
       return this.exitApp("There are already instances running.")
     }
-    // console.log(GlobalConfig)
-    /** 禁用默认系统菜单 */
+
+    // 禁用默认系统菜单
     Menu.setApplicationMenu(null)
-    /** 初始化 remote */
+    // 初始化 remote
     remote.initialize()
-    /** 初始化 app 配置 */
+    // 初始化 app 配置
     this.initAppConfig()
-    /** 加载环境变量 */
+    // 加载环境变量
     GlobalConfig.loadEnvFile()
-    /** 挂载全局变量 */
+    // 挂载全局变量
     GlobalConfig.mountGlobalVariables()
 
-    /** 初始化完成 */
+    // 初始化完成
     app.whenReady().then(() => {
       this.ipcListening()
       WinMain.create()
@@ -61,21 +61,21 @@ class WinApp {
       WinTray.ipcListening()
     })
 
-    /** 运行第二个实例时 */
+    // 运行第二个实例时
     app.on("second-instance", () => WinMain.show("second-instance"))
 
-    /** 所有的窗口都被关闭 */
+    // 所有的窗口都被关闭
     app.on("window-all-closed", () => {
       WinTray.destroy()
       this.exitApp()
     })
 
-    /** 程序退出之前 */
+    // 程序退出之前
     app.on("before-quit", () => {
       mainLog.log("[before quit app] ")
     })
 
-    /** 程序退出 */
+    // 程序退出
     app.on("quit", () => {
       mainLog.log("[app is quit] ")
       WinTray.destroy()
@@ -115,7 +115,7 @@ class WinApp {
 
   /** 监听相关事件 */
   static ipcListening() {
-    /** 重启 */
+    // 重启
     ipcMain.on("restart_app", () => this.restartApp())
   }
 }

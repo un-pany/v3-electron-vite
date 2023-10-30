@@ -56,28 +56,27 @@ class WinMain {
 
     this.WIN_INST = new BrowserWindow(this.WIN_CONFIG)
     this.WIN_INST.removeMenu()
+
     if (GlobalConfig.IS_DEV_MODE) {
       this.WIN_INST.loadURL(GlobalConfig.WIN_URL)
     } else {
       this.WIN_INST.loadFile(GlobalConfig.WIN_URL)
     }
 
-    /** 启用 remote */
+    // 启用 remote
     remote.enable(this.WIN_INST.webContents)
 
-    /**
-     * 窗口-准备好显示
-     * 在窗口的控制台中使用 F5 刷新时，也会触发该事件
-     */
+    // 窗口-准备好显示
+    // 在窗口的控制台中使用 F5 刷新时，也会触发该事件
     this.WIN_INST.on("ready-to-show", () => {
       this.show("win=>ready-to-show", true)
       GlobalConfig.IS_DEV_MODE && this.openDevTools()
     })
 
-    /** 窗口-即将关闭 */
+    // 窗口-即将关闭
     this.WIN_INST.on("close", () => {})
 
-    /** 窗口-已关闭 */
+    // 窗口-已关闭
     this.WIN_INST.on("closed", () => (this.WIN_INST = null))
   }
 
@@ -91,12 +90,12 @@ class WinMain {
 
   /** 监听通信事件 */
   static ipcListening() {
-    /** 中转消息- 代替中央事件总线 */
+    // 中转消息-代替中央事件总线
     ipcMain.on("vue_bus", (_, { channel, data }) => {
       if (!this.WIN_INST || !channel) return
       this.WIN_INST.webContents.send(channel, data)
     })
-    /** 设置窗口最小值 */
+    // 设置窗口最小值
     ipcMain.on("set_min_size", (_, dto: WinStateDTO) => {
       if (!this.WIN_INST) return
       const size = GlobalConfig.adaptByScreen(dto, this.WIN_INST)
@@ -105,7 +104,7 @@ class WinMain {
       this.WIN_INST.setMinimumSize(size.width, size.height)
       this.WIN_INST.setResizable(val)
     })
-    /** 设置窗口大小 */
+    // 设置窗口大小
     ipcMain.on("set_win_size", (_, dto: WinStateDTO) => {
       if (!this.WIN_INST) return
       const size = GlobalConfig.adaptByScreen(dto, this.WIN_INST)
