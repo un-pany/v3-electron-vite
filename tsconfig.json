@@ -4,7 +4,7 @@
     /** https://cn.vitejs.dev/guide/features.html#typescript-compiler-options */
     "useDefineForClassFields": true,
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     /** TS 严格模式 */
     "strict": true,
     "jsx": "preserve",
@@ -39,7 +39,7 @@
     "src/**/*.tsx",
     "src/**/*.vue",
     "types/**/*.d.ts",
-    "vite.config.ts"
+    "vite.config.mts"
   ],
   /** 编译器默认排除的编译文件 */
   "exclude": ["node_modules", "dist", "release"]

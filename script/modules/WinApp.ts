@@ -19,9 +19,9 @@ class WinApp {
     // 忽略证书相关错误
     app.commandLine.appendSwitch("ignore-certificate-errors")
     // 禁用 GPU
-    app.commandLine.appendSwitch("disable-gpu")
+    // app.commandLine.appendSwitch("disable-gpu")
     // 禁用 GPU 沙盒
-    app.commandLine.appendSwitch("disable-gpu-sandbox")
+    // app.commandLine.appendSwitch("disable-gpu-sandbox")
     // 禁用 GPU 合成
     // app.commandLine.appendSwitch("disable-gpu-compositing")
     // 禁用 GPU 光栅化

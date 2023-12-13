@@ -1,4 +1,8 @@
-/** 配置项文档：https://prettier.io/docs/en/configuration.html */
+/**
+ * 配置项文档：https://prettier.io/docs/en/configuration.html
+ * @type {import("prettier").Config}
+ */
+
 module.exports = {
   /** 每一行的宽度 */
   printWidth: 120,
