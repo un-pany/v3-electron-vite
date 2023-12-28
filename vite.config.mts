@@ -26,7 +26,11 @@ export default defineConfig({
     /** 设置 host: true 才可以使用 Network 的形式，以 IP 访问项目 */
     host: pkg.env.host,
     /** 端口号 */
-    port: pkg.env.port
+    port: pkg.env.port,
+    /** 预热常用文件，提高初始页面加载速度 */
+    warmup: {
+      clientFiles: ["./src/layouts/**/*.vue"]
+    }
   },
   build: {
     /** 单个 chunk 文件的大小超过 2048KB 时发出警告 */
