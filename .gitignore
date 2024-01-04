@@ -6,6 +6,7 @@ dist*
 release
 .eslintcache
 src-*
+*.mts.*.mjs
 
 # Local env files
 *.local
