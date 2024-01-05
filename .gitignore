@@ -6,7 +6,7 @@ dist*
 release
 .eslintcache
 src-*
-*.mts.*.mjs
+vite.config.mts.timestamp-*.mjs
 
 # Local env files
 *.local
