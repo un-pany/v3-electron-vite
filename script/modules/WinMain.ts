@@ -85,7 +85,7 @@ class WinMain {
     if (!this.WIN_INST) return
     const winCtns = this.WIN_INST.webContents
     if (winCtns.isDevToolsOpened()) return
-    winCtns.openDevTools({ mode: "undocked" })
+    winCtns.openDevTools({ mode: "undocked", title: "tools" })
   }
 
   /** 监听通信事件 */

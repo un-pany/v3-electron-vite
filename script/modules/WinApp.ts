@@ -46,8 +46,6 @@ class WinApp {
     remote.initialize()
     // 初始化 app 配置
     this.initAppConfig()
-    // 加载环境变量
-    GlobalConfig.loadEnvFile()
     // 挂载全局变量
     GlobalConfig.mountGlobalVariables()
 

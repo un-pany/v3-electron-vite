@@ -2,9 +2,7 @@
  * 全局配置
  */
 
-import NodeOS from "os"
 import NodePath from "path"
-import { config } from "dotenv"
 import { app, screen, BrowserWindow } from "electron"
 import PKG from "../../package.json"
 
@@ -53,33 +51,14 @@ class GlobalConfig {
 
   //#endregion
 
-  /**
-   * 加载环境变量, 默认为 .env 文件
-   * 若要打包后在主进程中也能访问环境变量, 需要将配置文件一起打包
-   * 在 package.json 的 build.files 中添加文件名即可
-   */
-  static loadEnvFile() {
-    if (this.IS_DEV_MODE) {
-      config()
-    } else {
-      config({ path: NodePath.resolve(this.DIR_APP, ".env") })
-    }
-  }
-
   /** 程序名称 */
   static getAppTitle() {
-    return process.env.VITE_APP_TITLE || this.PROJECT_NAME
+    return import.meta.env.VITE_APP_TITLE || this.PROJECT_NAME
   }
 
   /** 本地日志路径 */
   static getLocalLogsPath() {
-    switch (true) {
-      case this.IS_WIN32:
-        return app.getPath("logs")
-      case this.IS_MACOS:
-        return NodePath.join(NodeOS.homedir(), "Library/Logs", this.PROJECT_NAME)
-    }
-    return ""
+    return app.getPath("logs")
   }
 
   /** 挂载全局变量 */

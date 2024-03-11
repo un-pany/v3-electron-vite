@@ -6,6 +6,7 @@ import { createSvgIconsPlugin } from "vite-plugin-svg-icons"
 import svgLoader from "vite-svg-loader"
 import UnoCSS from "unocss/vite"
 import electron from "vite-electron-plugin"
+import { loadViteEnv } from "vite-electron-plugin/plugin"
 import { rmSync } from "fs"
 import pkg from "./package.json"
 
@@ -95,7 +96,8 @@ export default defineConfig({
             content = content.replaceAll(pattern2, "")
             return content
           }
-        }
+        },
+        loadViteEnv()
       ]
     })
   ],
