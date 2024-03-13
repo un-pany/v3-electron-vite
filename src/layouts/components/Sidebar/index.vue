@@ -63,14 +63,7 @@ const hiddenScrollbarVerticalBar = computed(() => {
         :collapse-transition="false"
         :mode="isTop && !isMobile ? 'horizontal' : 'vertical'"
       >
-        <SidebarItem
-          v-for="route in noHiddenRoutes"
-          :key="route.path"
-          :item="route"
-          :base-path="route.path"
-          :is-collapse="isCollapse"
-          :is-top="isTop"
-        />
+        <SidebarItem v-for="route in noHiddenRoutes" :key="route.path" :item="route" :base-path="route.path" />
       </el-menu>
     </el-scrollbar>
   </div>
@@ -138,10 +131,6 @@ const hiddenScrollbarVerticalBar = computed(() => {
   &.is-active,
   &:hover {
     background-color: v-bind(sidebarMenuHoverBgColor);
-  }
-  display: block;
-  * {
-    vertical-align: middle;
   }
 }
 
