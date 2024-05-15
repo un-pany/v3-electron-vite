@@ -13,7 +13,7 @@ class WinMain {
 
   /** 窗口配置 */
   private static WIN_CONFIG: BrowserWindowConstructorOptions = {
-    icon: GlobalConfig.APP_LOGO, // 图标
+    icon: GlobalConfig.getAppLogo(), // 图标
     title: GlobalConfig.getAppTitle(), // 如果由 loadURL() 加载的 HTML 文件中含有标签 <title>，此属性将被忽略
     minWidth: 500,
     minHeight: 400,
@@ -58,9 +58,9 @@ class WinMain {
     this.WIN_INST.removeMenu()
 
     if (GlobalConfig.IS_DEV_MODE) {
-      this.WIN_INST.loadURL(GlobalConfig.WIN_URL)
+      this.WIN_INST.loadURL(GlobalConfig.getWinUrl())
     } else {
-      this.WIN_INST.loadFile(GlobalConfig.WIN_URL)
+      this.WIN_INST.loadFile(GlobalConfig.getWinUrl())
     }
 
     // 启用 remote
@@ -102,6 +102,7 @@ class WinMain {
       const val = this.WIN_INST.isResizable()
       this.WIN_INST.setResizable(true)
       this.WIN_INST.setMinimumSize(size.width, size.height)
+      this.WIN_INST.setSize(size.width, size.height)
       this.WIN_INST.setResizable(val)
     })
     // 设置窗口大小

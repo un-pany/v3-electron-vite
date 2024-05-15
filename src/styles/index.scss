@@ -3,13 +3,17 @@
 // Transition
 @import "./transition.scss";
 // Element Plus
+@import "./element-plus.css";
 @import "./element-plus.scss";
 // Vxe Table
+@import "./vxe-table.css";
 @import "./vxe-table.scss";
 // 注册多主题
 @import "./theme/register.scss";
-// mixin
+// Mixins
 @import "./mixins.scss";
+// View Transition
+@import "./view-transition.scss";
 
 // 业务页面几乎都应该在根元素上挂载 class="app-container"，以保持页面美观
 .app-container {
@@ -21,8 +25,8 @@ html {
 }
 
 body {
-  width: 100% !important;
   height: 100%;
+  color: var(--v3-body-text-color);
   background-color: var(--v3-body-bg-color);
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;

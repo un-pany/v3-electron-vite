@@ -34,26 +34,32 @@ class GlobalConfig {
   static readonly DIR_RESOURCES = NodePath.resolve(this.DIR_APP, this.IS_DEV_MODE ? "" : "..")
   /** 根目录/安装目录 */
   static readonly DIR_ROOT = this.IS_DEV_MODE ? this.DIR_APP : NodePath.resolve(this.DIR_RESOURCES, "..")
-  /** 图标路径 */
-  private static readonly LOGO_PATH = {
-    win32: "icons/logo_256x256.ico",
-    darwin: "icons/logo_256x256.icns",
-    linux: "icons/logo_256x256.png"
-  }
-  /** 客户端图标 APP_LOGO */
-  static readonly APP_LOGO = NodePath.join(this.DIR_STATIC, this.LOGO_PATH[process.platform])
-  /** 客户端图标 DOCKER_LOGO */
-  static readonly DOCKER_LOGO = NodePath.join(this.DIR_STATIC, this.LOGO_PATH.linux)
-  /** 运行地址 */
-  static readonly WIN_URL = this.IS_DEV_MODE
-    ? `http://${PKG.env.host}:${PKG.env.port}`
-    : NodePath.join(this.DIR_APP, "dist", "index.html")
+  /** 版本号 */
+  static readonly APP_VERSION = PKG.version
 
   //#endregion
 
   /** 程序名称 */
   static getAppTitle() {
-    return import.meta.env.VITE_APP_TITLE || this.PROJECT_NAME
+    const suffix = this.IS_DEV_MODE ? ` | v${this.APP_VERSION}` : ""
+    return `${import.meta.env.VITE_APP_TITLE || this.PROJECT_NAME}${suffix}`
+  }
+
+  /** 程序图标 */
+  static getAppLogo(isDocker?: boolean) {
+    const logoList = {
+      win32: "icons/logo_256x256.ico",
+      darwin: "icons/logo_256x256.icns",
+      linux: "icons/logo_256x256.png"
+    }
+    const type = isDocker ? "linux" : process.platform
+    return NodePath.join(this.DIR_STATIC, logoList[type])
+  }
+
+  /** 运行地址/路径 */
+  static getWinUrl() {
+    if (this.IS_DEV_MODE) return `http://${PKG.env.host}:${PKG.env.port}`
+    return NodePath.join(this.DIR_APP, "dist/index.html")
   }
 
   /** 本地日志路径 */
@@ -66,18 +72,16 @@ class GlobalConfig {
     // 静态资源路径
     global.StaticPath = this.DIR_STATIC
     // 客户端图标
-    global.ClientLogo = this.APP_LOGO
+    global.ClientLogo = this.getAppLogo()
     // 客户端版本号
-    global.ClientVersion = PKG.version
+    global.ClientVersion = this.APP_VERSION
   }
 
   /** 根据分辨率适配窗口大小 */
   static adaptByScreen(dto: WinStateDTO, win: BrowserWindow | null) {
-    const devWidth = 1920
-    const devHeight = 1080
-    /** 显示器工作区域大小 */
-    const workAreaSize = screen.getPrimaryDisplay().workAreaSize
-    const zoomFactor = Math.max(workAreaSize.width / devWidth, workAreaSize.height / devHeight)
+    const devSize = { width: 1920, height: 1080 }
+    const areaSize = screen.getPrimaryDisplay().workAreaSize
+    const zoomFactor = Math.min(1, areaSize.width / devSize.width, areaSize.height / devSize.height)
     const realSize = { width: 0, height: 0 }
     realSize.width = Math.round(dto.width * zoomFactor)
     realSize.height = Math.round(dto.height * zoomFactor)

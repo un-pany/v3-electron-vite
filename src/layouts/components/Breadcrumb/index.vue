@@ -53,19 +53,13 @@ listenerRouteChange((route) => {
 </template>
 
 <style lang="scss" scoped>
-.el-breadcrumb__inner,
-.el-breadcrumb__inner a {
-  font-weight: 400 !important;
-}
-
-.app-breadcrumb.el-breadcrumb {
-  display: inline-block;
-  font-size: 14px;
+.el-breadcrumb {
   line-height: var(--v3-navigationbar-height);
-  margin-left: 8px;
   .no-redirect {
-    color: #97a8be;
-    cursor: text;
+    color: var(--el-text-color-placeholder);
+  }
+  a {
+    font-weight: normal;
   }
 }
 </style>

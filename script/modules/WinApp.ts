@@ -34,14 +34,19 @@ class WinApp {
     app.commandLine.appendSwitch("wm-window-animations-disabled")
   }
 
+  /** 是否获取应用单例锁 */
+  static hasSingleLock() {
+    return GlobalConfig.IS_DEV_MODE || app.requestSingleInstanceLock()
+  }
+
   /** 启动应用 */
   static startApp() {
-    if (!app.requestSingleInstanceLock()) {
+    if (!this.hasSingleLock()) {
       return this.exitApp("There are already instances running.")
     }
 
     // 禁用默认系统菜单
-    Menu.setApplicationMenu(null)
+    Menu.setApplicationMenu(Menu.buildFromTemplate([]))
     // 初始化 remote
     remote.initialize()
     // 初始化 app 配置
@@ -94,7 +99,7 @@ class WinApp {
       const callback = () => {
         const opt: MessageBoxSyncOptions = {
           type: "warning",
-          icon: GlobalConfig.APP_LOGO,
+          icon: GlobalConfig.getAppLogo(),
           noLink: true,
           title: title,
           message: `${content}`,

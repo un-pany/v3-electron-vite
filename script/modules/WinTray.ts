@@ -49,12 +49,12 @@ class WinTray {
   static create() {
     const contextMenu = Menu.buildFromTemplate(this.TRAY_MENU)
     if (GlobalConfig.IS_MACOS) {
-      app.dock?.setIcon(GlobalConfig.DOCKER_LOGO)
+      app.dock?.setIcon(GlobalConfig.getAppLogo(true))
       app.dock?.setMenu(contextMenu)
       return
     }
     // 声明托盘对象
-    this.TRAY_INST = new Tray(GlobalConfig.APP_LOGO)
+    this.TRAY_INST = new Tray(GlobalConfig.getAppLogo())
     // 悬停提示内容
     this.TRAY_INST.setToolTip(GlobalConfig.getAppTitle())
     // 右键菜单
