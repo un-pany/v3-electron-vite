@@ -1,26 +1,15 @@
-<script lang="ts" setup>
-import { nextTick, reactive, ref } from "vue"
-import { type ElMessageBoxOptions, ElMessageBox, ElMessage } from "element-plus"
+<script lang="tsx" setup>
+import { nextTick, reactive, ref, watch } from "vue"
 import { deleteTableDataApi, getTableDataApi } from "@/api/table"
-import { type GetTableResponseData } from "@/api/table/types/table"
-import RoleColumnSolts from "./tsx/RoleColumnSolts"
-import StatusColumnSolts from "./tsx/StatusColumnSolts"
-import {
-  type VxeGridInstance,
-  type VxeGridProps,
-  type VxeModalInstance,
-  type VxeModalProps,
-  type VxeFormInstance,
-  type VxeFormProps
-} from "vxe-table"
+import { VxeUI, type VxeGridInstance, type VxeGridProps } from "vxe-table"
+import { VxeTag, type VxeModalInstance, type VxeModalProps, type VxeFormInstance, type VxeFormProps } from "vxe-pc-ui"
 
 defineOptions({
   // 命名当前组件
   name: "VxeTable"
 })
 
-//#region vxe-grid
-interface RowMeta {
+interface RowVo {
   id: string
   username: string
   roles: string
@@ -28,11 +17,11 @@ interface RowMeta {
   email: string
   status: boolean
   createTime: string
-  /** vxe-table 自动添加上去的属性 */
-  _VXE_ID?: string
 }
-const xGridDom = ref<VxeGridInstance>()
-const xGridOpt: VxeGridProps = reactive({
+
+//#region 查询与删除
+const xGridRef = ref<VxeGridInstance<RowVo>>()
+const xGridOpt = reactive<VxeGridProps<RowVo>>({
   loading: true,
   autoResize: true,
   /** 分页配置项 */
@@ -95,8 +84,13 @@ const xGridOpt: VxeGridProps = reactive({
     {
       field: "roles",
       title: "角色",
-      /** 自定义列与 type: "html" 的列一起使用，会产生错误，所以采用 TSX 实现 */
-      slots: RoleColumnSolts
+      slots: {
+        default: ({ row, column }) => {
+          const cellValue = row[column.field]
+          const type = cellValue === "admin" ? "primary" : "warning"
+          return [<VxeTag status={type} content={cellValue} />]
+        }
+      }
     },
     {
       field: "phone",
@@ -109,7 +103,14 @@ const xGridOpt: VxeGridProps = reactive({
     {
       field: "status",
       title: "状态",
-      slots: StatusColumnSolts
+      slots: {
+        default: ({ row, column }) => {
+          const cellValue = row[column.field]
+          const aTag = <VxeTag status="success" content="启用" />
+          const bTag = <VxeTag status="danger" content="禁用" />
+          return [cellValue ? aTag : bTag]
+        }
+      }
     },
     {
       field: "createTime",
@@ -120,7 +121,7 @@ const xGridOpt: VxeGridProps = reactive({
       width: "150px",
       fixed: "right",
       showOverflow: false,
-      slots: { default: "row-operate" }
+      slots: { default: "cell-operate" }
     }
   ],
   /** 数据代理配置项（基于 Promise API） */
@@ -135,58 +136,80 @@ const xGridOpt: VxeGridProps = reactive({
       total: "total"
     },
     ajax: {
-      query: ({ page, form }) => {
+      query: async ({ page, form }) => {
         xGridOpt.loading = true
-        crudStore.clearTable()
-        return new Promise((resolve) => {
-          let total = 0
-          let result: RowMeta[] = []
-          /** 加载数据 */
-          const callback = (res: GetTableResponseData) => {
-            if (res?.data) {
-              // 总数
-              total = res.data.total
-              // 列表数据
-              result = res.data.list
-            }
-            xGridOpt.loading = false
-            // 返回值有格式要求，详情见 vxe-table 官方文档
-            resolve({ total, result })
-          }
-
-          /** 接口需要的参数 */
+        xGridFn.clearTable()
+        //
+        let total = 0
+        let result: RowVo[] = []
+        try {
+          /** 接口参数 */
           const params = {
             username: form.username || undefined,
             phone: form.phone || undefined,
             size: page.pageSize,
             currentPage: page.currentPage
           }
-          /** 调用接口 */
-          getTableDataApi(params).then(callback).catch(callback)
-        })
+          const res = await getTableDataApi(params)
+          if (res && res.data) {
+            // 总数
+            total = res.data.total
+            // 列表数据
+            result = res.data.list
+          }
+        } catch (error) {
+          console.error("[接口请求出错]", error)
+        }
+        xGridOpt.loading = false
+        // 返回值有格式要求，详情见 vxe-table 官方文档
+        return { total, result }
       }
     }
   }
 })
+const xGridFn = {
+  /** 加载表格数据 */
+  commitQuery: () => xGridRef.value?.commitProxy("query"),
+  /** 清空表格数据 */
+  clearTable: () => xGridRef.value?.reloadData([]),
+  /** 删除 */
+  onDelete: async (row?: RowVo) => {
+    const rows = row ? [row] : xGridRef.value?.getCheckboxRecords(true) || []
+    if (!rows.length) return
+    const msg = rows.length === 1 ? `用户：${rows[0].username}` : `${rows.length}个用户`
+    const action = await VxeUI.modal.confirm({
+      title: "提示",
+      content: `正在删除${msg}，确认删除？`,
+      status: "warning",
+      escClosable: true,
+      maskClosable: true
+    })
+    if (action !== "confirm") return
+    let isOk = true
+    await deleteTableDataApi(rows[0].id).catch(() => (isOk = false))
+    if (isOk) {
+      VxeUI.modal.message({ status: "success", content: "删除成功" })
+      xGridFn.commitQuery()
+    }
+  }
+}
 //#endregion
 
-//#region vxe-modal
-const xModalDom = ref<VxeModalInstance>()
-const xModalOpt: VxeModalProps = reactive({
+//#region 新增与修改
+const xModalRef = ref<VxeModalInstance>()
+const xModalOpt = reactive<VxeModalProps>({
   title: "",
   showClose: true,
   escClosable: true,
   maskClosable: true,
   beforeHideMethod: () => {
-    xFormDom.value?.clearValidate()
+    xFormRef.value?.clearValidate()
     return Promise.resolve()
   }
 })
-//#endregion
 
-//#region vxe-form
-const xFormDom = ref<VxeFormInstance>()
-const xFormOpt: VxeFormProps = reactive({
+const xFormRef = ref<VxeFormInstance<RowVo>>()
+const xFormOpt = reactive<VxeFormProps<RowVo>>({
   span: 24,
   titleWidth: "100px",
   loading: false,
@@ -194,8 +217,13 @@ const xFormOpt: VxeFormProps = reactive({
   titleColon: false,
   /** 表单数据 */
   data: {
+    id: "",
     username: "",
-    password: ""
+    roles: "",
+    phone: "",
+    email: "",
+    status: false,
+    createTime: ""
   },
   /** 项列表 */
   items: [
@@ -205,8 +233,8 @@ const xFormOpt: VxeFormProps = reactive({
       itemRender: { name: "$input", props: { placeholder: "请输入" } }
     },
     {
-      field: "password",
-      title: "密码",
+      field: "phone",
+      title: "电话",
       itemRender: { name: "$input", props: { placeholder: "请输入" } }
     },
     {
@@ -214,10 +242,10 @@ const xFormOpt: VxeFormProps = reactive({
       itemRender: {
         name: "$buttons",
         children: [
-          { props: { content: "取消" }, events: { click: () => xModalDom.value?.close() } },
+          { props: { content: "取消" }, events: { click: () => xModalRef.value?.close() } },
           {
             props: { type: "submit", content: "确定", status: "primary" },
-            events: { click: () => crudStore.onSubmitForm() }
+            events: { click: () => xModalFn.onSubmitForm() }
           }
         ]
       }
@@ -238,7 +266,7 @@ const xFormOpt: VxeFormProps = reactive({
         }
       }
     ],
-    password: [
+    phone: [
       {
         required: true,
         validator: ({ itemValue }) => {
@@ -253,121 +281,74 @@ const xFormOpt: VxeFormProps = reactive({
     ]
   }
 })
-//#endregion
 
-//#region 增删改查
-const crudStore = reactive({
-  /** 表单类型，true 表示修改，false 表示新增 */
-  isUpdate: true,
-  /** 加载表格数据 */
-  commitQuery: () => xGridDom.value?.commitProxy("query"),
-  /** 清空表格数据 */
-  clearTable: () => xGridDom.value?.reloadData([]),
-  /** 点击显示弹窗 */
-  onShowModal: (row?: RowMeta) => {
+// 表单加载时禁止关闭弹窗
+watch(
+  () => xFormOpt.loading,
+  (val) => {
+    const lock = !val
+    xModalOpt.showClose = lock
+    xModalOpt.escClosable = lock
+    xModalOpt.maskClosable = lock
+  }
+)
+
+let isModifyMode = false
+const xModalFn = {
+  clearFormValidate: () => {
+    !isModifyMode && xFormRef.value?.reset()
+    xFormRef.value?.clearValidate()
+  },
+  onShowModal: (row?: RowVo) => {
     if (row) {
-      crudStore.isUpdate = true
+      isModifyMode = true
       xModalOpt.title = "修改用户"
-      // 赋值
-      xFormOpt.data.username = row.username
+      Object.assign(xFormOpt.data || {}, row)
     } else {
-      crudStore.isUpdate = false
+      isModifyMode = false
       xModalOpt.title = "新增用户"
     }
-    // 禁用表单项
-    const props = xFormOpt.items?.[0]?.itemRender?.props
-    props && (props.disabled = crudStore.isUpdate)
-    xModalDom.value?.open()
-    nextTick(() => {
-      !crudStore.isUpdate && xFormDom.value?.reset()
-      xFormDom.value?.clearValidate()
-    })
+    xModalRef.value?.open()
+    nextTick(xModalFn.clearFormValidate)
   },
-  /** 确定并保存 */
-  onSubmitForm: () => {
-    if (xFormOpt.loading) return
-    xFormDom.value?.validate((errMap) => {
-      if (errMap) return
-      xFormOpt.loading = true
-      const callback = () => {
-        xFormOpt.loading = false
-        xModalDom.value?.close()
-        ElMessage.success("操作成功")
-        !crudStore.isUpdate && crudStore.afterInsert()
-        crudStore.commitQuery()
-      }
-      if (crudStore.isUpdate) {
-        // 模拟调用修改接口成功
-        setTimeout(() => callback(), 1000)
-      } else {
-        // 模拟调用新增接口成功
-        setTimeout(() => callback(), 1000)
-      }
-    })
-  },
-  /** 新增后是否跳入最后一页 */
-  afterInsert: () => {
-    const pager = xGridDom.value?.getProxyInfo()?.pager
-    if (pager) {
-      const currentTotal = pager.currentPage * pager.pageSize
-      if (currentTotal === pager.total) {
-        ++pager.currentPage
-      }
-    }
-  },
-  /** 删除 */
-  onDelete: (row: RowMeta) => {
-    const tip = `确定 <strong style="color: var(--el-color-danger);"> 删除 </strong> 用户 <strong style="color: var(--el-color-primary);"> ${row.username} </strong> ？`
-    const config: ElMessageBoxOptions = {
-      type: "warning",
-      showClose: true,
-      closeOnClickModal: true,
-      closeOnPressEscape: true,
-      cancelButtonText: "取消",
-      confirmButtonText: "确定",
-      dangerouslyUseHTMLString: true
-    }
-    ElMessageBox.confirm(tip, "提示", config).then(() => {
-      deleteTableDataApi(row.id).then(() => {
-        ElMessage.success("删除成功")
-        crudStore.afterDelete()
-        crudStore.commitQuery()
-      })
-    })
-  },
-  /** 删除后是否返回上一页 */
-  afterDelete: () => {
-    const tableData: RowMeta[] = xGridDom.value!.getData()
-    const pager = xGridDom.value?.getProxyInfo()?.pager
-    if (pager && pager.currentPage > 1 && tableData.length === 1) {
-      --pager.currentPage
-    }
-  },
-  /** 更多自定义方法 */
-  moreFn: () => {}
-})
+  onSubmitForm: async () => {
+    if (xFormOpt.loading || !xFormRef.value) return
+    const errMap = await xFormRef.value.validate()
+    if (errMap) return
+    xFormOpt.loading = true
+    // 模拟调用新增接口成功
+    await new Promise((resolve) => setTimeout(resolve, 2000))
+    VxeUI.modal.message({ status: "success", content: "操作成功" })
+    xGridFn.commitQuery()
+    xModalRef.value?.close()
+    xFormOpt.loading = false
+  }
+}
 //#endregion
+
+//
 </script>
 
 <template>
   <div class="app-container">
     <!-- 表格 -->
-    <vxe-grid ref="xGridDom" v-bind="xGridOpt">
-      <!-- 左侧按钮列表 -->
+    <vxe-grid ref="xGridRef" v-bind="xGridOpt">
+      <!-- 工具栏 | 左侧按钮列表 -->
       <template #toolbar-btns>
-        <vxe-button status="primary" icon="vxe-icon-add" @click="crudStore.onShowModal()">新增用户</vxe-button>
-        <vxe-button status="danger" icon="vxe-icon-delete">批量删除</vxe-button>
+        <vxe-button status="primary" icon="vxe-icon-add" @click="xModalFn.onShowModal()">新增用户</vxe-button>
+        <vxe-button status="danger" icon="vxe-icon-delete" @click="xGridFn.onDelete()">批量删除</vxe-button>
       </template>
-      <!-- 操作 -->
-      <template #row-operate="{ row }">
-        <el-button link type="primary" @click="crudStore.onShowModal(row)">修改</el-button>
-        <el-button link type="danger" @click="crudStore.onDelete(row)">删除</el-button>
+      <!-- 单元格 | 操作 -->
+      <template #cell-operate="{ row }">
+        <el-button link type="primary" @click="xModalFn.onShowModal(row)">修改</el-button>
+        <vxe-button mode="text" status="danger" @click="xGridFn.onDelete(row)">删除</vxe-button>
       </template>
     </vxe-grid>
+
     <!-- 弹窗 -->
-    <vxe-modal ref="xModalDom" v-bind="xModalOpt">
+    <vxe-modal ref="xModalRef" v-bind="xModalOpt">
       <!-- 表单 -->
-      <vxe-form ref="xFormDom" v-bind="xFormOpt" />
+      <vxe-form ref="xFormRef" v-bind="xFormOpt" />
     </vxe-modal>
   </div>
 </template>
