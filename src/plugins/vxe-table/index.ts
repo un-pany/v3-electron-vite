@@ -1,6 +1,7 @@
 import { type App } from "vue"
-// https://VxeTable.cn/#/table/start/install
+// https://vxeui.com
 import VxeUI from "vxe-pc-ui"
+// https://VxeTable.cn
 import VxeTable from "vxe-table"
 // https://github.com/x-extends/vxe-table-plugin-element
 import VxeTablePluginElement from "vxe-table-plugin-element"

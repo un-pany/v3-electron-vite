@@ -25,6 +25,7 @@ module.exports = {
   },
   rules: {
     // TS
+    "@typescript-eslint/no-unused-expressions": "off",
     "no-debugger": "off",
     "@typescript-eslint/no-var-requires": "off",
     "@typescript-eslint/no-explicit-any": "off",

@@ -36,11 +36,7 @@ const handleChangeTheme = ({ clientX, clientY }: MouseEvent, themeName: ThemeNam
           v-for="(theme, index) in themeList"
           :key="index"
           :disabled="activeThemeName === theme.name"
-          @click="
-            (e) => {
-              handleChangeTheme(e, theme.name)
-            }
-          "
+          @click="(e: MouseEvent) => handleChangeTheme(e, theme.name)"
         >
           <span>{{ theme.title }}</span>
         </el-dropdown-item>

@@ -5,6 +5,7 @@ import { onMounted } from "vue"
 import { ElNotification } from "element-plus"
 // 将 Element Plus 的语言设置为中文
 import zhCn from "element-plus/es/locale/lang/zh-cn"
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const { ipcRenderer } = require("electron")
 
 window.__electronLog && window.__electronLog.log(`Hello, ${APP_TITLE}! \n`)
