@@ -1,8 +1,16 @@
 <script lang="tsx" setup>
 import { nextTick, reactive, ref, watch } from "vue"
+import { ElTag } from "element-plus"
+import { VxeUI } from "vxe-table"
+import type {
+  VxeGridInstance,
+  VxeGridProps,
+  VxeModalInstance,
+  VxeModalProps,
+  VxeFormInstance,
+  VxeFormProps
+} from "vxe-table"
 import { deleteTableDataApi, getTableDataApi } from "@/api/table"
-import { VxeUI, type VxeGridInstance, type VxeGridProps } from "vxe-table"
-import { VxeTag, type VxeModalInstance, type VxeModalProps, type VxeFormInstance, type VxeFormProps } from "vxe-pc-ui"
 
 defineOptions({
   // 命名当前组件
@@ -32,17 +40,19 @@ const xGridOpt = reactive<VxeGridProps<RowVo>>({
   formConfig: {
     items: [
       {
+        title: "用户名",
         field: "username",
         itemRender: {
           name: "$input",
-          props: { placeholder: "用户名", clearable: true }
+          props: { placeholder: "请输入", clearable: true }
         }
       },
       {
+        title: "手机号",
         field: "phone",
         itemRender: {
           name: "$input",
-          props: { placeholder: "手机号", clearable: true }
+          props: { placeholder: "请输入", clearable: true }
         }
       },
       {
@@ -88,7 +98,11 @@ const xGridOpt = reactive<VxeGridProps<RowVo>>({
         default: ({ row, column }) => {
           const cellValue = row[column.field]
           const type = cellValue === "admin" ? "primary" : "warning"
-          return [<VxeTag status={type} content={cellValue} />]
+          return [
+            <ElTag type={type} effect="plain">
+              {cellValue}
+            </ElTag>
+          ]
         }
       }
     },
@@ -106,9 +120,12 @@ const xGridOpt = reactive<VxeGridProps<RowVo>>({
       slots: {
         default: ({ row, column }) => {
           const cellValue = row[column.field]
-          const aTag = <VxeTag status="success" content="启用" />
-          const bTag = <VxeTag status="danger" content="禁用" />
-          return [cellValue ? aTag : bTag]
+          const tagValue: any[] = cellValue ? ["success", "启用"] : ["danger", "禁用"]
+          return [
+            <ElTag type={tagValue[0]} effect="plain">
+              {tagValue[1]}
+            </ElTag>
+          ]
         }
       }
     },
@@ -208,7 +225,7 @@ const xModalOpt = reactive<VxeModalProps>({
   }
 })
 
-const xFormRef = ref<VxeFormInstance<RowVo>>()
+const xFormRef = ref<VxeFormInstance>()
 const xFormOpt = reactive<VxeFormProps<RowVo>>({
   span: 24,
   titleWidth: "100px",
@@ -340,7 +357,7 @@ const xModalFn = {
       </template>
       <!-- 单元格 | 操作 -->
       <template #cell-operate="{ row }">
-        <el-button link type="primary" @click="xModalFn.onShowModal(row)">修改</el-button>
+        <vxe-button mode="text" status="primary" @click="xModalFn.onShowModal(row)">修改</vxe-button>
         <vxe-button mode="text" status="danger" @click="xGridFn.onDelete(row)">删除</vxe-button>
       </template>
     </vxe-grid>

@@ -1,6 +1,4 @@
 import { type App } from "vue"
-// https://vxeui.com
-import VxeUI from "vxe-pc-ui"
 // https://VxeTable.cn
 import VxeTable from "vxe-table"
 // https://github.com/x-extends/vxe-table-plugin-element
@@ -9,7 +7,7 @@ import VxeTablePluginElement from "vxe-table-plugin-element"
 VxeTable.use(VxeTablePluginElement)
 
 /** 全局默认参数 */
-VxeTable.VxeUI.setConfig({
+VxeTable.setConfig({
   /** 全局尺寸 */
   size: "medium",
   /** 全局 zIndex 起始值，如果项目的的 z-index 样式值过大时就需要跟随设置更大，避免被遮挡 */
@@ -60,6 +58,5 @@ VxeTable.VxeUI.setConfig({
 
 export function loadVxeTable(app: App) {
   /** Vxe Table 组件完整引入 */
-  app.use(VxeUI)
   app.use(VxeTable)
 }

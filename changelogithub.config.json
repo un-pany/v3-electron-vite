@@ -1,0 +1,16 @@
+{
+  "types": {
+    "feat": { "title": "Feat" },
+    "fix": { "title": "Fix" },
+    "perf": { "title": "Perf" },
+    "style": { "title": "Style" },
+    "refactor": { "title": "Refactor" },
+    "revert": { "title": "Revert" },
+    "test": { "title": "Test" },
+    "docs": { "title": "Docs" },
+    "chore": { "title": "Chore" },
+    "workflow": { "title": "Workflow" },
+    "ci": { "title": "CI" },
+    "types": { "title": "Types" }
+  }
+}
