@@ -10,6 +10,7 @@
     "type": "git",
     "url": "https://github.com/un-pany/v3-electron-vite.git"
   },
+  "homepage": "https://github.com/un-pany",
   "main": "dist/index.js",
   "engines": {
     "node": ">=20.0.0"
@@ -19,7 +20,8 @@
     "port": 13333
   },
   "scripts": {
-    "dev": "vite",
+    "set-utf-8": "node -e \" process.platform === 'win32' && require('child_process').exec('chcp 65001'); \"",
+    "dev": "pnpm set-utf-8 && vite",
     "build": "vite build && electron-builder",
     "build:dir": "vite build && electron-builder --dir",
     "build:linux": "vite build && electron-builder --linux",
@@ -61,12 +63,21 @@
     "win": {
       "icon": "static/icons/logo_256x256.ico",
       "artifactName": "${productName} v${version} ${arch}.${ext}",
-      "requestedExecutionLevel": "requireAdministrator"
+      "requestedExecutionLevel": "requireAdministrator",
+      "signtoolOptions": {
+        "sign": null
+      }
     },
     "dmg": {
       "sign": false
     },
+    "pkg": {
+      "allowAnywhere": false,
+      "isRelocatable": false,
+      "isVersionChecked": false
+    },
     "mac": {
+      "category": "public.app-category.productivity",
       "target": [
         "dmg",
         "zip"
@@ -96,6 +107,7 @@
     "dayjs": "1.11.13",
     "electron-log": "5.2.0",
     "element-plus": "2.8.4",
+    "iconv-lite": "0.6.3",
     "lodash-es": "4.17.21",
     "mitt": "3.0.1",
     "normalize.css": "8.0.1",
@@ -106,7 +118,7 @@
     "screenfull": "6.0.2",
     "vue": "3.5.11",
     "vue-router": "4.4.5",
-    "vxe-table": "4.6.20",
+    "vxe-table": "4.6.21",
     "vxe-table-plugin-element": "4.0.4",
     "xe-utils": "3.5.31"
   },
@@ -121,8 +133,8 @@
     "@vitejs/plugin-vue-jsx": "4.0.1",
     "@vue/eslint-config-prettier": "9.0.0",
     "@vue/eslint-config-typescript": "13.0.0",
-    "electron": "32.1.2",
-    "electron-builder": "25.1.7",
+    "electron": "32.2.0",
+    "electron-builder": "25.1.6",
     "eslint": "8.57.1",
     "eslint-plugin-prettier": "5.2.1",
     "eslint-plugin-vue": "9.28.0",

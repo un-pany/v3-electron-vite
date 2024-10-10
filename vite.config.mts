@@ -61,7 +61,7 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
         ? undefined
         : {
             /** 打包时移除 console.log */
-            pure: ["console.log"],
+            // pure: ["console.log"],
             /** 打包时移除 debugger */
             drop: ["debugger"],
             /** 打包时移除所有注释 */

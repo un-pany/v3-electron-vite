@@ -1,3 +1,4 @@
+import "./utils/with-prototype"
 // core
 import { createApp } from "vue"
 import App from "@/App.vue"
@@ -28,3 +29,17 @@ loadDirectives(app)
 
 app.use(store).use(router)
 router.isReady().then(() => app.mount("#app"))
+
+//#region 冻结自定义属性
+try {
+  const customProps = ["vRemote", "vIpcRenderer", "vLog"]
+  customProps.forEach((prop) => {
+    Object.defineProperty(window, prop, {
+      writable: false,
+      configurable: false
+    })
+  })
+} catch (reason: any) {
+  console.error("[禁止修改自定义属性]", reason)
+}
+//#endregion

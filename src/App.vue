@@ -1,14 +1,11 @@
 <script lang="ts" setup>
-import { useTheme } from "@/hooks/useTheme"
-import { APP_TITLE } from "@/hooks/useTitle"
 import { onMounted } from "vue"
 import { ElNotification } from "element-plus"
 // 将 Element Plus 的语言设置为中文
 import zhCn from "element-plus/es/locale/lang/zh-cn"
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const { ipcRenderer } = require("electron")
-
-window.__electronLog && window.__electronLog.log(`Hello, ${APP_TITLE}! \n`)
+import IpcDict from "@/constants/ipc-dict"
+import { useTheme } from "@/hooks/useTheme"
+import { APP_TITLE } from "@/hooks/useTitle"
 
 const { initTheme } = useTheme()
 
@@ -20,21 +17,21 @@ ElNotification({
   title: "Hello",
   type: "success",
   dangerouslyUseHTMLString: true,
-  message:
-    "<a style='color: teal' target='_blank' href='https://github.com/un-pany/v3-admin-vite'>小项目获取 star 不易，如果你喜欢这个项目的话，欢迎点击这里支持一个 star ！这是作者持续维护的唯一动力（小声：毕竟是免费的）</a>",
+  message: `<a style='color: teal' target='_blank' href='https://github.com/un-pany/v3-admin-vite'>小项目获取 star 不易，如果你喜欢这个项目的话，欢迎点击这里支持一个 star ！这是作者持续维护的唯一动力（小声：毕竟是免费的）</a>`,
   // duration: 0,
   position: "bottom-right"
 })
 
 onMounted(() => {
+  console.log(`Hello, ${APP_TITLE}! \n`)
   const winState: WinStateDTO = {
-    width: 1440,
-    height: 900,
+    width: 1024,
+    height: 768,
     center: true,
     maxable: true,
     resizable: true
   }
-  ipcRenderer.send("set_win_size", winState)
+  window.vIpcRenderer.send(IpcDict.CODE_01001, winState)
 })
 </script>
 

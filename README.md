@@ -63,8 +63,8 @@ pnpm lint
 
 ```tree
 ├── script              主进程源码
-├   ├── modules
-├   ├── utils
+├   ├── core            主窗口、系统菜单与托盘、本地日志等模块
+├   ├── tool            一些工具类方法
 ├   ├── index.ts
 ├
 ├── src                 渲染进程源码
