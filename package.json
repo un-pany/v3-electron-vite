@@ -43,7 +43,12 @@
       "dist/**/*",
       "static/**/*"
     ],
-    "extraResources": [],
+    "extraResources": [
+      {
+        "from": "static/icons/logo.png",
+        "to": "${productName}.png"
+      }
+    ],
     "publish": [
       {
         "provider": "generic",
@@ -89,6 +94,7 @@
       "gatekeeperAssess": false
     },
     "linux": {
+      "category": "Utility",
       "target": [
         "AppImage",
         "deb"
@@ -96,7 +102,7 @@
       "icon": "static/icons/logo_256x256.png",
       "artifactName": "${productName} v${version} ${platform} ${arch}.${ext}",
       "desktop": {
-        "Icon": "/opt/v3-electron-vite/resources/app/static/icons/logo_256x256.png"
+        "Icon": "/opt/v3-electron-vite/resources/v3-electron-vite.png"
       }
     }
   },
