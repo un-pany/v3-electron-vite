@@ -1,9 +1,9 @@
 import "./utils/with-prototype"
 // core
-import { createApp } from "vue"
 import App from "@/App.vue"
-import store from "@/store"
-import router from "@/router"
+import { createApp } from "vue"
+import { pinia } from "@/store"
+import { router } from "@/router"
 import "@/router/permission"
 // load
 import { loadSvg } from "@/icons"
@@ -27,7 +27,7 @@ loadSvg(app)
 /** 加载自定义指令 */
 loadDirectives(app)
 
-app.use(store).use(router)
+app.use(pinia).use(router)
 router.isReady().then(() => app.mount("#app"))
 
 //#region 冻结自定义属性
