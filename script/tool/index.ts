@@ -1,6 +1,6 @@
 import NodeOS from "os"
 import IconvLite from "iconv-lite"
-import { exec } from "child_process"
+import { exec, type ExecOptions } from "child_process"
 import { shell } from "electron"
 import { AppConfig } from "../core/AppConfig"
 import { LocalLogger } from "../core/AppLogger"
@@ -30,12 +30,14 @@ export const iconvDecode = (text: string | Buffer, dataDecode?: string) => {
 }
 
 /** 运行 CMD 命令 */
-export const runCmdOrder = (command: string, options?: object, dataEncode?: string, dataDecode?: string) => {
+export const runCmdOrder = (command: string, options?: ExecOptions, dataEncode?: string, dataDecode?: string) => {
   return new Promise<CmdResult>((resolve) => {
-    const opt: any = {
+    const opt: {
+      encoding: string
+    } & ExecOptions = {
+      encoding: dataEncode || "buffer",
       windowsHide: true,
-      ...options,
-      encoding: dataEncode || "buffer"
+      ...options
     }
     const startTime = Date.now()
     LocalLogger.Cmd.log("[命令]", command)
