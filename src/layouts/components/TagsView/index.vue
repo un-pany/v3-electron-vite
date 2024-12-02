@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { getCurrentInstance, onMounted, ref, watch } from "vue"
+import { getCurrentInstance, ref, watch } from "vue"
 import { type RouteLocationNormalizedLoaded, type RouteRecordRaw, RouterLink, useRoute, useRouter } from "vue-router"
 import { type TagView, useTagsViewStore } from "@/store/modules/tags-view"
 import { usePermissionStore } from "@/store/modules/permission"
@@ -153,13 +153,12 @@ watch(visible, (value) => {
   value ? document.body.addEventListener("click", closeMenu) : document.body.removeEventListener("click", closeMenu)
 })
 
-onMounted(() => {
-  initTags()
-  /** 监听路由变化 */
-  listenerRouteChange(async (route) => {
-    addTags(route)
-  }, true)
-})
+initTags()
+
+/** 监听路由变化 */
+listenerRouteChange((route) => {
+  addTags(route)
+}, true)
 </script>
 
 <template>
